@@ -40,22 +40,30 @@ export const useDocumentUpload = () => {
         progress = 100;
         clearInterval(interval);
         
-        const updatedFiles = uploadingFiles.map(file => 
-          file.id === fileId 
-            ? { ...file, progress: 100, status: Math.random() > 0.1 ? "complete" : "error", error: "Processing failed" }
-            : file
-        );
+        const updatedFiles = uploadingFiles.map(file => {
+          if (file.id === fileId) {
+            const isSuccess = Math.random() > 0.1;
+            return { 
+              ...file, 
+              progress: 100, 
+              status: isSuccess ? "complete" as const : "error" as const,
+              ...(isSuccess ? {} : { error: "Processing failed" })
+            };
+          }
+          return file;
+        });
         
         updateCallback(updatedFiles);
         
         const file = uploadingFiles.find(f => f.id === fileId);
         if (file) {
+          const isSuccess = Math.random() > 0.1;
           toast({
-            title: Math.random() > 0.1 ? "File uploaded successfully" : "Upload error",
-            description: Math.random() > 0.1 
+            title: isSuccess ? "File uploaded successfully" : "Upload error",
+            description: isSuccess 
               ? `${file.name} has been uploaded and is being processed.`
               : `Failed to process ${file.name}. Please try again.`,
-            variant: Math.random() > 0.1 ? "default" : "destructive",
+            variant: isSuccess ? "default" : "destructive",
           });
         }
       } else {
