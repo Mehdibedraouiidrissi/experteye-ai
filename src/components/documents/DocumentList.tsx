@@ -29,7 +29,9 @@ const DocumentList = () => {
       const response = await DocumentsApi.listDocuments();
       return response as Document[];
     },
-    onError: (error) => handleError(error)
+    meta: {
+      onError: (error: any) => handleError(error)
+    }
   });
   
   const handleDelete = async (documentId: string) => {
