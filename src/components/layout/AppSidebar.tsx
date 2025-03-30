@@ -60,7 +60,7 @@ export function AppSidebar() {
   return (
     <Sidebar
       defaultCollapsed={false}
-      collapsible
+      collapsible="icon"
       onCollapseChange={setIsCollapsed}
     >
       <SidebarHeader className="flex items-center justify-between p-4">
