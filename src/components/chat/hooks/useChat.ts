@@ -1,9 +1,23 @@
 
 import { useState } from "react";
 import { useToast } from "@/hooks/use-toast";
-import { Message } from "./types";
+import { Message } from "../types";
 
-const useChatMessages = () => {
+export interface UseChatReturn {
+  messages: Message[];
+  input: string;
+  setInput: (value: string) => void;
+  isLoading: boolean;
+  showThinking: boolean;
+  setShowThinking: (value: boolean) => void;
+  handleSendMessage: () => Promise<void>;
+  handleRegenerate: () => void;
+}
+
+/**
+ * Custom hook for managing chat messages and interactions
+ */
+export const useChat = (): UseChatReturn => {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: "welcome",
@@ -17,7 +31,7 @@ const useChatMessages = () => {
   const [showThinking, setShowThinking] = useState(true);
   const { toast } = useToast();
 
-  const handleSendMessage = async () => {
+  const handleSendMessage = async (): Promise<void> => {
     if (!input.trim()) return;
     
     // Add user message
@@ -64,7 +78,7 @@ The strategic planning document also mentions these figures and provides additio
     }, 3000);
   };
 
-  const handleRegenerate = () => {
+  const handleRegenerate = (): void => {
     // Remove the last assistant message
     setMessages(prev => prev.filter((_, index) => index !== prev.length - 1));
 
@@ -119,5 +133,3 @@ The quarterly breakdown shows stronger performance in Q2 and Q3, with growth rat
     handleRegenerate
   };
 };
-
-export default useChatMessages;

@@ -5,7 +5,7 @@ import ChatMessage from "./ChatMessage";
 import ExampleQuestions from "./ExampleQuestions";
 import ChatInput from "./ChatInput";
 import LoadingIndicator from "./LoadingIndicator";
-import useChatMessages from "./useChatMessages";
+import { useChat } from "./hooks/useChat";
 
 const ChatInterface = () => {
   const {
@@ -17,7 +17,7 @@ const ChatInterface = () => {
     setShowThinking,
     handleSendMessage,
     handleRegenerate
-  } = useChatMessages();
+  } = useChat();
   
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
 
