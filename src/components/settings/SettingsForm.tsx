@@ -48,7 +48,7 @@ const SettingsForm = () => {
   };
   
   return (
-    <Card>
+    <Card className="border bg-card shadow-sm">
       <CardHeader>
         <CardTitle className="text-2xl">Settings</CardTitle>
         <CardDescription>
@@ -56,25 +56,25 @@ const SettingsForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="document">
+        <Tabs defaultValue="document" className="w-full">
           <div className="mb-6">
-            <TabsList className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground w-full">
-              <TabsTrigger value="document">
-                Document Processing
+            <TabsList className="w-full grid grid-cols-4 gap-2 bg-muted p-1 rounded-lg">
+              <TabsTrigger value="document" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
+                Document
               </TabsTrigger>
-              <TabsTrigger value="llm">
+              <TabsTrigger value="llm" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
                 LLM Settings
               </TabsTrigger>
-              <TabsTrigger value="retrieval">
+              <TabsTrigger value="retrieval" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
                 Retrieval
               </TabsTrigger>
-              <TabsTrigger value="ui">
+              <TabsTrigger value="ui" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
                 Interface
               </TabsTrigger>
             </TabsList>
           </div>
           
-          <TabsContent value="document" className="space-y-6">
+          <TabsContent value="document" className="p-1">
             <DocumentSettings 
               chunkSize={chunkSize}
               setChunkSize={setChunkSize}
@@ -83,7 +83,7 @@ const SettingsForm = () => {
             />
           </TabsContent>
           
-          <TabsContent value="llm" className="space-y-6">
+          <TabsContent value="llm" className="p-1">
             <LLMSettings 
               temperature={temperature}
               setTemperature={setTemperature}
@@ -94,7 +94,7 @@ const SettingsForm = () => {
             />
           </TabsContent>
           
-          <TabsContent value="retrieval" className="space-y-6">
+          <TabsContent value="retrieval" className="p-1">
             <RetrievalSettings 
               embeddingModel={embeddingModel}
               setEmbeddingModel={setEmbeddingModel}
@@ -105,7 +105,7 @@ const SettingsForm = () => {
             />
           </TabsContent>
           
-          <TabsContent value="ui" className="space-y-6">
+          <TabsContent value="ui" className="p-1">
             <InterfaceSettings 
               defaultShowThinking={defaultShowThinking}
               setDefaultShowThinking={setDefaultShowThinking}
@@ -115,8 +115,8 @@ const SettingsForm = () => {
           </TabsContent>
         </Tabs>
       </CardContent>
-      <CardFooter className="flex justify-end">
-        <Button onClick={handleSaveSettings} disabled={isLoading}>
+      <CardFooter className="flex justify-end border-t p-6 bg-background/50">
+        <Button onClick={handleSaveSettings} disabled={isLoading} className="bg-primary text-primary-foreground hover:bg-primary/90">
           {isLoading ? (
             <>Saving...</>
           ) : (

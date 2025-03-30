@@ -92,6 +92,7 @@
 
   body {
     @apply bg-background text-foreground antialiased;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
 }
 
@@ -127,4 +128,26 @@
   .transition-smooth {
     @apply transition-all duration-300 ease-in-out;
   }
+}
+
+/* App-specific styles */
+.card-shadow {
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.settings-card {
+  @apply bg-card rounded-lg border border-border p-4;
+}
+
+.settings-tab {
+  @apply py-2 px-4 rounded-lg hover:bg-accent transition-colors;
+}
+
+.settings-tab[data-state="active"] {
+  @apply bg-secondary text-secondary-foreground font-medium;
+}
+
+/* Override default Tab styling */
+[data-radix-tabs-trigger][data-state="active"] {
+  @apply bg-background text-foreground shadow-sm;
 }
