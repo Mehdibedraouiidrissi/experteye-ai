@@ -4,8 +4,10 @@ import {
   LayoutDashboard, 
   MessageSquare, 
   FolderOpen, 
-  Settings
+  Settings,
+  PlusCircle
 } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 interface MenuItem {
@@ -43,22 +45,40 @@ export function SidebarMenuItems({ isCollapsed }: SidebarMenuItemsProps) {
   ];
 
   return (
-    <nav className="space-y-1 px-2">
-      {menuItems.map((item) => (
-        <NavLink
-          key={item.path}
-          to={item.path}
-          className={({ isActive }) => cn(
-            "flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all",
-            isActive
-              ? "bg-sidebar-accent text-primary"
-              : "text-sidebar-foreground hover:bg-sidebar-accent/50"
-          )}
+    <div className="flex flex-col h-full">
+      <div className="px-3 pb-3">
+        <Button 
+          variant="outline"
+          className="w-full flex items-center justify-start gap-2 border-dashed"
+          onClick={() => window.location.href = "/chat"}
         >
-          {item.icon}
-          {!isCollapsed && <span className="ml-3">{item.name}</span>}
-        </NavLink>
-      ))}
-    </nav>
+          <PlusCircle className="h-5 w-5" />
+          {!isCollapsed && <span>New Chat</span>}
+        </Button>
+      </div>
+      <div className="space-y-1 px-2">
+        <p className={cn(
+          "text-xs font-medium text-muted-foreground px-3 py-2",
+          isCollapsed && "opacity-0"
+        )}>
+          {!isCollapsed && "Navigation"}
+        </p>
+        {menuItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            className={({ isActive }) => cn(
+              "flex items-center px-3 py-2 rounded-md text-sm font-medium transition-all",
+              isActive
+                ? "bg-accent text-accent-foreground"
+                : "text-foreground hover:bg-accent/50 hover:text-accent-foreground"
+            )}
+          >
+            {item.icon}
+            {!isCollapsed && <span className="ml-3">{item.name}</span>}
+          </NavLink>
+        ))}
+      </div>
+    </div>
   );
 }

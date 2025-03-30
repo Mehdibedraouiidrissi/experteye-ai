@@ -37,7 +37,7 @@ const Chat = () => {
   
   return (
     <DashboardLayout>
-      <div className="flex h-[calc(100vh-8rem)] gap-6 relative">
+      <div className="flex h-[calc(100vh-8rem)] gap-0 relative">
         {isMobile && (
           <Button
             variant="outline"
@@ -51,8 +51,8 @@ const Chat = () => {
         
         <div
           className={cn(
-            "h-full w-80 flex-shrink-0 transition-all duration-300 ease-in-out",
-            isMobile && "absolute top-0 bottom-0 left-0 z-10 bg-background",
+            "h-full w-80 border-r flex-shrink-0 transition-all duration-300 ease-in-out bg-background",
+            isMobile && "absolute top-0 bottom-0 left-0 z-10",
             isMobile && !showSidebar && "-translate-x-full opacity-0"
           )}
         >
@@ -64,7 +64,7 @@ const Chat = () => {
         </div>
         
         <div className={cn(
-          "flex-1 h-full overflow-hidden relative bg-card rounded-md border",
+          "flex-1 h-full overflow-hidden relative bg-background",
           isMobile && showSidebar && "opacity-50"
         )}>
           <ChatInterface />
@@ -72,6 +72,6 @@ const Chat = () => {
       </div>
     </DashboardLayout>
   );
-};
+}
 
 export default Chat;
