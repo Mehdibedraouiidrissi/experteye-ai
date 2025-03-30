@@ -59,7 +59,6 @@ export function AppSidebar() {
 
   return (
     <Sidebar
-      defaultCollapsed={false}
       collapsible="icon"
       onCollapseChange={setIsCollapsed}
     >

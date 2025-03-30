@@ -160,7 +160,7 @@ const DocumentUpload = () => {
             Supports PDF, Word, Excel, PowerPoint, and text files
           </p>
           <div className="flex gap-2">
-            <Button as="label" htmlFor="file-upload" className="cursor-pointer">
+            <Button className="cursor-pointer" onClick={() => document.getElementById('file-upload')?.click()}>
               <FileUp className="mr-2 h-4 w-4" />
               Select File
               <input 
