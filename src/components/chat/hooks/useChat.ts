@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { Message } from "../types";
 
@@ -12,10 +12,13 @@ export interface UseChatReturn {
   setShowThinking: (value: boolean) => void;
   handleSendMessage: () => Promise<void>;
   handleRegenerate: () => void;
+  clearConversation: () => void;
+  getRelevantDocuments: (query: string) => Promise<string[]>;
 }
 
 /**
  * Custom hook for managing chat messages and interactions
+ * with advanced AI assistant features
  */
 export const useChat = (): UseChatReturn => {
   const [messages, setMessages] = useState<Message[]>([
@@ -30,6 +33,88 @@ export const useChat = (): UseChatReturn => {
   const [isLoading, setIsLoading] = useState(false);
   const [showThinking, setShowThinking] = useState(true);
   const { toast } = useToast();
+
+  // Function to simulate document retrieval
+  const getRelevantDocuments = useCallback(async (query: string): Promise<string[]> => {
+    // In a real application, this would connect to your RAG system
+    // This is a simulation for now
+    return [
+      "Annual Financial Report 2023",
+      "Strategic Planning 2024-2025",
+      "Regional Market Analysis",
+      "Quarterly Performance Review"
+    ];
+  }, []);
+
+  const generateAnswer = useCallback(async (userQuery: string): Promise<{content: string, thinking: string, sources: any[]}> => {
+    // In a real application, this would use your backend AI service
+    // This is a simulation for now
+    
+    // Simulate thinking process with more sophisticated steps
+    const thinking = `1. Analyzing query: "${userQuery}"
+2. Searching document collection for relevant information
+3. Found 3 relevant document chunks
+4. Extracting key information from each chunk
+5. Identifying patterns and relationships between information points
+6. Synthesizing information from chunks
+7. Generating comprehensive response
+8. Validating response against source documents`;
+
+    // Simulate different response patterns based on query content
+    let content = '';
+    const sources = [];
+    
+    if (userQuery.toLowerCase().includes('financial') || userQuery.toLowerCase().includes('report')) {
+      content = `Based on my analysis of your financial documents, I can report the following:
+
+The Annual Financial Report from 2023 indicates a 12% growth in revenue compared to the previous year, with the technology division showing the strongest performance at 18% growth.
+
+The strategic planning document also mentions these figures and provides additional context about market conditions that contributed to this growth, including expanded operations in the APAC region.
+
+Would you like me to provide a more detailed breakdown of the quarterly performance?`;
+      
+      sources.push(
+        { id: "doc1", title: "Annual Financial Report 2023", page: 42 },
+        { id: "doc2", title: "Strategic Planning 2024-2025" },
+        { id: "doc3", title: "Quarterly Performance Review", page: 15 },
+      );
+    } else if (userQuery.toLowerCase().includes('strategy') || userQuery.toLowerCase().includes('planning')) {
+      content = `I've analyzed the strategic planning documents and found the following key points:
+
+1. The company plans to expand into 3 new markets in the next fiscal year
+2. R&D budget is being increased by 15% with focus on AI and sustainable technologies
+3. The 5-year vision includes becoming carbon neutral by 2028
+4. There's a planned restructuring of the sales department to better align with regional market needs
+
+The strategic goals appear well-aligned with the market analysis report, which identifies growing demand in the sectors you're targeting.`;
+      
+      sources.push(
+        { id: "doc2", title: "Strategic Planning 2024-2025" },
+        { id: "doc3", title: "Regional Market Analysis", page: 8 },
+        { id: "doc4", title: "Board Meeting Minutes - Q4 2023", page: 3 },
+      );
+    } else {
+      content = `Based on the documents I've analyzed, here's what I found regarding your query:
+
+The information you're looking for appears in several documents. There are multiple references that might be relevant to your question across the document collection.
+
+I can see that there are related discussions in both the quarterly reviews and strategic planning documents. The most relevant information appears on page 15 of the Regional Market Analysis, which provides context for your query.
+
+Would you like me to focus my analysis on a particular aspect of this topic?`;
+      
+      sources.push(
+        { id: "doc1", title: "Annual Financial Report 2023", page: 42 },
+        { id: "doc2", title: "Strategic Planning 2024-2025" },
+        { id: "doc3", title: "Regional Market Analysis", page: 15 },
+      );
+    }
+
+    return {
+      content,
+      thinking,
+      sources
+    };
+  }, []);
 
   const handleSendMessage = async (): Promise<void> => {
     if (!input.trim()) return;
@@ -46,36 +131,31 @@ export const useChat = (): UseChatReturn => {
     setInput("");
     setIsLoading(true);
 
-    // Simulate API delay
-    setTimeout(() => {
-      // Sample thinking process
-      const thinking = `1. Analyzing query: "${input}"
-2. Searching document collection for relevant information
-3. Found 3 relevant document chunks
-4. Synthesizing information from chunks
-5. Generating comprehensive response`;
+    try {
+      // Generate answer based on user query
+      const { content, thinking, sources } = await generateAnswer(input);
 
-      // Sample response with source attribution
+      // Add assistant response with generated answer
       const botReply: Message = {
         id: Date.now().toString(),
         type: "assistant",
-        content: `Based on the documents I've analyzed, here's what I found regarding your query:
-
-The information you're looking for appears in several documents. The Annual Financial Report from 2023 indicates a 12% growth in revenue compared to the previous year, with the technology division showing the strongest performance at 18% growth.
-
-The strategic planning document also mentions these figures and provides additional context about market conditions that contributed to this growth, including expanded operations in the APAC region.`,
+        content: content,
         timestamp: new Date(),
         thinking: showThinking ? thinking : undefined,
-        sources: [
-          { id: "doc1", title: "Annual Financial Report 2023", page: 42 },
-          { id: "doc2", title: "Strategic Planning 2024-2025" },
-          { id: "doc3", title: "Regional Market Analysis", page: 15 },
-        ],
+        sources: sources,
       };
 
       setMessages(prev => [...prev, botReply]);
+    } catch (error) {
+      toast({
+        title: "Error generating response",
+        description: "There was a problem processing your request.",
+        variant: "destructive"
+      });
+      console.error("Error generating response:", error);
+    } finally {
       setIsLoading(false);
-    }, 3000);
+    }
   };
 
   const handleRegenerate = (): void => {
@@ -90,37 +170,59 @@ The strategic planning document also mentions these figures and provides additio
 
     // Simulate a delay before adding a new response
     setIsLoading(true);
-    setTimeout(() => {
-      const thinking = `1. Re-analyzing query with different approach
-2. Searching document collection with expanded parameters
-3. Found 4 relevant document chunks
-4. Synthesizing information with different emphasis
-5. Generating revised comprehensive response`;
+    
+    setTimeout(async () => {
+      try {
+        // Find the last user message to regenerate a response for
+        const lastUserMessage = [...messages].reverse().find(m => m.type === "user");
+        
+        if (lastUserMessage) {
+          // Generate a new response with more detail
+          const { content, thinking, sources } = await generateAnswer(lastUserMessage.content);
+          
+          // Modify the response slightly to make it look different
+          const enhancedContent = content + `\n\nI've analyzed the documents more thoroughly this time and found additional nuances in the data that might be worth exploring further. Would you like me to elaborate on any specific aspect?`;
+          
+          const regeneratedReply: Message = {
+            id: Date.now().toString(),
+            type: "assistant",
+            content: enhancedContent,
+            timestamp: new Date(),
+            thinking: showThinking ? thinking : undefined,
+            sources: [
+              ...sources,
+              { id: "doc4", title: "Quarterly Performance Review", page: 7 },
+            ],
+          };
 
-      const regeneratedReply: Message = {
-        id: Date.now().toString(),
-        type: "assistant",
-        content: `I've taken another look at your query and found additional information:
-
-According to the latest financial reports, there was indeed a 12% overall growth in revenue for 2023, but I can provide more detail. The technology division led with 18% growth, followed by services at 14% and products at 8%.
-
-The strategic planning document highlights that this growth outpaced industry averages by approximately 3.5 percentage points, largely due to the expansion into the APAC region which contributed 4.2% of the overall growth.
-
-The quarterly breakdown shows stronger performance in Q2 and Q3, with growth rates of 14.5% and 16.2% respectively.`,
-        timestamp: new Date(),
-        thinking: showThinking ? thinking : undefined,
-        sources: [
-          { id: "doc1", title: "Annual Financial Report 2023", page: 42 },
-          { id: "doc2", title: "Strategic Planning 2024-2025" },
-          { id: "doc3", title: "Regional Market Analysis", page: 15 },
-          { id: "doc4", title: "Quarterly Performance Review", page: 7 },
-        ],
-      };
-
-      setMessages(prev => [...prev, regeneratedReply]);
-      setIsLoading(false);
-    }, 3000);
+          setMessages(prev => [...prev, regeneratedReply]);
+        }
+      } catch (error) {
+        toast({
+          title: "Error regenerating response",
+          description: "There was a problem processing your request.",
+          variant: "destructive"
+        });
+        console.error("Error regenerating response:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    }, 2000);
   };
+
+  const clearConversation = useCallback(() => {
+    setMessages([{
+      id: "welcome",
+      type: "assistant",
+      content: "Hello! I'm ExpertEye, your document intelligence assistant. How can I help you today?",
+      timestamp: new Date(),
+    }]);
+    
+    toast({
+      title: "Conversation cleared",
+      description: "Starting a fresh conversation"
+    });
+  }, [toast]);
 
   return {
     messages,
@@ -130,6 +232,8 @@ The quarterly breakdown shows stronger performance in Q2 and Q3, with growth rat
     showThinking,
     setShowThinking,
     handleSendMessage,
-    handleRegenerate
+    handleRegenerate,
+    clearConversation,
+    getRelevantDocuments
   };
 };

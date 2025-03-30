@@ -6,6 +6,8 @@ import ExampleQuestions from "./ExampleQuestions";
 import ChatInput from "./ChatInput";
 import LoadingIndicator from "./LoadingIndicator";
 import { useChat } from "./hooks/useChat";
+import { Button } from "@/components/ui/button";
+import { Trash2 } from "lucide-react";
 
 const ChatInterface = () => {
   const {
@@ -16,7 +18,8 @@ const ChatInterface = () => {
     showThinking,
     setShowThinking,
     handleSendMessage,
-    handleRegenerate
+    handleRegenerate,
+    clearConversation
   } = useChat();
   
   const endOfMessagesRef = useRef<HTMLDivElement>(null);
@@ -42,6 +45,20 @@ const ChatInterface = () => {
 
   return (
     <div className="flex flex-col h-full max-h-full overflow-hidden">
+      {messages.length > 1 && (
+        <div className="flex justify-end px-4 pt-2">
+          <Button 
+            variant="ghost" 
+            size="sm"
+            className="text-xs flex items-center gap-1 text-muted-foreground"
+            onClick={clearConversation}
+          >
+            <Trash2 className="h-3 w-3" />
+            Clear conversation
+          </Button>
+        </div>
+      )}
+      
       <ScrollArea className="flex-1">
         <div className="pb-4 px-4">
           {messages.map((message, index) => (
