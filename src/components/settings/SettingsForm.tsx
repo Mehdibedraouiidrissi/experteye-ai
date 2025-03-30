@@ -58,12 +58,34 @@ const SettingsForm = () => {
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="document">
-          <TabsList className="mb-6 w-full">
-            <TabsTrigger value="document" className="flex-1">Document Processing</TabsTrigger>
-            <TabsTrigger value="llm" className="flex-1">LLM Settings</TabsTrigger>
-            <TabsTrigger value="retrieval" className="flex-1">Retrieval</TabsTrigger>
-            <TabsTrigger value="ui" className="flex-1">Interface</TabsTrigger>
-          </TabsList>
+          <div className="mb-6">
+            <TabsList className="inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground w-full">
+              <TabsTrigger 
+                value="document" 
+                className="ring-offset-background data-[state=active]:bg-background data-[state=active]:text-foreground"
+              >
+                Document Processing
+              </TabsTrigger>
+              <TabsTrigger 
+                value="llm" 
+                className="ring-offset-background data-[state=active]:bg-background data-[state=active]:text-foreground"
+              >
+                LLM Settings
+              </TabsTrigger>
+              <TabsTrigger 
+                value="retrieval" 
+                className="ring-offset-background data-[state=active]:bg-background data-[state=active]:text-foreground"
+              >
+                Retrieval
+              </TabsTrigger>
+              <TabsTrigger 
+                value="ui" 
+                className="ring-offset-background data-[state=active]:bg-background data-[state=active]:text-foreground"
+              >
+                Interface
+              </TabsTrigger>
+            </TabsList>
+          </div>
           
           <TabsContent value="document" className="space-y-6">
             <div className="space-y-4">
