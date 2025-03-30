@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { Save } from "lucide-react";
 
-// Import our new component files
+// Import our component files
 import DocumentSettings from "./DocumentSettings";
 import LLMSettings from "./LLMSettings";
 import RetrievalSettings from "./RetrievalSettings";
@@ -56,23 +56,21 @@ const SettingsForm = () => {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <Tabs defaultValue="document" className="w-full">
-          <div className="mb-6">
-            <TabsList className="w-full grid grid-cols-4 gap-2 bg-muted p-1 rounded-lg">
-              <TabsTrigger value="document" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                Document
-              </TabsTrigger>
-              <TabsTrigger value="llm" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                LLM Settings
-              </TabsTrigger>
-              <TabsTrigger value="retrieval" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                Retrieval
-              </TabsTrigger>
-              <TabsTrigger value="ui" className="rounded-md data-[state=active]:bg-background data-[state=active]:shadow-sm">
-                Interface
-              </TabsTrigger>
-            </TabsList>
-          </div>
+        <Tabs defaultValue="document" className="w-full settings-tabs">
+          <TabsList className="mb-6">
+            <TabsTrigger value="document">
+              Document
+            </TabsTrigger>
+            <TabsTrigger value="llm">
+              LLM Settings
+            </TabsTrigger>
+            <TabsTrigger value="retrieval">
+              Retrieval
+            </TabsTrigger>
+            <TabsTrigger value="ui">
+              Interface
+            </TabsTrigger>
+          </TabsList>
           
           <TabsContent value="document" className="p-1">
             <DocumentSettings 
