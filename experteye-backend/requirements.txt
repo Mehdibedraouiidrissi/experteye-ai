@@ -10,3 +10,10 @@ faiss-cpu==1.7.4
 langchain==0.0.344
 unstructured==0.10.30
 sentence-transformers==2.2.2
+httpx==0.25.0
+PyPDF2==3.0.1
+python-docx==0.8.11
+openpyxl==3.1.2
+python-pptx==0.6.21
+PyMuPDF==1.23.7
+numpy==1.26.0

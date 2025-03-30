@@ -1,5 +1,5 @@
 
-from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status
+from fastapi import APIRouter, Depends, HTTPException, UploadFile, File, status, BackgroundTasks
 from typing import List, Dict, Any
 import os
 import uuid
@@ -14,6 +14,7 @@ router = APIRouter()
 @router.post("/upload")
 async def upload_document(
     file: UploadFile = File(...),
+    background_tasks: BackgroundTasks = None,
     user: Dict[str, Any] = Depends(get_current_user)
 ):
     # Check file type
@@ -29,8 +30,12 @@ async def upload_document(
     # Save document
     document_id = await save_document(file, user["id"])
     
-    # Process document in background (in a real system, this would be an async task)
-    process_result = await process_document(document_id)
+    # Process document in background
+    if background_tasks:
+        background_tasks.add_task(process_document, document_id)
+    else:
+        # If background tasks aren't available, process synchronously
+        asyncio.create_task(process_document(document_id))
     
     return {
         "document_id": document_id,

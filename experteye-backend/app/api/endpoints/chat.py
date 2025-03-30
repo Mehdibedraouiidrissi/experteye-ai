@@ -1,13 +1,14 @@
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, BackgroundTasks
 from typing import List, Dict, Any
 import uuid
 from datetime import datetime
+import asyncio
 
 from app.core.dependencies import get_current_user
 from app.db.session import get_chat_db
 from app.services.chat_service import create_chat, get_chats, add_message, get_chat
-from app.rag.rag_engine import process_query
+from app.rag.rag_engine import process_query, retrieve_context
 
 router = APIRouter()
 
@@ -39,15 +40,20 @@ async def send_message(
     message_id = add_message(chat_id, "user", message)
     
     # Process query through RAG
-    response = process_query(message)
+    context = await retrieve_context(message)
+    response = await process_query(message, context)
     
     # Add assistant response
     assistant_message_id = add_message(chat_id, "assistant", response)
     
+    # Get the context texts for frontend display (optional)
+    context_texts = context if context else []
+    
     return {
         "user_message_id": message_id,
         "assistant_message_id": assistant_message_id,
-        "response": response
+        "response": response,
+        "context": context_texts[:3]  # Return up to 3 context chunks
     }
 
 @router.get("/{chat_id}")
