@@ -1,40 +1,11 @@
 
 import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { Input } from "@/components/ui/input";
-import {
-  MessageSquarePlus,
-  Search,
-  MessageSquare,
-  MoreHorizontal,
-  Pencil,
-  Trash2,
-  CheckCircle2
-} from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import { useToast } from "@/hooks/use-toast";
-import { cn } from "@/lib/utils";
-
-type Conversation = {
-  id: string;
-  title: string;
-  lastMessage: string;
-  date: Date;
-};
-
-interface ConversationListProps {
-  onNewChat: () => void;
-  onSelectChat: (id: string) => void;
-  activeConversation?: string;
-}
+import NewChatButton from "./NewChatButton";
+import SearchBox from "./SearchBox";
+import ConversationListContent from "./ConversationListContent";
+import { Conversation, ConversationListProps } from "./types/ConversationType";
 
 const ConversationList = ({
   onNewChat,
@@ -69,13 +40,6 @@ const ConversationList = ({
       date: new Date(2023, 5, 5),
     },
   ]);
-  const [editingId, setEditingId] = useState<string | null>(null);
-  const [editTitle, setEditTitle] = useState("");
-
-  const handleEdit = (conversation: Conversation) => {
-    setEditingId(conversation.id);
-    setEditTitle(conversation.title);
-  };
 
   const handleDelete = (id: string) => {
     setConversations((prev) => prev.filter((conv) => conv.id !== id));
@@ -85,24 +49,13 @@ const ConversationList = ({
     });
   };
 
-  const saveEdit = (id: string) => {
-    if (editTitle.trim()) {
-      setConversations((prev) =>
-        prev.map((conv) =>
-          conv.id === id ? { ...conv, title: editTitle } : conv
-        )
-      );
-      setEditingId(null);
-      toast({
-        title: "Conversation renamed",
-        description: "The conversation has been renamed successfully.",
-      });
-    }
+  const handleRename = (id: string, newTitle: string) => {
+    setConversations((prev) =>
+      prev.map((conv) =>
+        conv.id === id ? { ...conv, title: newTitle } : conv
+      )
+    );
   };
-
-  const filteredConversations = conversations.filter((conv) =>
-    conv.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
 
   return (
     <Card className="flex flex-col h-full overflow-hidden">
@@ -111,124 +64,18 @@ const ConversationList = ({
         <CardDescription>
           Your recent document-related conversations
         </CardDescription>
-        <div className="flex gap-2 mt-2">
-          <Button onClick={onNewChat} className="w-full">
-            <MessageSquarePlus className="mr-2 h-4 w-4" />
-            New Chat
-          </Button>
-        </div>
-        <div className="relative mt-2">
-          <Search className="absolute left-2 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
-          <Input
-            placeholder="Search conversations..."
-            className="pl-8"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-          />
-        </div>
+        <NewChatButton onClick={onNewChat} />
+        <SearchBox value={searchQuery} onChange={setSearchQuery} />
       </CardHeader>
       <CardContent className="flex-1 overflow-hidden p-0">
-        <ScrollArea className="h-full p-4">
-          {filteredConversations.length > 0 ? (
-            <div className="space-y-3">
-              {filteredConversations.map((conversation) => (
-                <div
-                  key={conversation.id}
-                  className={cn(
-                    "group relative rounded-md p-3 transition-colors hover:bg-accent cursor-pointer",
-                    activeConversation === conversation.id && "bg-accent"
-                  )}
-                  onClick={() => onSelectChat(conversation.id)}
-                >
-                  {editingId === conversation.id ? (
-                    <div className="flex items-center space-x-2">
-                      <Input
-                        value={editTitle}
-                        onChange={(e) => setEditTitle(e.target.value)}
-                        autoFocus
-                        className="h-7 py-1"
-                        onClick={(e) => e.stopPropagation()}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter") {
-                            saveEdit(conversation.id);
-                          } else if (e.key === "Escape") {
-                            setEditingId(null);
-                          }
-                        }}
-                      />
-                      <Button
-                        size="sm"
-                        variant="ghost"
-                        className="h-7 w-7 p-0"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          saveEdit(conversation.id);
-                        }}
-                      >
-                        <CheckCircle2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  ) : (
-                    <>
-                      <div className="flex items-center">
-                        <MessageSquare className="mr-2 h-4 w-4 text-muted-foreground" />
-                        <span className="mr-2 line-clamp-1 flex-1 font-medium">
-                          {conversation.title}
-                        </span>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="h-7 w-7 p-0 opacity-0 group-hover:opacity-100"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleEdit(conversation);
-                              }}
-                            >
-                              <Pencil className="mr-2 h-4 w-4" />
-                              Rename
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              className="text-destructive focus:bg-destructive focus:text-destructive-foreground"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDelete(conversation.id);
-                              }}
-                            >
-                              <Trash2 className="mr-2 h-4 w-4" />
-                              Delete
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </div>
-                      <p className="line-clamp-1 text-sm text-muted-foreground">
-                        {conversation.lastMessage}
-                      </p>
-                      <p className="mt-1 text-xs text-muted-foreground">
-                        {conversation.date.toLocaleDateString()}
-                      </p>
-                    </>
-                  )}
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="flex h-full items-center justify-center">
-              <p className="text-muted-foreground text-center">
-                {searchQuery ? "No matching conversations found" : "No conversations yet"}
-              </p>
-            </div>
-          )}
-        </ScrollArea>
+        <ConversationListContent
+          conversations={conversations}
+          activeConversation={activeConversation}
+          onSelectChat={onSelectChat}
+          onDeleteConversation={handleDelete}
+          onRenameConversation={handleRename}
+          searchQuery={searchQuery}
+        />
       </CardContent>
     </Card>
   );
