@@ -60,7 +60,6 @@ export function AppSidebar() {
   return (
     <Sidebar
       collapsible="icon"
-      onCollapseChange={setIsCollapsed}
     >
       <SidebarHeader className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-2">
@@ -71,7 +70,7 @@ export function AppSidebar() {
             </span>
           )}
         </div>
-        <SidebarTrigger className="h-8 w-8" />
+        <SidebarTrigger className="h-8 w-8" onClick={() => setIsCollapsed(!isCollapsed)} />
       </SidebarHeader>
       <SidebarContent className="py-2">
         <nav className="space-y-1 px-2">
