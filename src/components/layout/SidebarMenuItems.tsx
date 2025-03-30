@@ -59,7 +59,7 @@ export function SidebarMenuItems({ isCollapsed }: SidebarMenuItemsProps) {
       <div className="space-y-1 px-2">
         <p className={cn(
           "text-xs font-medium text-muted-foreground px-3 py-2",
-          isCollapsed && "opacity-0"
+          isCollapsed && "sr-only"
         )}>
           {!isCollapsed && "Navigation"}
         </p>
@@ -73,6 +73,7 @@ export function SidebarMenuItems({ isCollapsed }: SidebarMenuItemsProps) {
                 ? "bg-accent text-accent-foreground"
                 : "text-foreground hover:bg-accent/50 hover:text-accent-foreground"
             )}
+            title={isCollapsed ? item.name : undefined}
           >
             {item.icon}
             {!isCollapsed && <span className="ml-3">{item.name}</span>}

@@ -5,7 +5,7 @@ import ChatInterface from "@/components/chat/ChatInterface";
 import ConversationList from "@/components/chat/ConversationList";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Button } from "@/components/ui/button";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const Chat = () => {
@@ -22,6 +22,9 @@ const Chat = () => {
   
   const handleNewChat = () => {
     setActiveConversation(undefined);
+    if (isMobile) {
+      setShowSidebar(false);
+    }
   };
   
   const handleSelectChat = (id: string) => {
@@ -38,22 +41,24 @@ const Chat = () => {
   return (
     <DashboardLayout>
       <div className="flex h-[calc(100vh-8rem)] gap-0 relative">
+        {/* Mobile sidebar toggle button */}
         {isMobile && (
           <Button
             variant="outline"
             size="icon"
             onClick={toggleSidebar}
-            className="absolute top-0 left-0 z-10"
+            className="absolute top-0 left-0 z-20 m-2 bg-background"
           >
-            <Menu className="h-5 w-5" />
+            {showSidebar ? <X className="h-4 w-4" /> : <Menu className="h-4 w-4" />}
           </Button>
         )}
         
+        {/* Conversation sidebar */}
         <div
           className={cn(
-            "h-full w-80 border-r flex-shrink-0 transition-all duration-300 ease-in-out bg-background",
-            isMobile && "absolute top-0 bottom-0 left-0 z-10",
-            isMobile && !showSidebar && "-translate-x-full opacity-0"
+            "h-full border-r flex-shrink-0 transition-smooth bg-background",
+            isMobile ? "absolute top-0 bottom-0 left-0 z-10 w-full sm:w-80" : "w-80",
+            isMobile && !showSidebar && "-translate-x-full"
           )}
         >
           <ConversationList
@@ -63,15 +68,16 @@ const Chat = () => {
           />
         </div>
         
+        {/* Chat interface */}
         <div className={cn(
-          "flex-1 h-full overflow-hidden relative bg-background",
-          isMobile && showSidebar && "opacity-50"
+          "flex-1 h-full overflow-hidden relative bg-background transition-smooth",
+          isMobile && showSidebar ? "opacity-30 pointer-events-none" : "opacity-100"
         )}>
           <ChatInterface />
         </div>
       </div>
     </DashboardLayout>
   );
-}
+};
 
 export default Chat;
