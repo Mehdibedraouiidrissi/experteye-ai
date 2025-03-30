@@ -18,7 +18,7 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="bg-sidebar border-r border-sidebar-border">
+    <Sidebar variant="sidebar" collapsible="icon" className="bg-sidebar border-r border-sidebar-border">
       <SidebarHeader>
         <CustomSidebarHeader 
           isCollapsed={isCollapsed} 
