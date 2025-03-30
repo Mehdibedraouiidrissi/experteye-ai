@@ -3,10 +3,12 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { FileUp, UploadCloud } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { formatFileSize } from "./utils";
 
 interface FileDropZoneProps {
   onFileSelect: (files: File[]) => void;
   supportedTypes?: string[];
+  maxFileSize?: number;
 }
 
 const FileDropZone = ({ 
@@ -17,7 +19,8 @@ const FileDropZone = ({
     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     'text/plain'
-  ] 
+  ],
+  maxFileSize = 100 * 1024 * 1024 // 100MB default
 }: FileDropZoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
   
@@ -62,8 +65,11 @@ const FileDropZone = ({
       <h3 className="text-lg font-medium mb-2">
         Drag and drop your documents
       </h3>
-      <p className="text-sm text-muted-foreground mb-4">
-        Supports PDF, Word, Excel, PowerPoint, and text files
+      <p className="text-sm text-muted-foreground mb-2">
+        Supports PDF, Word, Excel, PowerPoint, SAS and text files
+      </p>
+      <p className="text-xs text-muted-foreground mb-4">
+        Maximum file size: {formatFileSize(maxFileSize)}
       </p>
       <div className="flex gap-2">
         <Button className="cursor-pointer" onClick={() => document.getElementById('file-upload')?.click()}>
@@ -75,7 +81,7 @@ const FileDropZone = ({
             multiple 
             className="sr-only" 
             onChange={handleFileChange}
-            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt"
+            accept=".pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.txt,.sas"
           />
         </Button>
       </div>

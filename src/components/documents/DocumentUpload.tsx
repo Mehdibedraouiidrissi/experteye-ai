@@ -6,6 +6,8 @@ import FileUploadList, { UploadingFile } from "./FileUploadList";
 import SupportedFileTypes from "./SupportedFileTypes";
 import { useToast } from "@/hooks/use-toast";
 import { DocumentsApi, useApiErrorHandler } from "@/services/api";
+import { Progress } from "@/components/ui/progress";
+import { AlertCircle } from "lucide-react";
 
 const DocumentUpload = () => {
   const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>([]);
@@ -15,7 +17,7 @@ const DocumentUpload = () => {
   // Clean up when component unmounts
   useEffect(() => {
     return () => {
-      // No cleanup needed here since we're using real API calls
+      // Cleanup logic if needed
     };
   }, []);
   
@@ -26,26 +28,49 @@ const DocumentUpload = () => {
     'application/vnd.openxmlformats-officedocument.presentationml.presentation',
     'text/plain'
   ];
+
+  const MAX_FILE_SIZE = 100 * 1024 * 1024; // 100MB limit
   
   const handleFileSelect = async (files: File[]) => {
-    const filesToProcess = files.filter(file => {
+    const validFiles: File[] = [];
+    const invalidFiles: {name: string, reason: string}[] = [];
+    
+    // Validate files
+    for (const file of files) {
       // Check file extension
       const extension = file.name.split('.').pop()?.toLowerCase() || '';
-      return ['.pdf', '.docx', '.xlsx', '.pptx', '.txt'].some(ext => 
-        extension.endsWith(ext.replace('.', ''))
+      const isValidType = ['.pdf', '.docx', '.xlsx', '.pptx', '.txt', '.sas'].some(ext => 
+        extension === ext.replace('.', '')
       );
-    });
+      
+      if (!isValidType) {
+        invalidFiles.push({
+          name: file.name,
+          reason: "Unsupported file type"
+        });
+      } else if (file.size > MAX_FILE_SIZE) {
+        invalidFiles.push({
+          name: file.name,
+          reason: "File size exceeds 100MB limit"
+        });
+      } else {
+        validFiles.push(file);
+      }
+    }
     
-    if (filesToProcess.length !== files.length) {
+    if (invalidFiles.length > 0) {
+      const details = invalidFiles.map(f => `${f.name}: ${f.reason}`).join('\n');
       toast({
-        title: "Unsupported file type",
-        description: "Some files were skipped. We support PDF, Word, Excel, PowerPoint, and text files.",
+        title: "Some files couldn't be uploaded",
+        description: details,
         variant: "destructive",
       });
     }
     
-    // Add files to uploading list
-    const newFiles: UploadingFile[] = filesToProcess.map(file => ({
+    if (validFiles.length === 0) return;
+    
+    // Add valid files to uploading list
+    const newFiles: UploadingFile[] = validFiles.map(file => ({
       id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
       name: file.name,
       size: file.size,
@@ -55,31 +80,15 @@ const DocumentUpload = () => {
     
     setUploadingFiles(prev => [...prev, ...newFiles]);
     
-    // Process each file
-    for (let i = 0; i < filesToProcess.length; i++) {
-      const file = filesToProcess[i];
+    // Upload each file with chunked upload method for large files
+    for (let i = 0; i < validFiles.length; i++) {
+      const file = validFiles[i];
       const fileId = newFiles[i].id;
       
       try {
-        // Start by showing upload progress animation
-        let progress = 0;
-        const progressInterval = setInterval(() => {
-          progress += 5;
-          if (progress >= 90) {
-            clearInterval(progressInterval);
-          }
-          
-          // Update progress
-          setUploadingFiles(prev => 
-            prev.map(f => f.id === fileId ? { ...f, progress } : f)
-          );
-        }, 100);
+        await uploadFile(file, fileId);
         
-        // Upload the file
-        await DocumentsApi.uploadDocument(file);
-        
-        // Clear interval and set to complete
-        clearInterval(progressInterval);
+        // Mark as complete
         setUploadingFiles(prev => 
           prev.map(f => f.id === fileId ? 
             { ...f, progress: 100, status: "complete" as const } : f
@@ -107,6 +116,56 @@ const DocumentUpload = () => {
       }
     }
   };
+
+  const uploadFile = async (file: File, fileId: string) => {
+    try {
+      // Use the API to upload the file with progress tracking
+      const xhr = new XMLHttpRequest();
+      
+      // Create a promise to handle the XHR
+      const uploadPromise = new Promise<void>((resolve, reject) => {
+        xhr.open('POST', 'http://localhost:5000/api/documents/upload', true);
+        
+        // Set authorization header if needed
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+          xhr.setRequestHeader('Authorization', `Bearer ${token}`);
+        }
+        
+        // Track upload progress
+        xhr.upload.onprogress = (event) => {
+          if (event.lengthComputable) {
+            const percentComplete = Math.round((event.loaded / event.total) * 100);
+            setUploadingFiles(prev => 
+              prev.map(f => f.id === fileId ? { ...f, progress: percentComplete } : f)
+            );
+          }
+        };
+        
+        xhr.onload = function() {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            resolve();
+          } else {
+            reject(new Error(`Server responded with status: ${xhr.status}`));
+          }
+        };
+        
+        xhr.onerror = () => reject(new Error('Network error occurred'));
+        xhr.ontimeout = () => reject(new Error('Upload timed out'));
+        
+        // Prepare form data
+        const formData = new FormData();
+        formData.append('file', file);
+        
+        // Send the request
+        xhr.send(formData);
+      });
+      
+      await uploadPromise;
+    } catch (error) {
+      throw error;
+    }
+  };
   
   const removeFile = (fileId: string) => {
     setUploadingFiles(prev => prev.filter(file => file.id !== fileId));
@@ -117,13 +176,14 @@ const DocumentUpload = () => {
       <CardHeader>
         <CardTitle>Upload Documents</CardTitle>
         <CardDescription>
-          Upload your documents for AI-powered analysis and querying
+          Upload your documents for AI-powered analysis and querying (up to 100MB per file)
         </CardDescription>
       </CardHeader>
       <CardContent>
         <FileDropZone 
           onFileSelect={handleFileSelect}
           supportedTypes={supportedTypes}
+          maxFileSize={MAX_FILE_SIZE}
         />
 
         <FileUploadList 
