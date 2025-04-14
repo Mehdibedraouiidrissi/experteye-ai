@@ -2,8 +2,6 @@
 import { useState } from "react";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import { cn } from "@/lib/utils";
 import {
   ThumbsUp,
@@ -11,12 +9,12 @@ import {
   Copy,
   Check,
   RotateCcw,
-  ChevronDown,
-  ChevronUp,
   Bot,
   User
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
+import ThinkingProcess from "./ThinkingProcess";
+import SourceReferences from "./SourceReferences";
 
 export type MessageType = "user" | "assistant";
 
@@ -24,6 +22,8 @@ interface SourceReference {
   id: string;
   title: string;
   page?: number;
+  context?: string;
+  relevance?: number;
 }
 
 interface ChatMessageProps {
@@ -47,7 +47,6 @@ const ChatMessage = ({
 }: ChatMessageProps) => {
   const { toast } = useToast();
   const [copied, setCopied] = useState(false);
-  const [showThinking, setShowThinking] = useState(false);
   const isBot = type === "assistant";
 
   const handleCopy = () => {
@@ -67,7 +66,7 @@ const ChatMessage = ({
     )}>
       <Avatar className={cn(
         "mt-1 h-8 w-8 rounded-md",
-        isBot ? "bg-expertEye-100 text-expertEye-700" : "bg-secondary text-foreground"
+        isBot ? "bg-primary/10 text-primary" : "bg-secondary text-foreground"
       )}>
         <div className="flex h-full w-full items-center justify-center">
           {isBot ? <Bot size={16} /> : <User size={16} />}
@@ -86,16 +85,6 @@ const ChatMessage = ({
           </div>
           {isBot && isLatest && (
             <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-              {thinking && (
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-7 w-7"
-                  onClick={() => setShowThinking(!showThinking)}
-                >
-                  {showThinking ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
-                </Button>
-              )}
               <Button
                 variant="ghost"
                 size="icon"
@@ -138,28 +127,14 @@ const ChatMessage = ({
           )}
         </div>
 
-        {thinking && showThinking && (
-          <Card className="mt-2 mb-3 p-3 text-xs bg-muted/70 text-muted-foreground font-mono whitespace-pre-wrap">
-            <div className="font-semibold mb-1">Thinking Process:</div>
-            {thinking}
-          </Card>
-        )}
+        {thinking && isBot && <ThinkingProcess thinking={thinking} />}
 
         <div className="mt-1 whitespace-pre-wrap">
           {content}
         </div>
 
         {isBot && sources && sources.length > 0 && (
-          <div className="mt-2">
-            <p className="text-xs text-muted-foreground mb-1">Sources:</p>
-            <div className="flex flex-wrap gap-1">
-              {sources.map((source) => (
-                <Badge key={source.id} variant="outline" className="text-xs">
-                  {source.title}{source.page ? ` (p.${source.page})` : ""}
-                </Badge>
-              ))}
-            </div>
-          </div>
+          <SourceReferences sources={sources} />
         )}
       </div>
     </div>
