@@ -34,7 +34,7 @@ const Dashboard = () => {
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <StatCard 
             title="Documents" 
-            value="247"
+            value={247}
             description="12 uploaded today"
             icon={<FileText className="h-5 w-5" />}
             trend={{
@@ -44,7 +44,7 @@ const Dashboard = () => {
           />
           <StatCard 
             title="Conversations" 
-            value="186"
+            value={186}
             description="Active today: 42"
             icon={<MessageSquare className="h-5 w-5" />}
             trend={{
@@ -54,7 +54,7 @@ const Dashboard = () => {
           />
           <StatCard 
             title="Users" 
-            value="50"
+            value={50}
             description="12 active now"
             icon={<Users className="h-5 w-5" />}
             trend={{
@@ -64,7 +64,7 @@ const Dashboard = () => {
           />
           <StatCard 
             title="Vector DB" 
-            value="12.5k"
+            value={12500}
             description="Text chunks indexed"
             icon={<Binary className="h-5 w-5" />}
             trend={{

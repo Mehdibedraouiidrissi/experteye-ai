@@ -89,11 +89,11 @@
 
 /* Fix for sidebar */
 .bg-sidebar {
-  @apply bg-sidebar;
+  background-color: hsl(var(--sidebar));
 }
 
 .border-sidebar-border {
-  @apply border-sidebar-border;
+  border-color: hsl(var(--sidebar-border));
 }
 
 /* Document processing animations */
