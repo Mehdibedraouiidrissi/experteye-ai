@@ -46,7 +46,7 @@ const ChatInterface = () => {
   return (
     <div className="flex flex-col h-full max-h-full overflow-hidden">
       {messages.length > 1 && (
-        <div className="flex justify-end px-2 md:px-4 pt-2">
+        <div className="flex justify-end px-4 pt-2">
           <Button 
             variant="ghost" 
             size="sm"
@@ -60,7 +60,7 @@ const ChatInterface = () => {
       )}
       
       <ScrollArea className="flex-1">
-        <div className="pb-4 px-2 md:px-4">
+        <div className="pb-4 px-4">
           {messages.map((message, index) => (
             <ChatMessage
               key={message.id}

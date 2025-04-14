@@ -3,7 +3,6 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { File, X, Check, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { formatFileSize } from "./utils";
 
 export interface UploadingFile {
   id: string;
@@ -20,6 +19,14 @@ interface FileUploadListProps {
 }
 
 const FileUploadList = ({ files, onRemove }: FileUploadListProps) => {
+  const formatFileSize = (bytes: number): string => {
+    if (bytes < 1024) return bytes + ' B';
+    const kb = bytes / 1024;
+    if (kb < 1024) return kb.toFixed(1) + ' KB';
+    const mb = kb / 1024;
+    return mb.toFixed(1) + ' MB';
+  };
+
   if (files.length === 0) return null;
 
   return (
@@ -39,7 +46,6 @@ const FileUploadList = ({ files, onRemove }: FileUploadListProps) => {
                 size="icon" 
                 className="h-6 w-6"
                 onClick={() => onRemove(file.id)}
-                disabled={file.status === "uploading"}
               >
                 <X className="h-4 w-4" />
               </Button>
@@ -49,7 +55,7 @@ const FileUploadList = ({ files, onRemove }: FileUploadListProps) => {
             </div>
             <div className="flex items-center gap-3">
               <Progress value={file.progress} className="h-1 flex-1" />
-              <div className="flex-shrink-0 w-12 text-right text-xs">
+              <div className="flex-shrink-0 w-10 text-right text-xs">
                 {file.status === "complete" ? (
                   <span className="text-green-500 flex items-center justify-end">
                     <Check className="h-3 w-3 mr-1" /> Done

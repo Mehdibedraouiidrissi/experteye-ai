@@ -9,22 +9,16 @@ import {
 import { SidebarMenuItems } from "./SidebarMenuItems";
 import { SidebarHeader as CustomSidebarHeader } from "./SidebarHeader";
 import { SidebarFooter as CustomSidebarFooter } from "./SidebarFooter";
-import { useIsMobile } from "@/hooks/use-mobile";
 
 export function AppSidebar() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const isMobile = useIsMobile();
 
   const handleToggleCollapse = () => {
     setIsCollapsed(!isCollapsed);
   };
 
   return (
-    <Sidebar 
-      variant="sidebar" 
-      collapsible={isMobile ? "offcanvas" : "icon"} 
-      className="bg-sidebar border-r border-sidebar-border"
-    >
+    <Sidebar collapsible="icon" className="bg-sidebar border-r border-sidebar-border">
       <SidebarHeader>
         <CustomSidebarHeader 
           isCollapsed={isCollapsed} 

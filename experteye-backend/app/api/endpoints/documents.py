@@ -4,7 +4,6 @@ from typing import List, Dict, Any
 import os
 import uuid
 from datetime import datetime
-import asyncio
 
 from app.core.dependencies import get_current_user
 from app.services.document_service import save_document, list_documents, get_document, delete_document
@@ -27,31 +26,6 @@ async def upload_document(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"File type not allowed. Allowed types: {', '.join(allowed_extensions)}"
         )
-    
-    # Check file size (limit to 100MB)
-    try:
-        # Get file size - FastAPI doesn't have direct file.size property
-        # Instead, read a small chunk to confirm file exists, then check size
-        content = await file.read(1024)  # Read first KB to validate file
-        await file.seek(0)  # Reset file pointer to beginning
-        
-        # Get file size from file object if available
-        file_size = getattr(file, "size", 0)
-        
-        # If size attribute not available, we'll rely on the backend's chunked processing
-        if file_size > 100 * 1024 * 1024 and file_size != 0:  # 100 MB limit, if we can determine size
-            raise HTTPException(
-                status_code=status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
-                detail="File too large. Maximum size is 100MB."
-            )
-    except Exception as e:
-        if not isinstance(e, HTTPException):
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail=f"Error processing file: {str(e)}"
-            )
-        else:
-            raise e
     
     # Save document
     document_id = await save_document(file, user["id"])

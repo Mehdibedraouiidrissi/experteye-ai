@@ -16,15 +16,15 @@ const Dashboard = () => {
 
   return (
     <DashboardLayout>
-      <div className="grid gap-4 md:gap-6">
+      <div className="grid gap-6">
         <div>
-          <h1 className="text-2xl md:text-3xl font-bold mb-1">Welcome to ExpertEye</h1>
+          <h1 className="text-3xl font-bold mb-1">Welcome to ExpertEye</h1>
           <p className="text-muted-foreground">
             Document intelligence at your fingertips
           </p>
         </div>
 
-        <div className="grid gap-4 md:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           <StatCard
             title="Total Documents"
             value={42}
@@ -53,12 +53,12 @@ const Dashboard = () => {
           />
         </div>
 
-        <div className="grid gap-4 md:gap-6 grid-cols-1 md:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-3">
           <div className="md:col-span-2">
             <RecentActivity />
           </div>
-          <div className="space-y-4 md:space-y-6">
-            <div className="bg-accent p-4 md:p-6 rounded-lg flex flex-col gap-3 md:gap-4">
+          <div className="space-y-6">
+            <div className="bg-accent p-6 rounded-lg flex flex-col gap-4">
               <h3 className="text-lg font-medium">Upload Documents</h3>
               <p className="text-sm text-muted-foreground">
                 Add new documents to your collection for AI-powered analysis
@@ -73,7 +73,7 @@ const Dashboard = () => {
               </Button>
             </div>
 
-            <div className="bg-muted p-4 md:p-6 rounded-lg flex flex-col gap-3 md:gap-4">
+            <div className="bg-muted p-6 rounded-lg flex flex-col gap-4">
               <h3 className="text-lg font-medium">Need Help?</h3>
               <p className="text-sm text-muted-foreground">
                 Ask a question about your documents or start a new conversation

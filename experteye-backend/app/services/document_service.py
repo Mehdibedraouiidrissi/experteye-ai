@@ -15,21 +15,9 @@ async def save_document(file: UploadFile, user_id: str) -> str:
     file_ext = os.path.splitext(file.filename)[1]
     file_path = os.path.join(settings.DOCUMENTS_DIR, f"{document_id}{file_ext}")
     
-    # Create directory if it doesn't exist
-    os.makedirs(os.path.dirname(file_path), exist_ok=True)
-    
-    # Save file to disk using chunks for large files
+    # Save file to disk
     with open(file_path, "wb") as buffer:
-        # Read file in chunks to handle large files
-        chunk_size = 1024 * 1024  # 1MB chunks
-        while True:
-            chunk = await file.read(chunk_size)
-            if not chunk:
-                break
-            buffer.write(chunk)
-    
-    # Get file size
-    file_size = os.path.getsize(file_path)
+        shutil.copyfileobj(file.file, buffer)
     
     # Register in database
     documents_db = get_document_db()
@@ -39,7 +27,7 @@ async def save_document(file: UploadFile, user_id: str) -> str:
         "user_id": user_id,
         "filename": file.filename,
         "file_path": file_path,
-        "file_size": file_size,
+        "file_size": os.path.getsize(file_path),
         "mime_type": file.content_type or "application/octet-stream",
         "created_at": datetime.utcnow().isoformat(),
         "processed": False,
