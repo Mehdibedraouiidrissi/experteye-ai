@@ -7,6 +7,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { AuthApi, useApiErrorHandler } from "@/services/api";
 
 interface AuthFormProps {
   isLogin?: boolean;
@@ -14,12 +15,14 @@ interface AuthFormProps {
 
 const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
+  const { handleError } = useApiErrorHandler();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,17 +38,38 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
 
     setIsLoading(true);
     
-    // Simulate authentication delay
-    setTimeout(() => {
-      setIsLoading(false);
+    try {
+      if (isLogin) {
+        // Login process
+        await AuthApi.login(username || email, password);
+        toast({
+          title: "Logged in successfully",
+          description: "Welcome back to ExpertEye!",
+        });
+        navigate("/dashboard");
+      } else {
+        // Registration process
+        await AuthApi.register(username, email, password);
+        toast({
+          title: "Account created successfully",
+          description: "Your account has been created. You can now login.",
+        });
+        navigate("/login");
+      }
+    } catch (error: any) {
+      const errorMessage = error?.message || (isLogin ? 
+        "Invalid username or password. Please check your credentials or sign up if you don't have an account." : 
+        "Registration failed. This username may already be taken.");
       
       toast({
-        title: isLogin ? "Logged in successfully" : "Account created successfully",
-        description: isLogin ? "Welcome back to ExpertEye!" : "Your account has been created.",
+        title: isLogin ? "Login failed" : "Registration failed",
+        description: errorMessage,
+        variant: "destructive",
       });
-      
-      navigate("/dashboard");
-    }, 1500);
+      handleError(error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -55,23 +79,61 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
           {isLogin ? "Login to your account" : "Create your account"}
         </CardTitle>
         <CardDescription className="text-center">
-          {isLogin ? "Enter your email and password to access ExpertEye" : "Fill in the details to get started with ExpertEye"}
+          {isLogin ? "Enter your credentials to access ExpertEye" : "Fill in the details to get started with ExpertEye"}
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              type="email"
-              placeholder="name@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              className="w-full"
-            />
-          </div>
+          {isLogin ? (
+            <div className="space-y-2">
+              <Label htmlFor="username">Username or Email</Label>
+              <Input
+                id="username"
+                type="text"
+                placeholder="Enter your username or email"
+                value={username || email}
+                onChange={(e) => {
+                  if (e.target.value.includes('@')) {
+                    setEmail(e.target.value);
+                    setUsername("");
+                  } else {
+                    setUsername(e.target.value);
+                    setEmail("");
+                  }
+                }}
+                required
+                className="w-full"
+              />
+            </div>
+          ) : (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="username">Username</Label>
+                <Input
+                  id="username"
+                  type="text"
+                  placeholder="Choose a username"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  required
+                  className="w-full"
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  placeholder="name@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                  className="w-full"
+                />
+              </div>
+            </>
+          )}
+          
           <div className="space-y-2">
             <Label htmlFor="password">Password</Label>
             <div className="relative">

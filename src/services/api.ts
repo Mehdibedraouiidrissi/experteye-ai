@@ -1,4 +1,3 @@
-
 import { useToast } from "@/hooks/use-toast";
 
 const API_BASE_URL = "http://localhost:5000/api";
@@ -52,8 +51,11 @@ export class ApiService {
     };
     
     if (data) {
-      if (isFormData) {
+      if (isFormData || (typeof data === 'string' && endpoint === "/auth/token")) {
         options.body = data;
+        if (endpoint === "/auth/token") {
+          headers["Content-Type"] = "application/x-www-form-urlencoded";
+        }
       } else {
         options.body = JSON.stringify(data);
       }
@@ -124,6 +126,7 @@ export const AuthApi = {
   
   logout() {
     ApiService.setToken(null);
+    window.location.href = "/login";
   }
 };
 
@@ -199,7 +202,6 @@ export const useApiErrorHandler = () => {
     // Handle authentication errors
     if (error && error.status === 401) {
       AuthApi.logout();
-      // Redirect to login page
       window.location.href = "/login";
     }
   };
