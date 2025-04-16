@@ -71,6 +71,7 @@
   body {
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: 'Montserrat', sans-serif;
   }
 }
 
@@ -87,7 +88,7 @@
   @apply px-3 py-2 text-sm transition-all rounded-md hover:text-foreground data-[state=active]:text-foreground data-[state=active]:bg-background data-[state=active]:shadow-sm;
 }
 
-/* Fix for sidebar */
+/* Fix for sidebar - using direct CSS to avoid circular dependency */
 .bg-sidebar {
   background-color: hsl(var(--sidebar));
 }
@@ -132,4 +133,21 @@
 
 .animate-fade-in {
   animation: fade-in 0.2s ease-out;
+}
+
+/* Home page specific styles */
+.hero-gradient {
+  background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--expertEye-50)));
+}
+
+/* Scroll animations */
+.animate-on-scroll {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.animate-on-scroll.visible {
+  opacity: 1;
+  transform: translateY(0);
 }

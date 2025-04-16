@@ -1,15 +1,13 @@
 
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import HomePage from "./HomePage";
 
 const Index = () => {
-  const navigate = useNavigate();
-
   useEffect(() => {
-    navigate("/dashboard");
-  }, [navigate]);
+    document.title = "ExpertEye - Intelligent Document Analysis";
+  }, []);
 
-  return null;
+  return <HomePage />;
 };
 
 export default Index;
