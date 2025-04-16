@@ -13,15 +13,17 @@ const Login = () => {
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md flex flex-col items-center justify-center mb-6">
         <div 
-          className="flex items-center gap-2 cursor-pointer"
+          className="logo-container mb-4 cursor-pointer" 
           onClick={() => navigate("/")}
-          >
-          <img 
-            src="/lovable-uploads/b62e1898-4b6c-49cf-8eea-204a5d62414e.png" 
-            alt="ExpertEye Logo" 
-            className="h-10 w-10"
-          />
-          <h1 className="text-3xl font-bold" >
+        >
+          <div className="logo-img flex items-center justify-center">
+            <img 
+              src="/lovable-uploads/2c36dba7-9c21-44c0-9d59-c51c67614466.png" 
+              alt="ExpertEye Logo" 
+              className="h-10 w-10"
+            />
+          </div>
+          <h1 className="text-3xl font-bold text-primary logo-text">
             ExpertEye
           </h1>
         </div>
