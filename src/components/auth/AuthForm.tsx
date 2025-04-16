@@ -50,6 +50,16 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         });
         return;
       }
+    } else {
+      // Login validation - check if email has correct format for experteye domain
+      if (email && !validateExpertEyeEmail(email)) {
+        toast({
+          title: "Invalid Email Format",
+          description: "Only @experteye.com email addresses are allowed.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -71,6 +81,8 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         navigate("/login");
       }
     } catch (error: any) {
+      console.error("Auth error:", error);
+      
       if (isLogin) {
         toast({
           title: "Login failed",
@@ -80,12 +92,10 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
       } else {
         toast({
           title: "Registration failed",
-          description: error?.message || "This username may already be taken.",
+          description: error?.message || "Unable to connect to the server. Please check your internet connection and try again.",
           variant: "destructive",
         });
       }
-      
-      console.error("Auth error:", error);
     } finally {
       setIsLoading(false);
     }

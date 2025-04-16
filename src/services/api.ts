@@ -1,4 +1,3 @@
-
 import { useToast } from "@/hooks/use-toast";
 
 const API_BASE_URL = "http://localhost:5000/api";
@@ -74,8 +73,10 @@ export class ApiService {
           // For auth failures, provide a more user-friendly message
           if (endpoint === "/auth/token" && response.status === 401) {
             errorMessage = "Username or password invalid";
+          } else if (endpoint === "/auth/register") {
+            errorMessage = "Registration failed - server may be unavailable";
           } else {
-            errorMessage = `Error: ${response.status}`;
+            errorMessage = `Request failed with status: ${response.status}`;
           }
         }
         
@@ -94,13 +95,20 @@ export class ApiService {
       
       return {} as T;
     } catch (error) {
+      if (error instanceof TypeError && error.message.includes('fetch')) {
+        // Network error (e.g., server not reachable)
+        const networkError: ApiError = {
+          status: 0,
+          message: "Unable to connect to the server. Please check if the backend is running."
+        };
+        throw networkError;
+      }
       console.error("API request failed:", error);
       throw error;
     }
   }
 }
 
-// Auth API
 export const AuthApi = {
   async login(username: string, password: string) {
     const formData = new URLSearchParams();
@@ -119,11 +127,20 @@ export const AuthApi = {
   },
   
   async register(username: string, email: string, password: string) {
-    return await ApiService.request(
-      "/auth/register",
-      "POST",
-      { username, email, password }
-    );
+    try {
+      return await ApiService.request(
+        "/auth/register",
+        "POST",
+        { username, email, password }
+      );
+    } catch (error: any) {
+      console.error("Registration error:", error);
+      // Enhance the error message if it's related to the API being unreachable
+      if (error.status === 0) {
+        error.message = "Unable to connect to the backend server. Please ensure the backend service is running.";
+      }
+      throw error;
+    }
   },
   
   async getUserProfile() {
@@ -136,7 +153,6 @@ export const AuthApi = {
   }
 };
 
-// Documents API
 export const DocumentsApi = {
   async uploadDocument(file: File) {
     const formData = new FormData();
@@ -163,7 +179,6 @@ export const DocumentsApi = {
   }
 };
 
-// Chat API
 export const ChatApi = {
   async createChat() {
     return await ApiService.request("/chat", "POST");
@@ -186,7 +201,6 @@ export const ChatApi = {
   }
 };
 
-// Custom hook for API error handling
 export const useApiErrorHandler = () => {
   const { toast } = useToast();
   
