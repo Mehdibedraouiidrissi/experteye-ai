@@ -42,7 +42,7 @@ export function ModeToggle() {
     setTheme(newTheme);
     toast({
       title: `${newTheme === 'dark' ? 'Dark' : 'Light'} mode activated`,
-      description: `The application is now in ${newTheme} mode.`,
+      description: `The interface has been switched to ${newTheme} mode.`,
       duration: 2000,
     });
   };
@@ -52,11 +52,11 @@ export function ModeToggle() {
       variant="ghost" 
       size="icon" 
       onClick={toggleTheme} 
-      className="rounded-full w-10 h-10 p-0 flex items-center justify-center transition-all duration-300 hover:bg-primary/10"
+      className="rounded-full w-10 h-10 p-0 flex items-center justify-center transition-all duration-500 hover:bg-primary/10 relative overflow-hidden"
       aria-label={`Switch to ${theme === 'light' ? 'dark' : 'light'} mode`}
     >
-      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-warning" />
-      <Moon className="absolute h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-primary" />
+      <Sun className="h-[1.2rem] w-[1.2rem] rotate-0 scale-100 transition-all duration-500 dark:-rotate-90 dark:scale-0 text-warning absolute" />
+      <Moon className="h-[1.2rem] w-[1.2rem] rotate-90 scale-0 transition-all duration-500 dark:rotate-0 dark:scale-100 text-primary absolute" />
       <span className="sr-only">Toggle theme</span>
     </Button>
   );

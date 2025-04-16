@@ -33,25 +33,27 @@
   }
 
   .dark {
-    --background: 268 81% 15%;
+    --background: 270 25% 12%;
     --foreground: 0 0% 98%;
-    --card: 268 81% 10%;
+    --card: 270 30% 8%;
     --card-foreground: 0 0% 98%;
-    --popover: 268 81% 10%;
+    --popover: 270 30% 8%;
     --popover-foreground: 0 0% 98%;
-    --primary: 268 81% 29%;
+    --primary: 268 70% 35%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 254 63% 65%;
+    --secondary: 254 63% 30%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 268 45% 25%;
-    --muted-foreground: 255 59% 75%;
-    --accent: 254 63% 65%;
+    --muted: 268 25% 18%;
+    --muted-foreground: 0 0% 80%;
+    --accent: 254 63% 30%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 270 65% 75%;
+    --destructive: 270 65% 30%;
     --destructive-foreground: 0 0% 98%;
-    --border: 268 45% 25%;
-    --input: 268 45% 25%;
-    --ring: 268 81% 29%;
+    --border: 268 25% 20%;
+    --input: 268 25% 20%;
+    --ring: 268 70% 35%;
+    --sidebar: 270 30% 10%;
+    --sidebar-border: 268 25% 25%;
   }
 }
 
@@ -123,7 +125,11 @@
 }
 
 .hero-gradient {
-  background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--muted)));
+  @apply bg-gradient-to-br from-background to-muted/50;
+}
+
+.dark .hero-gradient {
+  @apply bg-gradient-to-br from-background via-background/90 to-primary/10;
 }
 
 .animate-on-scroll {
@@ -153,10 +159,18 @@
   @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
 }
 
+.dark .card-hover {
+  @apply hover:bg-background/50 hover:border-primary/20;
+}
+
 .section-primary {
   @apply bg-primary/5 rounded-lg;
 }
 
 .section-secondary {
   @apply bg-secondary/5 rounded-lg;
+}
+
+.dark .glass-effect {
+  @apply backdrop-blur-md bg-white/5 border border-white/10;
 }
