@@ -1,5 +1,3 @@
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -187,8 +185,17 @@
   color-scheme: dark;
 }
 
-.dark .bg-white {
-  background-color: hsl(var(--background));
+/* Logo styles */
+.logo-container {
+  @apply flex items-center gap-2;
+}
+
+.logo-img {
+  @apply h-8 w-8 rounded-full overflow-hidden bg-white transition-colors duration-300;
+}
+
+.dark .logo-img {
+  background-color: transparent;
 }
 
 /* Fix for circular dependency - instead of using @apply */

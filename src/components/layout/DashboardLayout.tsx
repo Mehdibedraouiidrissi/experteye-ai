@@ -21,14 +21,16 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <div className="flex-1 flex flex-col overflow-hidden">
           <header className="bg-background border-b py-2 px-4 flex justify-between items-center">
             <div 
-              className="flex items-center gap-2 cursor-pointer" 
+              className="logo-container cursor-pointer" 
               onClick={() => navigate("/")}
             >
-              <img 
-                src="/lovable-uploads/b62e1898-4b6c-49cf-8eea-204a5d62414e.png" 
-                alt="ExpertEye Logo" 
-                className="h-8 w-8"
-              />
+              <div className="logo-img flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/2c36dba7-9c21-44c0-9d59-c51c67614466.png" 
+                  alt="ExpertEye Logo" 
+                  className="h-8 w-8"
+                />
+              </div>
               <h1 className="text-xl font-bold text-primary hidden md:block">
                 ExpertEye AI Assistant
               </h1>
