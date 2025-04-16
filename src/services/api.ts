@@ -1,10 +1,9 @@
 import { useToast } from "@/hooks/use-toast";
 
-// Let's update the API base URL to ensure it correctly points to our backend
-// Check if we're running locally or in a production environment
+// Ensure correct API URL based on environment
 const API_BASE_URL = import.meta.env.PROD 
-  ? "/api" // In production, API requests will be proxied 
-  : "http://localhost:5000/api"; // In development, direct connection to backend
+  ? "/api" 
+  : "http://localhost:5000/api"; 
 
 export interface ApiError {
   status: number;
@@ -66,7 +65,9 @@ export class ApiService {
     }
     
     try {
-      console.log(`Attempting API request to: ${url}`);
+      console.log(`Attempting API request to: ${url} with method: ${method}`);
+      console.log("Request options:", JSON.stringify(options, null, 2));
+      
       const response = await fetch(url, options);
       
       if (!response.ok) {
@@ -103,10 +104,9 @@ export class ApiService {
       console.error(`API request failed to ${url}:`, error);
       
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        // Network error (e.g., server not reachable)
         const networkError: ApiError = {
           status: 0,
-          message: "Unable to connect to the backend server. Please ensure the backend service is running and accessible at " + API_BASE_URL
+          message: `Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}. Try running './start-dev.sh' script from the project root.`
         };
         throw networkError;
       }

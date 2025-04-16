@@ -9,6 +9,7 @@ BACKEND_PID=$!
 
 # Start the frontend
 echo "Starting React frontend..."
+cd ..
 npm run dev &
 FRONTEND_PID=$!
 
