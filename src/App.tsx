@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { ApiService } from "./services/api";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
@@ -24,8 +25,10 @@ const queryClient = new QueryClient({
   },
 });
 
-// Simplified auth check for demo
-const isAuthenticated = () => true; // In a real app, this would check auth state
+// Check authentication status
+const isAuthenticated = () => {
+  return !!ApiService.getToken();
+};
 
 const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
   return isAuthenticated() ? (
@@ -43,8 +46,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/login" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Login />} />
+          <Route path="/signup" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Signup />} />
           <Route path="/chatdemo" element={<ChatDemo />} />
           <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
           <Route path="/chat" element={<ProtectedRoute element={<Chat />} />} />
