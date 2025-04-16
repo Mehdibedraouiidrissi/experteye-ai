@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -6,8 +5,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
-import { Eye, EyeOff, Loader2 } from "lucide-react";
+import { Eye, EyeOff, Loader2, AlertTriangle } from "lucide-react";
 import { AuthApi, useApiErrorHandler } from "@/services/api";
+import { Alert, AlertDescription } from "@/components/ui/alert";
 
 interface AuthFormProps {
   isLogin?: boolean;
@@ -20,6 +20,7 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [backendError, setBackendError] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
   const { handleError } = useApiErrorHandler();
@@ -31,8 +32,9 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
+    setBackendError(null);
+    
     if (!isLogin) {
-      // Sign up form validation
       if (!validateExpertEyeEmail(email)) {
         toast({
           title: "Invalid Email",
@@ -51,7 +53,6 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         return;
       }
     } else {
-      // Login validation - check if email has correct format for experteye domain
       if (email && !validateExpertEyeEmail(email)) {
         toast({
           title: "Invalid Email Format",
@@ -83,6 +84,10 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
     } catch (error: any) {
       console.error("Auth error:", error);
       
+      if (error?.status === 0 || error?.message?.includes("backend")) {
+        setBackendError(error.message || "Unable to connect to the backend server");
+      }
+      
       if (isLogin) {
         toast({
           title: "Login failed",
@@ -112,6 +117,15 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         </CardDescription>
       </CardHeader>
       <CardContent>
+        {backendError && (
+          <Alert variant="destructive" className="mb-4">
+            <AlertTriangle className="h-4 w-4" />
+            <AlertDescription>
+              {backendError}
+            </AlertDescription>
+          </Alert>
+        )}
+        
         <form onSubmit={handleSubmit} className="space-y-4">
           {isLogin ? (
             <div className="space-y-2">

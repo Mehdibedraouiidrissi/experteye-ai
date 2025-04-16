@@ -1,6 +1,10 @@
 import { useToast } from "@/hooks/use-toast";
 
-const API_BASE_URL = "http://localhost:5000/api";
+// Let's update the API base URL to ensure it correctly points to our backend
+// Check if we're running locally or in a production environment
+const API_BASE_URL = import.meta.env.PROD 
+  ? "/api" // In production, API requests will be proxied 
+  : "http://localhost:5000/api"; // In development, direct connection to backend
 
 export interface ApiError {
   status: number;
@@ -62,6 +66,7 @@ export class ApiService {
     }
     
     try {
+      console.log(`Attempting API request to: ${url}`);
       const response = await fetch(url, options);
       
       if (!response.ok) {
@@ -95,15 +100,17 @@ export class ApiService {
       
       return {} as T;
     } catch (error) {
+      console.error(`API request failed to ${url}:`, error);
+      
       if (error instanceof TypeError && error.message.includes('fetch')) {
         // Network error (e.g., server not reachable)
         const networkError: ApiError = {
           status: 0,
-          message: "Unable to connect to the server. Please check if the backend is running."
+          message: "Unable to connect to the backend server. Please ensure the backend service is running and accessible at " + API_BASE_URL
         };
         throw networkError;
       }
-      console.error("API request failed:", error);
+      
       throw error;
     }
   }
@@ -128,6 +135,7 @@ export const AuthApi = {
   
   async register(username: string, email: string, password: string) {
     try {
+      console.log("Attempting to register user:", { username, email });
       return await ApiService.request(
         "/auth/register",
         "POST",
@@ -137,7 +145,7 @@ export const AuthApi = {
       console.error("Registration error:", error);
       // Enhance the error message if it's related to the API being unreachable
       if (error.status === 0) {
-        error.message = "Unable to connect to the backend server. Please ensure the backend service is running.";
+        error.message = "Unable to connect to the backend server. Please ensure the backend service is running and try again. If the issue persists, check that the backend is running on port 5000.";
       }
       throw error;
     }
