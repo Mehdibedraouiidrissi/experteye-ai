@@ -7,7 +7,7 @@ const AboutSection = () => {
       <div className="container mx-auto text-center max-w-3xl space-y-6">
         <h2 className="text-3xl font-bold">About ExpertEye</h2>
         <p className="text-lg text-muted-foreground">
-                     ExpertEye DigitalHub is your intelligent assistant, 
+                     ExpertEye AI is your intelligent assistant, 
                 designed to support automotive professionals with instant access to pricing benchmarks, market insights, 
             and performance analytics — all powered by real-time data and ExpertEye's industry expertise.
         </p>
