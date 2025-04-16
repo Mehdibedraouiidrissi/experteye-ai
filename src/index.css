@@ -198,6 +198,14 @@
   background-color: transparent;
 }
 
+.logo-img img {
+  @apply h-full w-full object-contain;
+}
+
+.dark .logo-img img {
+  content: url('/lovable-uploads/5e81a7bf-4345-4786-9201-e49e538cee85.png');
+}
+
 /* Fix for circular dependency - instead of using @apply */
 .dark [class*="border"] {
   border-color: hsl(var(--border));
