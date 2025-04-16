@@ -18,7 +18,7 @@ const HomeNavbar = () => {
               className="h-10 w-10"
             />
           </div>
-          <span className="text-xl font-bold text-primary">ExpertEye</span>
+          <span className="text-xl font-bold text-primary logo-text">ExpertEye</span>
         </div>
         <div className="hidden md:flex items-center space-x-6">
           <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</a>

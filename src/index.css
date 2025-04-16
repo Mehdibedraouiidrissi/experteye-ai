@@ -202,8 +202,14 @@
   @apply h-full w-full object-contain;
 }
 
+/* Dark mode logo */
 .dark .logo-img img {
-  content: url('/lovable-uploads/5e81a7bf-4345-4786-9201-e49e538cee85.png');
+  content: url('/lovable-uploads/43ff1508-cf27-415e-bc06-141aa7bb1b51.png');
+}
+
+/* Dark mode logo text - hide original text */
+.dark .logo-text {
+  display: none;
 }
 
 /* Fix for circular dependency - instead of using @apply */

@@ -31,7 +31,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                   className="h-8 w-8"
                 />
               </div>
-              <h1 className="text-xl font-bold text-primary hidden md:block">
+              <h1 className="text-xl font-bold text-primary logo-text hidden md:block">
                 ExpertEye AI Assistant
               </h1>
             </div>

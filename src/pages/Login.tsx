@@ -23,7 +23,7 @@ const Login = () => {
               className="h-10 w-10"
             />
           </div>
-          <h1 className="text-3xl font-bold text-primary">
+          <h1 className="text-3xl font-bold text-primary logo-text">
             ExpertEye
           </h1>
         </div>
