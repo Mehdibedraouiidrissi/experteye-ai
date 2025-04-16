@@ -38,7 +38,7 @@ const Dashboard = () => {
             description="12 uploaded today"
             icon={<FileText className="h-5 w-5" />}
             trend={{
-              value: "+16%",
+              value: 16,
               isPositive: true
             }}
           />
@@ -48,7 +48,7 @@ const Dashboard = () => {
             description="Active today: 42"
             icon={<MessageSquare className="h-5 w-5" />}
             trend={{
-              value: "+24%",
+              value: 24,
               isPositive: true
             }}
           />
@@ -58,7 +58,7 @@ const Dashboard = () => {
             description="12 active now"
             icon={<Users className="h-5 w-5" />}
             trend={{
-              value: "+8%",
+              value: 8,
               isPositive: true
             }}
           />
@@ -68,7 +68,7 @@ const Dashboard = () => {
             description="Text chunks indexed"
             icon={<Binary className="h-5 w-5" />}
             trend={{
-              value: "+32%",
+              value: 32,
               isPositive: true
             }}
           />
