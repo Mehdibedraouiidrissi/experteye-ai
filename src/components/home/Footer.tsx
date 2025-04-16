@@ -1,8 +1,11 @@
 import React from 'react';
 import { Separator } from "@/components/ui/separator";
 import FooterLinks from './FooterLinks';
+import { useNavigate } from 'react-router-dom';
 
 const Footer = () => {
+  const navigate = useNavigate();
+  
   const productLinks = [
     { text: "Capabilities", href: "#features" },
     { text: "How It Helps", href: "#use-cases" },
@@ -26,13 +29,18 @@ const Footer = () => {
       <div className="container mx-auto">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
           <div>
-            <div className="flex items-center gap-2 mb-4">
-              <img 
-                src="/lovable-uploads/b62e1898-4b6c-49cf-8eea-204a5d62414e.png" 
-                alt="ExpertEye Logo" 
-                className="h-8 w-8" 
-              />
-              <span className="text-lg font-bold text-primary">ExpertEye</span>
+            <div 
+              className="flex items-center gap-2 mb-4 cursor-pointer"
+              onClick={() => navigate("/")}
+            >
+              <div className="logo-img flex items-center justify-center">
+                <img 
+                  src="/lovable-uploads/2c36dba7-9c21-44c0-9d59-c51c67614466.png" 
+                  alt="ExpertEye Logo" 
+                  className="h-8 w-8" 
+                />
+              </div>
+              <span className="text-lg font-bold text-primary logo-text">ExpertEye</span>
             </div>
             <p className="text-sm text-muted-foreground">
               Your AI assistant for seamless knowledge access, task automation, and smarter collaboration — built for ExpertEye teams.
