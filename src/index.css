@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -203,12 +204,15 @@
 }
 
 /* Dark mode logo - apply filter instead of changing image */
-.dark .logo-img img {
+.dark .logo-img img,
+.dark img.logo-image {
   filter: brightness(0) invert(1); /* Makes the image white */
 }
 
 /* Dark mode logo text - make white instead of hiding */
-.dark .logo-text {
+.dark .logo-text,
+.dark h1.logo-text,
+.dark span.logo-text {
   @apply text-white;
 }
 

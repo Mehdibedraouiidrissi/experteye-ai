@@ -14,10 +14,10 @@ export function SidebarHeader({ isCollapsed, onToggleCollapse }: SidebarHeaderPr
   return (
     <div className="flex items-center justify-between p-4">
       <div 
-        className="flex items-center space-x-2 cursor-pointer"
+        className="logo-container cursor-pointer"
         onClick={() => navigate("/")}
       >
-        <BookOpen className="h-7 w-7 text-primary" />
+        <BookOpen className="h-7 w-7 text-primary logo-image" />
         {!isCollapsed && (
           <span className="text-xl font-bold text-primary logo-text">
             ExpertEye

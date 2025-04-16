@@ -39,6 +39,16 @@ const Signup = () => {
       <AuthForm isLogin={false} />
       
       <footer className="mt-8 text-xs text-center text-muted-foreground">
+        <div className="logo-container justify-center mb-2">
+          <div className="logo-img flex items-center justify-center h-6 w-6">
+            <img 
+              src="/lovable-uploads/2c36dba7-9c21-44c0-9d59-c51c67614466.png" 
+              alt="ExpertEye Logo" 
+              className="h-full w-full"
+            />
+          </div>
+          <span className="text-sm font-bold text-primary logo-text">ExpertEye</span>
+        </div>
         <p>ExpertEye &copy; {new Date().getFullYear()}</p>
         <p className="mt-1">Powered by RAG and Local LLMs</p>
       </footer>
