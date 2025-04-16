@@ -1,16 +1,20 @@
 
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import AuthForm from "@/components/auth/AuthForm";
 
 const Signup = () => {
   useEffect(() => {
     document.title = "ExpertEye - Sign Up";
   }, []);
+  const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md flex flex-col items-center justify-center mb-6">
-        <div className="flex items-center justify-center gap-2 mb-4">
+        <div className="flex items-center gap-2 cursor-pointer"
+          onClick={() => navigate("/")}
+          >
           <img 
             src="/lovable-uploads/b62e1898-4b6c-49cf-8eea-204a5d62414e.png" 
             alt="ExpertEye Logo" 
