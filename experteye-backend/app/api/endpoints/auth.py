@@ -30,6 +30,13 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
 async def register_user(username: str, password: str, email: str):
+    # Validate email domain
+    if not email.endswith("@experteye.com"):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Only @experteye.com email addresses are allowed"
+        )
+    
     users_db = get_user_db()
     if any(user["username"] == username for user in users_db):
         raise HTTPException(
@@ -37,5 +44,16 @@ async def register_user(username: str, password: str, email: str):
             detail="Username already registered"
         )
     
-    user = create_user(username, email, password)
-    return {"username": user["username"], "email": user["email"]}
+    try:
+        user = create_user(username, email, password)
+        return {"username": user["username"], "email": user["email"]}
+    except ValueError as e:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=str(e)
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Registration failed: {str(e)}"
+        )

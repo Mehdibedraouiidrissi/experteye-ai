@@ -24,23 +24,48 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const navigate = useNavigate();
   const { handleError } = useApiErrorHandler();
 
+  const validateExpertEyeEmail = (email: string) => {
+    return email.endsWith("@experteye.com");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isLogin && password !== confirmPassword) {
-      toast({
-        title: "Passwords don't match",
-        description: "Please make sure your passwords match.",
-        variant: "destructive",
-      });
-      return;
+    if (!isLogin) {
+      // Sign up form validation
+      if (!validateExpertEyeEmail(email)) {
+        toast({
+          title: "Invalid Email",
+          description: "Only @experteye.com email addresses are allowed.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        toast({
+          title: "Passwords don't match",
+          description: "Please make sure your passwords match.",
+          variant: "destructive",
+        });
+        return;
+      }
+    } else {
+      // Login validation - check if email has correct format for experteye domain
+      if (email && !validateExpertEyeEmail(email)) {
+        toast({
+          title: "Invalid Email Format",
+          description: "Only @experteye.com email addresses are allowed.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     setIsLoading(true);
     
     try {
       if (isLogin) {
-        // Login process
         await AuthApi.login(username || email, password);
         toast({
           title: "Logged in successfully",
@@ -48,7 +73,6 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         });
         navigate("/dashboard");
       } else {
-        // Registration process
         await AuthApi.register(username, email, password);
         toast({
           title: "Account created successfully",
@@ -57,7 +81,8 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         navigate("/login");
       }
     } catch (error: any) {
-      // Updated error message for login failures
+      console.error("Auth error:", error);
+      
       if (isLogin) {
         toast({
           title: "Login failed",
@@ -67,14 +92,10 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
       } else {
         toast({
           title: "Registration failed",
-          description: error?.message || "This username may already be taken.",
+          description: error?.message || "Unable to connect to the server. Please check your internet connection and try again.",
           variant: "destructive",
         });
       }
-      
-      // We're not calling handleError here to avoid displaying 'failed fetch' message
-      // but we still log the error to console for debugging
-      console.error("Auth error:", error);
     } finally {
       setIsLoading(false);
     }
