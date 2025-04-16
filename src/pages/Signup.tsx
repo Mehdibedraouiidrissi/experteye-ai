@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import AuthForm from "@/components/auth/AuthForm";
 
 const Signup = () => {
+  
   useEffect(() => {
     document.title = "ExpertEye - Sign Up";
   }, []);

@@ -33,25 +33,31 @@
   }
 
   .dark {
-    --background: 268 81% 15%;
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 268 81% 10%;
+    --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-    --popover: 268 81% 10%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 268 81% 29%;
+    --primary: 268 70% 60%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 254 63% 65%;
+    --secondary: 254 63% 30%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 268 45% 25%;
-    --muted-foreground: 255 59% 75%;
-    --accent: 254 63% 65%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
+    --accent: 254 63% 30%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 270 65% 75%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 268 45% 25%;
-    --input: 268 45% 25%;
-    --ring: 268 81% 29%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --sidebar: 240 10% 3.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    --warning: 37 92% 50%;
+    --warning-foreground: 0 0% 98%;
   }
 }
 
@@ -123,7 +129,11 @@
 }
 
 .hero-gradient {
-  background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--muted)));
+  @apply bg-gradient-to-br from-background to-muted/50;
+}
+
+.dark .hero-gradient {
+  @apply bg-gradient-to-br from-background via-background/90 to-primary/10;
 }
 
 .animate-on-scroll {
@@ -153,10 +163,74 @@
   @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
 }
 
+.dark .card-hover {
+  @apply hover:bg-background/50 hover:border-primary/20;
+}
+
 .section-primary {
   @apply bg-primary/5 rounded-lg;
 }
 
 .section-secondary {
   @apply bg-secondary/5 rounded-lg;
+}
+
+.dark .glass-effect {
+  @apply backdrop-blur-md bg-white/5;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Dark mode specific overrides */
+.dark {
+  color-scheme: dark;
+}
+
+/* Logo styles */
+.logo-container {
+  @apply flex items-center gap-2;
+}
+
+.logo-img {
+  @apply h-8 w-8 rounded-full overflow-hidden bg-white transition-colors duration-300;
+}
+
+.dark .logo-img {
+  background-color: transparent;
+}
+
+.logo-img img {
+  @apply h-full w-full object-contain;
+}
+
+/* Dark mode logo - apply filter instead of changing image */
+.dark .logo-img img {
+  filter: brightness(0) invert(1); /* Makes the image white */
+}
+
+/* Dark mode logo text - make white instead of hiding */
+.dark .logo-text {
+  @apply text-white;
+}
+
+/* Fix for circular dependency - instead of using @apply */
+.dark [class*="border"] {
+  border-color: hsl(var(--border));
+}
+
+.dark .shadow-md,
+.dark .shadow-lg {
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.3);
+}
+
+.dark .text-gray-500,
+.dark .text-gray-600,
+.dark .text-gray-700 {
+  color: hsl(var(--muted-foreground));
+}
+
+.dark .neo-morphism {
+  background-color: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.5);
 }
