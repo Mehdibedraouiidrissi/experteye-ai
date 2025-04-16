@@ -1,3 +1,4 @@
+
 import { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import animatePlugin from "tailwindcss-animate";
@@ -20,6 +21,17 @@ const config = {
     },
     extend: {
       colors: {
+        border: {
+          DEFAULT: "hsl(var(--border))",
+        },
+        input: {
+          DEFAULT: "hsl(var(--input))",
+        },
+        ring: {
+          DEFAULT: "hsl(var(--ring))",
+        },
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
         primary: {
           DEFAULT: "#3A0CA3",
           foreground: "#FFFFFF",
