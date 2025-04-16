@@ -7,23 +7,23 @@ const FeaturesSection = () => {
   const features = [
     {
       icon: BarChart2,
-      title: "Real-Time Insights",
-      description: "Instant data-driven reports and recommendations to keep you ahead."
+      title: "Smart Knowledge Access",
+      description: "Instantly retrieve internal documents, policies, and team-specific information using AI search."
     },
     {
       icon: Rocket,
-      title: "Predictive Analytics",
-      description: "Predict future trends using advanced machine learning algorithms."
+      title: "AI Chat for Daily Tasks",
+      description: "Summarize reports, answer questions, and support internal workflows with intelligent assistance."
     },
     {
       icon: Lock,
-      title: "Seamless Integration",
-      description: "Easily integrates with your existing systems and workflows."
+      title: "Private & Secure",
+      description: "Enterprise-grade security ensures all data stays within your organization."
     },
     {
       icon: Zap,
-      title: "Scalable",
-      description: "Suitable for businesses of all sizes – from startups to enterprises."
+      title: "Personalized Experience",
+      description: "Delivers context-aware answers tailored to your role, department, and tools."
     }
   ];
 

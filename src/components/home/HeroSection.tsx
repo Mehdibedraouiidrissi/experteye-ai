@@ -12,14 +12,14 @@ const HeroSection = () => {
       <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
         <div className="space-y-6 animate-fade-in">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
-            Transform Your Business with Expert AI Insights
+            Unlock Internal Innovation with Experteye AI Assistance
           </h1>
           <p className="text-xl text-muted-foreground">
             Leverage cutting-edge AI to make smarter decisions, faster.
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button size="lg" onClick={() => navigate("/signup")} className="gap-2 bg-primary hover:bg-primary/90 rounded-full">
-              Start Using ExpertEye <ArrowRight className="h-4 w-4" />
+              Start Using ExpertEye AI <ArrowRight className="h-4 w-4" />
             </Button>
             <Button size="lg" variant="outline" onClick={() => navigate("/chat")} className="border-primary text-primary hover:bg-primary/10 rounded-full">
               Try AI Assistant
