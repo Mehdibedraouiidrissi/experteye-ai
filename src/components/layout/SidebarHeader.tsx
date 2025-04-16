@@ -1,6 +1,7 @@
 
 import { BookOpen } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useNavigate } from "react-router-dom";
 
 interface SidebarHeaderProps {
   isCollapsed: boolean;
@@ -8,9 +9,14 @@ interface SidebarHeaderProps {
 }
 
 export function SidebarHeader({ isCollapsed, onToggleCollapse }: SidebarHeaderProps) {
+  const navigate = useNavigate();
+  
   return (
     <div className="flex items-center justify-between p-4">
-      <div className="flex items-center space-x-2">
+      <div 
+        className="flex items-center space-x-2 cursor-pointer"
+        onClick={() => navigate("/")}
+      >
         <BookOpen className="h-7 w-7 text-primary" />
         {!isCollapsed && (
           <span className="text-xl font-bold text-primary logo-text">

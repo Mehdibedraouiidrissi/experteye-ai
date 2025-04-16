@@ -10,7 +10,10 @@ const HomeNavbar = () => {
   return (
     <header className="border-b py-4 px-6 bg-background">
       <div className="container mx-auto flex justify-between items-center">
-        <div className="logo-container">
+        <div 
+          className="logo-container cursor-pointer"
+          onClick={() => navigate("/")}
+        >
           <div className="logo-img flex items-center justify-center">
             <img 
               src="/lovable-uploads/2c36dba7-9c21-44c0-9d59-c51c67614466.png" 

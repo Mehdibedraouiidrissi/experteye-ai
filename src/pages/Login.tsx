@@ -15,7 +15,10 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex flex-col items-center justify-center p-4 relative">
       <div className="w-full max-w-md flex flex-col items-center justify-center mb-6">
-        <div className="logo-container mb-4">
+        <div 
+          className="logo-container mb-4 cursor-pointer" 
+          onClick={() => navigate("/")}
+        >
           <div className="logo-img flex items-center justify-center">
             <img 
               src="/lovable-uploads/2c36dba7-9c21-44c0-9d59-c51c67614466.png" 
