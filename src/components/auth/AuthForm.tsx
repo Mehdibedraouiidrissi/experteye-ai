@@ -57,16 +57,24 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         navigate("/login");
       }
     } catch (error: any) {
-      const errorMessage = error?.message || (isLogin ? 
-        "Invalid username or password. Please check your credentials or sign up if you don't have an account." : 
-        "Registration failed. This username may already be taken.");
+      // Updated error message for login failures
+      if (isLogin) {
+        toast({
+          title: "Login failed",
+          description: "Username or password invalid. Please check your credentials or sign up if you don't have an account.",
+          variant: "destructive",
+        });
+      } else {
+        toast({
+          title: "Registration failed",
+          description: error?.message || "This username may already be taken.",
+          variant: "destructive",
+        });
+      }
       
-      toast({
-        title: isLogin ? "Login failed" : "Registration failed",
-        description: errorMessage,
-        variant: "destructive",
-      });
-      handleError(error);
+      // We're not calling handleError here to avoid displaying 'failed fetch' message
+      // but we still log the error to console for debugging
+      console.error("Auth error:", error);
     } finally {
       setIsLoading(false);
     }

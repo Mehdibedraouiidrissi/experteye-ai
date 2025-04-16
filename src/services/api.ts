@@ -1,3 +1,4 @@
+
 import { useToast } from "@/hooks/use-toast";
 
 const API_BASE_URL = "http://localhost:5000/api";
@@ -70,7 +71,12 @@ export class ApiService {
           const errorData = await response.json();
           errorMessage = errorData.detail || `Error: ${response.status}`;
         } catch {
-          errorMessage = `Error: ${response.status}`;
+          // For auth failures, provide a more user-friendly message
+          if (endpoint === "/auth/token" && response.status === 401) {
+            errorMessage = "Username or password invalid";
+          } else {
+            errorMessage = `Error: ${response.status}`;
+          }
         }
         
         const error: ApiError = {
