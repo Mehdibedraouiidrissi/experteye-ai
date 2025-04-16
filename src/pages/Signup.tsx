@@ -21,7 +21,7 @@ const Signup = () => {
             alt="ExpertEye Logo" 
             className="h-10 w-10"
           />
-          <h1 className="text-3xl font-bold" style={{color: "#3A0CA3"}}>
+          <h1 className="text-3xl font-bold">
             ExpertEye
           </h1>
         </div>
