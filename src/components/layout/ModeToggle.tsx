@@ -7,20 +7,34 @@ import { useToast } from "@/components/ui/use-toast";
 export function ModeToggle() {
   const { toast } = useToast();
   const [theme, setTheme] = useState(() => {
-    const storedTheme = localStorage.getItem("theme");
-    return storedTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+    // Check for theme in localStorage or use system preference
+    if (typeof window !== "undefined") {
+      const storedTheme = window.localStorage.getItem("theme");
+      if (storedTheme) {
+        return storedTheme;
+      }
+      // Check for system preference
+      if (window.matchMedia("(prefers-color-scheme: dark)").matches) {
+        return "dark";
+      }
+    }
+    return "light"; // Default theme
   });
 
+  // Apply theme when component mounts and when theme changes
   useEffect(() => {
-    const root = window.document.documentElement;
-    
-    if (theme === "dark") {
-      root.classList.add("dark");
-    } else {
-      root.classList.remove("dark");
+    if (typeof window !== "undefined") {
+      const root = window.document.documentElement;
+      
+      // Remove both classes first to ensure clean state
+      root.classList.remove("light", "dark");
+      
+      // Add current theme class
+      root.classList.add(theme);
+      
+      // Store theme preference
+      window.localStorage.setItem("theme", theme);
     }
-    
-    localStorage.setItem("theme", theme);
   }, [theme]);
 
   const toggleTheme = () => {
