@@ -1,4 +1,3 @@
-
 import { Config } from "tailwindcss";
 import { fontFamily } from "tailwindcss/defaultTheme";
 import animatePlugin from "tailwindcss-animate";
@@ -56,18 +55,20 @@ const config = {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        expertEye: {
-          "50": "hsl(var(--expertEye-50))",
-          "100": "hsl(var(--expertEye-100))",
-          "200": "hsl(var(--expertEye-200))",
-          "300": "hsl(var(--expertEye-300))",
-          "400": "hsl(var(--expertEye-400))",
-          "500": "hsl(var(--expertEye-500))",
-          "600": "hsl(var(--expertEye-600))",
-          "700": "hsl(var(--expertEye-700))",
-          "800": "hsl(var(--expertEye-800))",
-          "900": "hsl(var(--expertEye-900))",
+        success: {
+          DEFAULT: "hsl(var(--success))",
+          foreground: "hsl(var(--success-foreground))",
         },
+        warning: {
+          DEFAULT: "hsl(var(--warning))",
+          foreground: "hsl(var(--warning-foreground))",
+        },
+        "deep-blue": "#004F84",
+        "dark-gray": "#2C3E50",
+        "teal": "#00B8A9",
+        "emerald": "#27AE60",
+        "soft-white": "#FFFFFF",
+        "light-yellow": "#F39C12",
       },
       borderRadius: {
         lg: "var(--radius)",
@@ -75,7 +76,7 @@ const config = {
         sm: "calc(var(--radius) - 4px)",
       },
       fontFamily: {
-        sans: ["Inter", ...fontFamily.sans],
+        sans: ["Montserrat", ...fontFamily.sans],
       },
       keyframes: {
         "accordion-down": {
@@ -122,6 +123,10 @@ const config = {
         "fade-out": "fade-out 0.3s ease-out",
         "slide-in-right": "slide-in-right 0.3s ease-out",
         "slide-out-right": "slide-out-right 0.3s ease-out",
+      },
+      boxShadow: {
+        'soft': '0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)',
+        'hover': '0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05)',
       },
     },
   },

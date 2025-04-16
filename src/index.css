@@ -6,61 +6,59 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
+    --foreground: 215 28% 17%;
     --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
+    --card-foreground: 215 28% 17%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 262 83% 74%;
+    --popover-foreground: 215 28% 17%;
+    --primary: 202 100% 26%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
+    --secondary: 183 100% 36%;
+    --secondary-foreground: 215 28% 17%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215 16% 47%;
+    --accent: 183 100% 36%;
+    --accent-foreground: 215 28% 17%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 262 83% 74%;
-    --radius: 0.5rem;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 202 100% 26%;
+    --radius: 0.75rem;
     --sidebar: 0 0% 100%;
-    --sidebar-border: 240 5.9% 90%;
-    --expertEye-50: hsl(276, 84%, 95%);
-    --expertEye-100: hsl(276, 84%, 90%);
-    --expertEye-200: hsl(276, 84%, 85%);
-    --expertEye-300: hsl(276, 84%, 80%);
-    --expertEye-400: hsl(276, 84%, 75%);
-    --expertEye-500: hsl(276, 84%, 70%);
-    --expertEye-600: hsl(276, 84%, 65%);
-    --expertEye-700: hsl(276, 84%, 60%);
-    --expertEye-800: hsl(276, 84%, 55%);
-    --expertEye-900: hsl(276, 84%, 50%);
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    --warning: 37 92% 50%;
+    --warning-foreground: 215 28% 17%;
   }
 
   .dark {
-    --background: 240 10% 3.9%;
+    --background: 215 28% 17%;
     --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
+    --card: 210 25% 15%;
     --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
+    --popover: 210 25% 15%;
     --popover-foreground: 0 0% 98%;
-    --primary: 262 83% 74%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
+    --primary: 202 100% 26%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 183 100% 36%;
+    --secondary-foreground: 215 28% 17%;
+    --muted: 215 25% 27%;
+    --muted-foreground: 210 5% 80%;
+    --accent: 183 100% 36%;
+    --accent-foreground: 215 28% 17%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 262 83% 74%;
-    --sidebar: 240 10% 3.9%;
-    --sidebar-border: 240 3.7% 15.9%;
+    --border: 215 25% 27%;
+    --input: 215 25% 27%;
+    --ring: 202 100% 26%;
+    --sidebar: 210 25% 15%;
+    --sidebar-border: 215 25% 27%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    --warning: 37 92% 50%;
+    --warning-foreground: 0 0% 98%;
   }
 }
 
@@ -137,7 +135,7 @@
 
 /* Home page specific styles */
 .hero-gradient {
-  background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--expertEye-50)));
+  background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--muted)));
 }
 
 /* Scroll animations */
@@ -150,4 +148,31 @@
 .animate-on-scroll.visible {
   opacity: 1;
   transform: translateY(0);
+}
+
+/* New button styles */
+.btn-primary {
+  @apply bg-primary hover:bg-primary/90 text-primary-foreground rounded-full transition-all duration-300;
+}
+
+.btn-secondary {
+  @apply bg-secondary hover:bg-secondary/80 text-secondary-foreground rounded-full transition-all duration-300;
+}
+
+.btn-outline {
+  @apply border border-primary text-primary hover:bg-primary/10 rounded-full transition-all duration-300;
+}
+
+/* Card hover effects */
+.card-hover {
+  @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
+}
+
+/* Custom section styles */
+.section-primary {
+  @apply bg-primary/5 rounded-lg;
+}
+
+.section-secondary {
+  @apply bg-secondary/5 rounded-lg;
 }
