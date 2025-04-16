@@ -21,15 +21,15 @@ const HeroSection = () => {
             <Button size="lg" onClick={() => navigate("/signup")} className="gap-2 bg-primary hover:bg-primary/90 rounded-full">
               Start Using ExpertEye <ArrowRight className="h-4 w-4" />
             </Button>
-            <Button size="lg" variant="outline" onClick={() => navigate("/chat")} className="border-primary text-primary hover:bg-primary/10 rounded-full">
+            <Button size="lg" variant="outline" onClick={() => navigate("/chatdemo")} className="border-primary text-primary hover:bg-primary/10 rounded-full">
               Try AI Assistant
             </Button>
           </div>
         </div>
         <div className="relative">
           <img 
-            src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7" 
-            alt="Digital code visualization" 
+            src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" 
+            alt="Data analytics dashboard" 
             className="rounded-lg shadow-xl w-full object-cover aspect-video animate-fade-in"
           />
         </div>
