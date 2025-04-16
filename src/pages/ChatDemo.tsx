@@ -74,7 +74,7 @@ const ChatDemo = () => {
           </Button>
         </div>
         <div className="max-w-3xl mx-auto mt-4 flex justify-center">
-          <Button variant="outline" onClick={() => navigate("/chat")} className="gap-2">
+          <Button variant="outline" onClick={() => navigate("/login")} className="gap-2">
             Go to Full AI Assistant
           </Button>
         </div>
