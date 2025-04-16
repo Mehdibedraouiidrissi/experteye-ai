@@ -1,5 +1,6 @@
 
 import { useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import StatCard from "@/components/dashboard/StatCard";
 import RecentActivity from "@/components/dashboard/RecentActivity";
@@ -12,7 +13,6 @@ import {
   Binary,
   ArrowRight 
 } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -27,7 +27,7 @@ const Dashboard = () => {
         <div>
           <h1 className="text-3xl font-bold mb-1">Dashboard</h1>
           <p className="text-muted-foreground">
-            Welcome to ExpertEye Document Intelligence
+            Welcome to ExpertEye AI Assistant
           </p>
         </div>
         
