@@ -25,7 +25,6 @@ const HomePage = () => {
           <div className="hidden md:flex items-center space-x-6">
             <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</a>
             <a href="#how-it-works" className="text-sm font-medium hover:text-primary transition-colors">How It Works</a>
-            <a href="#testimonials" className="text-sm font-medium hover:text-primary transition-colors">Testimonials</a>
             <Button variant="outline" onClick={() => navigate("/login")}>Log In</Button>
             <Button onClick={() => navigate("/signup")}>Get Started</Button>
           </div>
@@ -181,82 +180,12 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section id="testimonials" className="py-16 px-6">
-          <div className="container mx-auto">
-            <h2 className="text-3xl font-bold text-center mb-12">What Our Clients Say</h2>
-            <div className="grid md:grid-cols-3 gap-8">
-              <Card className="bg-expertEye-50 border-none shadow-sm">
-                <CardContent className="pt-6">
-                  <p className="italic mb-4">
-                    "ExpertEye has revolutionized the way we make decisions, turning complex data into clear insights."
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-expertEye-200 flex items-center justify-center">
-                      <span className="font-bold text-expertEye-700">JD</span>
-                    </div>
-                    <div>
-                      <p className="font-bold">John Doe</p>
-                      <p className="text-sm text-muted-foreground">CEO, Tech Solutions Inc.</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-expertEye-50 border-none shadow-sm">
-                <CardContent className="pt-6">
-                  <p className="italic mb-4">
-                    "The predictive analytics have given us a competitive edge in our market. Well worth the investment."
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-expertEye-200 flex items-center justify-center">
-                      <span className="font-bold text-expertEye-700">AS</span>
-                    </div>
-                    <div>
-                      <p className="font-bold">Anna Smith</p>
-                      <p className="text-sm text-muted-foreground">CTO, Global Enterprises</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-              
-              <Card className="bg-expertEye-50 border-none shadow-sm">
-                <CardContent className="pt-6">
-                  <p className="italic mb-4">
-                    "Our team has saved countless hours since implementing ExpertEye. The AI is genuinely intelligent."
-                  </p>
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-expertEye-200 flex items-center justify-center">
-                      <span className="font-bold text-expertEye-700">RL</span>
-                    </div>
-                    <div>
-                      <p className="font-bold">Robert Lee</p>
-                      <p className="text-sm text-muted-foreground">Data Director, Innovate Corp</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-            
-            <div className="mt-12 text-center">
-              <h3 className="text-xl font-bold mb-4">Trusted By</h3>
-              <div className="flex flex-wrap justify-center gap-8 opacity-60">
-                <div className="h-8">Company 1</div>
-                <div className="h-8">Company 2</div>
-                <div className="h-8">Company 3</div>
-                <div className="h-8">Company 4</div>
-                <div className="h-8">Company 5</div>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* CTA Section */}
+        {/* CTA Section - Updated text as requested */}
         <section className="py-16 px-6 bg-primary text-primary-foreground">
           <div className="container mx-auto text-center max-w-3xl space-y-6">
-            <h2 className="text-3xl font-bold">Ready to Transform Your Business?</h2>
+            <h2 className="text-3xl font-bold">Empower Your Team with ExpertEye DigitalHub</h2>
             <p className="text-lg">
-              Join thousands of companies using ExpertEye to drive better decisions.
+              Unlock the full potential of your organization with AI-powered insights, exclusive to your team. Streamline decision-making and boost productivity.
             </p>
             <Button 
               size="lg" 
@@ -264,7 +193,7 @@ const HomePage = () => {
               onClick={() => navigate("/signup")}
               className="mt-4"
             >
-              Get Started for Free
+              Get Started
             </Button>
           </div>
         </section>
@@ -289,7 +218,6 @@ const HomePage = () => {
               <ul className="space-y-2 text-sm">
                 <li><a href="#features" className="text-muted-foreground hover:text-foreground">Features</a></li>
                 <li><a href="#how-it-works" className="text-muted-foreground hover:text-foreground">How It Works</a></li>
-                <li><a href="#testimonials" className="text-muted-foreground hover:text-foreground">Testimonials</a></li>
               </ul>
             </div>
             
