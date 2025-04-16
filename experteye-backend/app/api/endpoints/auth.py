@@ -46,4 +46,3 @@ async def register_user(username: str, password: str, email: str):
     
     user = create_user(username, email, password)
     return {"username": user["username"], "email": user["email"]}
-
