@@ -28,13 +28,10 @@ const HeroSection = () => {
         </div>
         <div className="relative">
           <img 
-            src="https://images.unsplash.com/photo-1498050108023-c5249f4df085" 
-            alt="AI data analysis visualization" 
+            src="https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7" 
+            alt="Digital code visualization" 
             className="rounded-lg shadow-xl w-full object-cover aspect-video animate-fade-in"
           />
-          <div className="absolute -bottom-6 -right-6 bg-primary text-primary-foreground p-4 rounded-lg shadow-lg">
-            <p className="text-sm font-medium">Trusted by 500+ companies</p>
-          </div>
         </div>
       </div>
     </section>
