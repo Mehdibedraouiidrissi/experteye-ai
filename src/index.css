@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -33,27 +34,31 @@
   }
 
   .dark {
-    --background: 270 25% 12%;
+    --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
-    --card: 270 30% 8%;
+    --card: 240 10% 3.9%;
     --card-foreground: 0 0% 98%;
-    --popover: 270 30% 8%;
+    --popover: 240 10% 3.9%;
     --popover-foreground: 0 0% 98%;
-    --primary: 268 70% 35%;
+    --primary: 268 70% 60%;
     --primary-foreground: 0 0% 98%;
     --secondary: 254 63% 30%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 268 25% 18%;
-    --muted-foreground: 0 0% 80%;
+    --muted: 240 3.7% 15.9%;
+    --muted-foreground: 240 5% 64.9%;
     --accent: 254 63% 30%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 270 65% 30%;
+    --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 268 25% 20%;
-    --input: 268 25% 20%;
-    --ring: 268 70% 35%;
-    --sidebar: 270 30% 10%;
-    --sidebar-border: 268 25% 25%;
+    --border: 240 3.7% 15.9%;
+    --input: 240 3.7% 15.9%;
+    --ring: 240 4.9% 83.9%;
+    --sidebar: 240 10% 3.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 98%;
+    --warning: 37 92% 50%;
+    --warning-foreground: 0 0% 98%;
   }
 }
 
@@ -173,4 +178,32 @@
 
 .dark .glass-effect {
   @apply backdrop-blur-md bg-white/5 border border-white/10;
+}
+
+/* Dark mode specific overrides */
+.dark {
+  color-scheme: dark;
+}
+
+.dark .bg-white {
+  @apply bg-background;
+}
+
+.dark .border {
+  @apply border-border;
+}
+
+.dark .shadow-md,
+.dark .shadow-lg {
+  @apply shadow-[0_4px_12px_-2px_rgba(0,0,0,0.3)];
+}
+
+.dark .text-gray-500,
+.dark .text-gray-600,
+.dark .text-gray-700 {
+  @apply text-muted-foreground;
+}
+
+.dark .neo-morphism {
+  @apply bg-black/40 backdrop-blur-xl border border-white/5 shadow-[0_4px_12px_-2px_rgba(0,0,0,0.5)];
 }

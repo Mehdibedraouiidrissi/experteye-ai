@@ -34,6 +34,9 @@ export function ModeToggle() {
       
       // Store theme preference
       window.localStorage.setItem("theme", theme);
+      
+      // Set transition on all elements to make the switch smoother
+      document.documentElement.style.setProperty('--transition-speed', '0.3s');
     }
   }, [theme]);
 
