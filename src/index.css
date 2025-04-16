@@ -202,14 +202,14 @@
   @apply h-full w-full object-contain;
 }
 
-/* Dark mode logo */
+/* Dark mode logo - apply filter instead of changing image */
 .dark .logo-img img {
-  content: url('/lovable-uploads/20f7b45d-7f6a-4d62-91a9-e2a0c38ec617.png');
+  filter: brightness(0) invert(1); /* Makes the image white */
 }
 
-/* Dark mode logo text - hide original text */
+/* Dark mode logo text - make white instead of hiding */
 .dark .logo-text {
-  display: none;
+  @apply text-white;
 }
 
 /* Fix for circular dependency - instead of using @apply */
