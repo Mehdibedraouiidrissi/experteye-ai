@@ -16,7 +16,7 @@ const Login = () => {
             alt="ExpertEye Logo" 
             className="h-10 w-10"
           />
-          <h1 className="text-3xl font-bold bg-gradient-to-r from-expertEye-600 to-expertEye-800 bg-clip-text text-transparent">
+          <h1 className="text-3xl font-bold" style={{color: "#3A0CA3"}}>
             ExpertEye
           </h1>
         </div>
