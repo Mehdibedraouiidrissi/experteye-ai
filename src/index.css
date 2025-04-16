@@ -5,24 +5,24 @@
 @layer base {
   :root {
     --background: 0 0% 100%;
-    --foreground: 209 36% 25%;
+    --foreground: 268 81% 29%;
     --card: 0 0% 100%;
-    --card-foreground: 209 36% 25%;
+    --card-foreground: 268 81% 29%;
     --popover: 0 0% 100%;
-    --popover-foreground: 209 36% 25%;
-    --primary: 209 84% 28%;
+    --popover-foreground: 268 81% 29%;
+    --primary: 268 81% 29%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 177 100% 36%;
+    --secondary: 254 63% 75%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215 16% 47%;
-    --accent: 142 71% 45%;
+    --muted: 255 59% 90%;
+    --muted-foreground: 268 45% 40%;
+    --accent: 254 63% 75%;
     --accent-foreground: 0 0% 98%;
-    --destructive: 37 92% 50%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 209 84% 28%;
+    --destructive: 270 65% 85%;
+    --destructive-foreground: 268 81% 29%;
+    --border: 255 59% 90%;
+    --input: 255 59% 90%;
+    --ring: 268 81% 29%;
     --radius: 0.75rem;
     --sidebar: 0 0% 100%;
     --sidebar-border: 214.3 31.8% 91.4%;
@@ -33,25 +33,25 @@
   }
 
   .dark {
-    --background: 209 36% 25%;
+    --background: 268 81% 15%;
     --foreground: 0 0% 98%;
-    --card: 210 25% 15%;
+    --card: 268 81% 10%;
     --card-foreground: 0 0% 98%;
-    --popover: 210 25% 15%;
+    --popover: 268 81% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 209 84% 28%;
+    --primary: 268 81% 29%;
     --primary-foreground: 0 0% 98%;
-    --secondary: 177 100% 36%;
-    --secondary-foreground: 209 36% 25%;
-    --muted: 215 25% 27%;
-    --muted-foreground: 210 5% 80%;
-    --accent: 142 71% 45%;
-    --accent-foreground: 209 36% 25%;
-    --destructive: 37 92% 50%;
+    --secondary: 254 63% 65%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 268 45% 25%;
+    --muted-foreground: 255 59% 75%;
+    --accent: 254 63% 65%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 270 65% 75%;
     --destructive-foreground: 0 0% 98%;
-    --border: 215 25% 27%;
-    --input: 215 25% 27%;
-    --ring: 209 84% 28%;
+    --border: 268 45% 25%;
+    --input: 268 45% 25%;
+    --ring: 268 81% 29%;
   }
 }
 
@@ -70,7 +70,6 @@
   @apply mt-4;
 }
 
-/* Enhanced tabs styling */
 [role="tablist"] {
   @apply flex rounded-md p-1 text-muted-foreground font-medium;
 }
@@ -79,7 +78,6 @@
   @apply px-3 py-2 text-sm transition-all rounded-md hover:text-foreground data-[state=active]:text-foreground data-[state=active]:bg-background data-[state=active]:shadow-sm;
 }
 
-/* Fix for sidebar - using direct CSS to avoid circular dependency */
 .bg-sidebar {
   background-color: hsl(var(--sidebar));
 }
@@ -88,7 +86,6 @@
   border-color: hsl(var(--sidebar-border));
 }
 
-/* Document processing animations */
 @keyframes pulse {
   0%, 100% {
     opacity: 1;
@@ -102,7 +99,6 @@
   animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Better transitions for tabs */
 .settings-tabs .tabs-content {
   @apply transition-all;
 }
@@ -126,12 +122,10 @@
   animation: fade-in 0.2s ease-out;
 }
 
-/* Home page specific styles */
 .hero-gradient {
   background: linear-gradient(135deg, hsl(var(--background)), hsl(var(--muted)));
 }
 
-/* Scroll animations */
 .animate-on-scroll {
   opacity: 0;
   transform: translateY(20px);
@@ -143,7 +137,6 @@
   transform: translateY(0);
 }
 
-/* New button styles */
 .btn-primary {
   @apply bg-primary hover:bg-primary/90 text-primary-foreground rounded-full transition-all duration-300;
 }
@@ -156,12 +149,10 @@
   @apply border border-primary text-primary hover:bg-primary/10 rounded-full transition-all duration-300;
 }
 
-/* Card hover effects */
 .card-hover {
   @apply transition-all duration-300 hover:shadow-lg hover:-translate-y-1;
 }
 
-/* Custom section styles */
 .section-primary {
   @apply bg-primary/5 rounded-lg;
 }

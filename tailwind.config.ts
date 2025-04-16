@@ -20,37 +20,33 @@ const config = {
     },
     extend: {
       colors: {
-        // Update primary color to match the logo's deep blue
         primary: {
-          DEFAULT: "#004F84",
+          DEFAULT: "#3A0CA3",
           foreground: "#FFFFFF",
         },
-        // Keep existing color definitions, but adjust some to complement the deep blue
         secondary: {
-          DEFAULT: "#00B8A9", // Teal accent
+          DEFAULT: "#9b87f5",
           foreground: "#FFFFFF",
         },
-        background: "#FFFFFF", // Soft white background
-        foreground: "#2C3E50", // Dark gray for text
+        background: "#FFFFFF",
+        foreground: "#1A1F2C",
         muted: {
-          DEFAULT: "#F5F5F5", // Light gray for muted elements
-          foreground: "#6C757D", // Muted text color
+          DEFAULT: "#E5DEFF",
+          foreground: "#6E59A5",
         },
         accent: {
-          DEFAULT: "#27AE60", // Emerald green
+          DEFAULT: "#7E69AB",
           foreground: "#FFFFFF",
         },
         destructive: {
-          DEFAULT: "#F39C12", // Light yellow for destructive actions
-          foreground: "#FFFFFF",
+          DEFAULT: "#D6BCFA",
+          foreground: "#1A1F2C",
         },
-        // Additional custom colors from the provided palette
-        "deep-blue": "#004F84",
-        "dark-gray": "#2C3E50",
-        "teal": "#00B8A9",
-        "emerald": "#27AE60",
-        "soft-white": "#FFFFFF",
-        "light-yellow": "#F39C12",
+        "primary-purple": "#3A0CA3",
+        "secondary-purple": "#7E69AB",
+        "dark-purple": "#1A1F2C",
+        "light-purple": "#D6BCFA",
+        "soft-purple": "#E5DEFF",
       },
       borderRadius: {
         lg: "var(--radius)",
