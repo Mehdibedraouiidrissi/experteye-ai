@@ -43,7 +43,7 @@ const Login = () => {
       {/* Chat Demo Button */}
       <Button 
         size="lg" 
-        className="fixed bottom-6 right-6 rounded-full h-16 w-16 shadow-lg bg-[#8257e6] hover:bg-[#7046c7] text-white"
+        className="fixed bottom-6 right-6 rounded-full h-16 w-16 shadow-lg bg-[#3A0CA3] hover:bg-[#2C0882] text-white"
         onClick={() => navigate("/chatdemo")}
       >
         <MessageSquare className="h-6 w-6" />
