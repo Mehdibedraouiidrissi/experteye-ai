@@ -19,14 +19,18 @@ const HomePage = () => {
       <header className="border-b py-4 px-6 bg-background">
         <div className="container mx-auto flex justify-between items-center">
           <div className="flex items-center gap-2">
-            <Brain className="h-8 w-8 text-primary" />
-            <span className="text-xl font-bold">ExpertEye</span>
+            <img 
+              src="/lovable-uploads/b62e1898-4b6c-49cf-8eea-204a5d62414e.png" 
+              alt="ExpertEye Logo" 
+              className="h-10 w-10"
+            />
+            <span className="text-xl font-bold text-expertEye-700">ExpertEye</span>
           </div>
           <div className="hidden md:flex items-center space-x-6">
-            <a href="#features" className="text-sm font-medium hover:text-primary transition-colors">Features</a>
-            <a href="#how-it-works" className="text-sm font-medium hover:text-primary transition-colors">How It Works</a>
+            <a href="#features" className="text-sm font-medium hover:text-expertEye-700 transition-colors">Features</a>
+            <a href="#how-it-works" className="text-sm font-medium hover:text-expertEye-700 transition-colors">How It Works</a>
             <Button variant="outline" onClick={() => navigate("/login")}>Log In</Button>
-            <Button onClick={() => navigate("/signup")}>Get Started</Button>
+            <Button onClick={() => navigate("/signup")} className="bg-expertEye-700 hover:bg-expertEye-800">Get Started</Button>
           </div>
           <Button variant="ghost" size="icon" className="md:hidden">
             <i className="ri-menu-line"></i>
@@ -35,8 +39,8 @@ const HomePage = () => {
       </header>
 
       <main>
-        {/* Hero Section */}
-        <section className="py-16 md:py-24 px-6 bg-gradient-to-br from-background via-background to-expertEye-50">
+        {/* Hero Section - Updated with purple-themed gradient */}
+        <section className="py-16 md:py-24 px-6 bg-gradient-to-br from-background via-background to-expertEye-100">
           <div className="container mx-auto grid md:grid-cols-2 gap-12 items-center">
             <div className="space-y-6 animate-fade-in">
               <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight">
@@ -46,10 +50,10 @@ const HomePage = () => {
                 Leverage cutting-edge AI to make smarter decisions, faster.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Button size="lg" onClick={() => navigate("/signup")} className="gap-2">
+                <Button size="lg" onClick={() => navigate("/signup")} className="gap-2 bg-expertEye-700 hover:bg-expertEye-800">
                   Start Using ExpertEye <ArrowRight className="h-4 w-4" />
                 </Button>
-                <Button size="lg" variant="outline" onClick={() => navigate("/chat")}>
+                <Button size="lg" variant="outline" onClick={() => navigate("/chat")} className="border-expertEye-700 text-expertEye-700 hover:bg-expertEye-100">
                   Try AI Assistant
                 </Button>
               </div>
@@ -60,15 +64,15 @@ const HomePage = () => {
                 alt="AI data analysis visualization" 
                 className="rounded-lg shadow-xl w-full object-cover aspect-video animate-fade-in"
               />
-              <div className="absolute -bottom-6 -right-6 bg-expertEye-500 text-white p-4 rounded-lg shadow-lg">
+              <div className="absolute -bottom-6 -right-6 bg-expertEye-700 text-white p-4 rounded-lg shadow-lg">
                 <p className="text-sm font-medium">Trusted by 500+ companies</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* About Section */}
-        <section className="py-16 px-6 bg-secondary/30">
+        {/* About Section - Updated with lighter purple background */}
+        <section className="py-16 px-6 bg-expertEye-50/50">
           <div className="container mx-auto text-center max-w-3xl space-y-6">
             <h2 className="text-3xl font-bold">About ExpertEye</h2>
             <p className="text-lg text-muted-foreground">
@@ -76,23 +80,23 @@ const HomePage = () => {
               automate workflows, and optimize decision-making processes for businesses across industries.
             </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
-              <div className="bg-background p-6 rounded-lg shadow-sm">
-                <h3 className="font-bold">Innovative</h3>
+              <div className="bg-background p-6 rounded-lg shadow-sm border border-expertEye-200">
+                <h3 className="font-bold text-expertEye-800">Innovative</h3>
                 <p className="text-sm text-muted-foreground">Cutting-edge AI algorithms for superior results</p>
               </div>
-              <div className="bg-background p-6 rounded-lg shadow-sm">
-                <h3 className="font-bold">Accurate</h3>
+              <div className="bg-background p-6 rounded-lg shadow-sm border border-expertEye-200">
+                <h3 className="font-bold text-expertEye-800">Accurate</h3>
                 <p className="text-sm text-muted-foreground">Precise analysis with 99.8% accuracy rate</p>
               </div>
-              <div className="bg-background p-6 rounded-lg shadow-sm">
-                <h3 className="font-bold">Scalable</h3>
+              <div className="bg-background p-6 rounded-lg shadow-sm border border-expertEye-200">
+                <h3 className="font-bold text-expertEye-800">Scalable</h3>
                 <p className="text-sm text-muted-foreground">Grows with your business needs seamlessly</p>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Core Features */}
+        {/* Core Features - Updated icon colors to match purple theme */}
         <section id="features" className="py-16 px-6">
           <div className="container mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">Core Features</h2>
@@ -140,38 +144,38 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* How It Works */}
-        <section id="how-it-works" className="py-16 px-6 bg-secondary/30">
+        {/* How It Works - Updated with purple accents */}
+        <section id="how-it-works" className="py-16 px-6 bg-expertEye-50/50">
           <div className="container mx-auto">
             <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
             <div className="grid md:grid-cols-4 gap-8">
               <div className="text-center">
-                <div className="bg-primary/20 mx-auto rounded-full w-16 h-16 flex items-center justify-center mb-4">
-                  <FileUp className="h-6 w-6 text-primary" />
+                <div className="bg-expertEye-100 mx-auto rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                  <FileUp className="h-6 w-6 text-expertEye-700" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">1. Upload Your Data</h3>
                 <p className="text-muted-foreground">Simple data input to get started with your analysis.</p>
               </div>
               
               <div className="text-center">
-                <div className="bg-primary/20 mx-auto rounded-full w-16 h-16 flex items-center justify-center mb-4">
-                  <Brain className="h-6 w-6 text-primary" />
+                <div className="bg-expertEye-100 mx-auto rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                  <Brain className="h-6 w-6 text-expertEye-700" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">2. AI-Driven Analysis</h3>
                 <p className="text-muted-foreground">ExpertEye's AI processes and analyzes the data.</p>
               </div>
               
               <div className="text-center">
-                <div className="bg-primary/20 mx-auto rounded-full w-16 h-16 flex items-center justify-center mb-4">
-                  <BarChart2 className="h-6 w-6 text-primary" />
+                <div className="bg-expertEye-100 mx-auto rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                  <BarChart2 className="h-6 w-6 text-expertEye-700" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">3. Get Insights</h3>
                 <p className="text-muted-foreground">Receive detailed insights or recommendations instantly.</p>
               </div>
               
               <div className="text-center">
-                <div className="bg-primary/20 mx-auto rounded-full w-16 h-16 flex items-center justify-center mb-4">
-                  <Rocket className="h-6 w-6 text-primary" />
+                <div className="bg-expertEye-100 mx-auto rounded-full w-16 h-16 flex items-center justify-center mb-4">
+                  <Rocket className="h-6 w-6 text-expertEye-700" />
                 </div>
                 <h3 className="text-xl font-bold mb-2">4. Take Action</h3>
                 <p className="text-muted-foreground">Implement solutions to drive business outcomes.</p>
@@ -180,8 +184,8 @@ const HomePage = () => {
           </div>
         </section>
 
-        {/* CTA Section - Updated text as requested */}
-        <section className="py-16 px-6 bg-primary text-primary-foreground">
+        {/* CTA Section - Updated with purple background */}
+        <section className="py-16 px-6 bg-expertEye-700 text-white">
           <div className="container mx-auto text-center max-w-3xl space-y-6">
             <h2 className="text-3xl font-bold">Empower Your Team with ExpertEye DigitalHub</h2>
             <p className="text-lg">
@@ -191,7 +195,7 @@ const HomePage = () => {
               size="lg" 
               variant="secondary" 
               onClick={() => navigate("/signup")}
-              className="mt-4"
+              className="mt-4 bg-white text-expertEye-700 hover:bg-expertEye-50"
             >
               Get Started
             </Button>
@@ -199,14 +203,18 @@ const HomePage = () => {
         </section>
       </main>
 
-      {/* Footer */}
+      {/* Footer - Updated with logo and purple accents */}
       <footer className="bg-background border-t py-12 px-6">
         <div className="container mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-2 mb-4">
-                <Brain className="h-6 w-6 text-primary" />
-                <span className="text-lg font-bold">ExpertEye</span>
+                <img 
+                  src="/lovable-uploads/b62e1898-4b6c-49cf-8eea-204a5d62414e.png" 
+                  alt="ExpertEye Logo" 
+                  className="h-8 w-8" 
+                />
+                <span className="text-lg font-bold text-expertEye-700">ExpertEye</span>
               </div>
               <p className="text-sm text-muted-foreground">
                 Advanced AI solutions for modern businesses.
@@ -214,28 +222,28 @@ const HomePage = () => {
             </div>
             
             <div>
-              <h3 className="font-bold mb-4">Product</h3>
+              <h3 className="font-bold mb-4 text-expertEye-800">Product</h3>
               <ul className="space-y-2 text-sm">
-                <li><a href="#features" className="text-muted-foreground hover:text-foreground">Features</a></li>
-                <li><a href="#how-it-works" className="text-muted-foreground hover:text-foreground">How It Works</a></li>
+                <li><a href="#features" className="text-muted-foreground hover:text-expertEye-700">Features</a></li>
+                <li><a href="#how-it-works" className="text-muted-foreground hover:text-expertEye-700">How It Works</a></li>
               </ul>
             </div>
             
             <div>
-              <h3 className="font-bold mb-4">Company</h3>
+              <h3 className="font-bold mb-4 text-expertEye-800">Company</h3>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">About Us</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">Careers</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">Contact</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-expertEye-700">About Us</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-expertEye-700">Careers</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-expertEye-700">Contact</a></li>
               </ul>
             </div>
             
             <div>
-              <h3 className="font-bold mb-4">Legal</h3>
+              <h3 className="font-bold mb-4 text-expertEye-800">Legal</h3>
               <ul className="space-y-2 text-sm">
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">Privacy Policy</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">Terms of Service</a></li>
-                <li><a href="#" className="text-muted-foreground hover:text-foreground">Cookie Policy</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-expertEye-700">Privacy Policy</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-expertEye-700">Terms of Service</a></li>
+                <li><a href="#" className="text-muted-foreground hover:text-expertEye-700">Cookie Policy</a></li>
               </ul>
             </div>
           </div>
@@ -247,16 +255,16 @@ const HomePage = () => {
               © 2025 ExpertEye, All Rights Reserved
             </p>
             <div className="flex gap-4">
-              <a href="#" className="text-muted-foreground hover:text-foreground">
+              <a href="#" className="text-muted-foreground hover:text-expertEye-700">
                 <i className="ri-linkedin-fill"></i>
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground">
+              <a href="#" className="text-muted-foreground hover:text-expertEye-700">
                 <i className="ri-twitter-fill"></i>
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground">
+              <a href="#" className="text-muted-foreground hover:text-expertEye-700">
                 <i className="ri-facebook-fill"></i>
               </a>
-              <a href="#" className="text-muted-foreground hover:text-foreground">
+              <a href="#" className="text-muted-foreground hover:text-expertEye-700">
                 <i className="ri-instagram-fill"></i>
               </a>
             </div>
@@ -264,11 +272,11 @@ const HomePage = () => {
         </div>
       </footer>
 
-      {/* Floating Chat Button */}
+      {/* Floating Chat Button - Updated with purple background */}
       <div className="fixed bottom-6 right-6">
         <Button 
           size="lg" 
-          className="rounded-full h-16 w-16 shadow-lg"
+          className="rounded-full h-16 w-16 shadow-lg bg-expertEye-700 hover:bg-expertEye-800"
           onClick={() => navigate("/chat")}
         >
           <MessageSquare className="h-6 w-6" />
