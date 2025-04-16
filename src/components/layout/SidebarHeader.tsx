@@ -11,9 +11,9 @@ export function SidebarHeader({ isCollapsed, onToggleCollapse }: SidebarHeaderPr
   return (
     <div className="flex items-center justify-between p-4">
       <div className="flex items-center space-x-2">
-        <BookOpen className="h-7 w-7 text-expertEye-600" />
+        <BookOpen className="h-7 w-7 text-primary" />
         {!isCollapsed && (
-          <span className="text-xl font-bold bg-gradient-to-r from-expertEye-600 to-expertEye-800 bg-clip-text text-transparent">
+          <span className="text-xl font-bold text-primary logo-text">
             ExpertEye
           </span>
         )}
