@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
@@ -24,23 +23,37 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
   const navigate = useNavigate();
   const { handleError } = useApiErrorHandler();
 
+  const validateExpertEyeEmail = (email: string) => {
+    return email.endsWith("@experteye.com");
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!isLogin && password !== confirmPassword) {
-      toast({
-        title: "Passwords don't match",
-        description: "Please make sure your passwords match.",
-        variant: "destructive",
-      });
-      return;
+    if (!isLogin) {
+      if (!validateExpertEyeEmail(email)) {
+        toast({
+          title: "Invalid Email",
+          description: "Only @experteye.com email addresses are allowed.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      if (password !== confirmPassword) {
+        toast({
+          title: "Passwords don't match",
+          description: "Please make sure your passwords match.",
+          variant: "destructive",
+        });
+        return;
+      }
     }
 
     setIsLoading(true);
     
     try {
       if (isLogin) {
-        // Login process
         await AuthApi.login(username || email, password);
         toast({
           title: "Logged in successfully",
@@ -48,7 +61,6 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         });
         navigate("/dashboard");
       } else {
-        // Registration process
         await AuthApi.register(username, email, password);
         toast({
           title: "Account created successfully",
@@ -57,7 +69,6 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         navigate("/login");
       }
     } catch (error: any) {
-      // Updated error message for login failures
       if (isLogin) {
         toast({
           title: "Login failed",
@@ -72,8 +83,6 @@ const AuthForm = ({ isLogin = true }: AuthFormProps) => {
         });
       }
       
-      // We're not calling handleError here to avoid displaying 'failed fetch' message
-      // but we still log the error to console for debugging
       console.error("Auth error:", error);
     } finally {
       setIsLoading(false);
