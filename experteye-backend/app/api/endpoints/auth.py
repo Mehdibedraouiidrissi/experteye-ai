@@ -79,9 +79,9 @@ async def register_user(
             detail="This password is already in use by another user"
         )
     
-    # Check if username already exists
+    # Check if username already exists (case-insensitive)
     users_db = get_user_db()
-    if any(user["username"] == username for user in users_db):
+    if any(user["username"].lower() == username.lower() for user in users_db):
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Username already registered"
