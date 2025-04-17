@@ -26,11 +26,14 @@ const LoginForm = () => {
 
   // Check for stored token on component mount
   useEffect(() => {
+    // Check if we're already logged in
     const token = localStorage.getItem("auth_token");
     if (token) {
+      // Add timestamp to prevent caching
+      const timestamp = new Date().getTime();
       // If token exists, navigate to dashboard
       console.log("Token found in localStorage, redirecting to dashboard");
-      window.location.href = "/dashboard";
+      window.location.href = `/dashboard?_t=${timestamp}`;
     }
   }, []);
 
@@ -56,6 +59,7 @@ const LoginForm = () => {
           }}
           required
           className="w-full"
+          autoComplete="username"
         />
       </div>
       
@@ -63,6 +67,7 @@ const LoginForm = () => {
         id="password"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
+        autoComplete="current-password"
       />
 
       <div className="text-right">

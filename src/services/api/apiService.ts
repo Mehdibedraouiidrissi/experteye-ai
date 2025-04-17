@@ -34,9 +34,12 @@ export class ApiService {
     
     console.log(`API Request: ${method} ${url}`);
     
+    // Generate a unique timestamp to prevent caching
+    const timestamp = new Date().getTime();
+    
     const headers: HeadersInit = {
       // Add cache control headers to prevent caching
-      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
       "Pragma": "no-cache",
       "Expires": "0"
     };
@@ -58,7 +61,7 @@ export class ApiService {
       // Use 'include' for cross-origin requests with credentials
       credentials: "include",
       // Prevent caching of requests
-      cache: "no-cache",
+      cache: "no-store",
       mode: "cors", // Explicitly set CORS mode
     };
     
@@ -71,8 +74,12 @@ export class ApiService {
     }
     
     try {
-      console.log(`Making API request to: ${url} with method: ${method}`);
-      const response = await fetch(url, options);
+      console.log(`Making API request to: ${url}?_t=${timestamp} with method: ${method}`);
+      
+      // Add timestamp parameter to URL to prevent caching
+      const cacheBustUrl = `${url}${url.includes('?') ? '&' : '?'}_t=${timestamp}`;
+      
+      const response = await fetch(cacheBustUrl, options);
       
       // For debugging purposes
       console.log(`Response status: ${response.status}`);
@@ -120,5 +127,23 @@ export class ApiService {
       
       throw error;
     }
+  }
+  
+  // Clear all browser storage - for complete logout
+  static clearStorage() {
+    // Clear localStorage
+    localStorage.clear();
+    
+    // Clear sessionStorage
+    sessionStorage.clear();
+    
+    // Clear all cookies
+    document.cookie.split(";").forEach(cookie => {
+      const [name] = cookie.trim().split("=");
+      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
+    });
+    
+    // Clear the token in memory
+    this.token = null;
   }
 }
