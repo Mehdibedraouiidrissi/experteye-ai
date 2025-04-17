@@ -32,7 +32,13 @@ export class ApiService {
     const url = `${API_BASE_URL}${endpoint}`;
     const token = this.getToken();
     
-    const headers: HeadersInit = {};
+    const headers: HeadersInit = {
+      // Add cache control headers to prevent caching
+      "Cache-Control": "no-cache, no-store, must-revalidate",
+      "Pragma": "no-cache",
+      "Expires": "0"
+    };
+    
     if (token) {
       headers["Authorization"] = `Bearer ${token}`;
     }
@@ -49,6 +55,8 @@ export class ApiService {
       headers,
       // Use 'include' for cross-origin requests with credentials
       credentials: "include",
+      // Prevent caching of requests
+      cache: "no-cache",
     };
     
     if (data) {
