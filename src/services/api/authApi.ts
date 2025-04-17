@@ -29,10 +29,9 @@ export const AuthApi = {
         const profile = await this.getUserProfile();
         console.log("User profile verified successfully:", profile);
         
-        // Redirect to dashboard with a timeout to allow for state updates
-        setTimeout(() => {
-          window.location.href = "/dashboard";
-        }, 100);
+        // Redirect to dashboard after successful login and profile verification
+        console.log("Redirecting to dashboard...");
+        window.location.href = "/dashboard";
         
         return response;
       } catch (profileError) {

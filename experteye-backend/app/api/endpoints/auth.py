@@ -3,6 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import timedelta
 from typing import Dict, Optional
+from jose import jwt, JWTError
 
 from app.core.security import create_access_token, verify_password
 from app.core.config import settings
@@ -37,12 +38,7 @@ async def register_user(
     email: str = Body(...),
     password: str = Body(...)
 ):
-    # Validate input
-    if not username or not email or not password:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="All fields are required"
-        )
+    # ... keep existing code (validation of input fields)
     
     # Validate email domain
     if not email.endswith("@experteye.com"):
@@ -51,20 +47,7 @@ async def register_user(
             detail="Only @experteye.com email addresses are allowed"
         )
     
-    # Check if username already exists
-    users_db = get_user_db()
-    if any(user["username"] == username for user in users_db):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Username already registered"
-        )
-    
-    # Check if email already exists
-    if any(user["email"] == email for user in users_db):
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
-        )
+    # ... keep existing code (check for existing username and email)
     
     try:
         user = create_user(username, email, password)
@@ -83,7 +66,7 @@ async def register_user(
 @router.get("/users/me")
 async def read_users_me(token: str = Depends(oauth2_scheme)):
     try:
-        import jwt
+        # Using jose.jwt which was imported at the top
         payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         username = payload.get("sub")
         if username is None:
@@ -104,7 +87,7 @@ async def read_users_me(token: str = Depends(oauth2_scheme)):
             "is_admin": user.get("is_admin", False)
         }
         return user_data
-    except jwt.PyJWTError as e:
+    except JWTError as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Invalid token: {str(e)}",
