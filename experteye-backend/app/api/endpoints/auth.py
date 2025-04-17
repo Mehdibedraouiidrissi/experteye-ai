@@ -108,5 +108,35 @@ async def register_user(
             detail=f"Registration failed: {str(e)}"
         )
 
-# ... keep existing code (read_users_me and health_check endpoints)
+@router.get("/users/me")
+async def read_users_me(token: str = Depends(oauth2_scheme)):
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        username: str = payload.get("sub")
+        if username is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Could not validate credentials",
+                headers={"WWW-Authenticate": "Bearer"},
+            )
+    except JWTError:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Could not validate credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
+    user = get_user_by_username(username)
+    if user is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="User not found",
+        )
+    
+    # Remove sensitive information
+    safe_user = {k: v for k, v in user.items() if k != "hashed_password"}
+    return safe_user
 
+@router.get("/health")
+async def health_check():
+    return {"status": "ok"}

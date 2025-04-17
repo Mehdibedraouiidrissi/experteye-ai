@@ -30,8 +30,11 @@ export const AuthApi = {
         console.log("User profile verified successfully:", profile);
         
         // Redirect to dashboard after successful login and profile verification
-        console.log("Redirecting to dashboard...");
-        window.location.href = "/dashboard";
+        // Add a small delay to ensure the token is properly set
+        setTimeout(() => {
+          console.log("Redirecting to dashboard...");
+          window.location.href = "/dashboard";
+        }, 100);
         
         return response;
       } catch (profileError) {
