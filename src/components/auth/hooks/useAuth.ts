@@ -141,12 +141,14 @@ export const useAuth = (isLogin: boolean) => {
         const loginIdentifier = username || email;
         console.log(`Attempting login with identifier: ${loginIdentifier}`);
         
-        await AuthApi.login(loginIdentifier, password);
+        const response = await AuthApi.login(loginIdentifier, password);
         
         toast({
           title: "Logged in successfully",
           description: "Welcome back to ExpertEye!",
         });
+        
+        // We don't need to redirect here as the AuthApi.login function will handle that
       } else {
         const result = await AuthApi.register(username, email, password);
         
