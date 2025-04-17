@@ -11,6 +11,7 @@ interface PasswordInputProps {
   label?: string;
   placeholder?: string;
   required?: boolean;
+  autoComplete?: string;
 }
 
 const PasswordInput = ({
@@ -19,7 +20,8 @@ const PasswordInput = ({
   onChange,
   label = "Password",
   placeholder = "••••••••",
-  required = true
+  required = true,
+  autoComplete = "current-password"
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,6 +37,7 @@ const PasswordInput = ({
           onChange={onChange}
           required={required}
           className="w-full pr-10"
+          autoComplete={autoComplete}
         />
         <button 
           type="button" 
