@@ -32,6 +32,8 @@ export class ApiService {
     const url = `${API_BASE_URL}${endpoint}`;
     const token = this.getToken();
     
+    console.log(`API Request: ${method} ${url}`);
+    
     const headers: HeadersInit = {
       // Add cache control headers to prevent caching
       "Cache-Control": "no-cache, no-store, must-revalidate",
@@ -57,6 +59,7 @@ export class ApiService {
       credentials: "include",
       // Prevent caching of requests
       cache: "no-cache",
+      mode: "cors", // Explicitly set CORS mode
     };
     
     if (data) {
@@ -68,7 +71,7 @@ export class ApiService {
     }
     
     try {
-      console.log(`Attempting API request to: ${url} with method: ${method}`);
+      console.log(`Making API request to: ${url} with method: ${method}`);
       const response = await fetch(url, options);
       
       // For debugging purposes
@@ -79,6 +82,7 @@ export class ApiService {
         try {
           const errorData = await response.json();
           errorMessage = errorData.detail || `Error: ${response.status}`;
+          console.error("API error response:", errorData);
         } catch {
           if (endpoint === "/auth/token" && response.status === 401) {
             errorMessage = "Username or password invalid";
@@ -97,9 +101,12 @@ export class ApiService {
       // Check if response is empty
       const contentType = response.headers.get("content-type");
       if (contentType && contentType.includes("application/json")) {
-        return await response.json();
+        const jsonData = await response.json();
+        console.log("Received API response:", jsonData);
+        return jsonData;
       }
       
+      console.log("Received empty or non-JSON response");
       return {} as T;
     } catch (error) {
       console.error(`API request failed to ${url}:`, error);

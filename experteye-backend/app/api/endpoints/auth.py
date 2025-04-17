@@ -35,6 +35,13 @@ async def register_user(
     email: str = Body(...),
     password: str = Body(...)
 ):
+    # Validate input
+    if not username or not email or not password:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="All fields are required"
+        )
+    
     # Validate email domain
     if not email.endswith("@experteye.com"):
         raise HTTPException(
@@ -42,6 +49,7 @@ async def register_user(
             detail="Only @experteye.com email addresses are allowed"
         )
     
+    # Check if username already exists
     users_db = get_user_db()
     if any(user["username"] == username for user in users_db):
         raise HTTPException(
@@ -49,9 +57,16 @@ async def register_user(
             detail="Username already registered"
         )
     
+    # Check if email already exists
+    if any(user["email"] == email for user in users_db):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email already registered"
+        )
+    
     try:
         user = create_user(username, email, password)
-        return {"username": user["username"], "email": user["email"]}
+        return {"username": user["username"], "email": user["email"], "message": "User created successfully"}
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
