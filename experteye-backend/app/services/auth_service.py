@@ -1,3 +1,4 @@
+
 import uuid
 from datetime import datetime
 from typing import Dict, Any, Optional
@@ -47,8 +48,10 @@ def authenticate_user(username: str, password: str) -> Optional[Dict[str, Any]]:
     # Debug
     print(f"Authenticating user: {username}")
     
-    # Try to find user by username or email
-    user = next((user for user in users_db if user["username"] == username or user["email"] == username), None)
+    # Try to find user by username or email (case-insensitive for username)
+    user = next((user for user in users_db if 
+                 user["username"].lower() == username.lower() or 
+                 user["email"] == username), None)
     
     if not user:
         print(f"User not found: {username}")
@@ -82,8 +85,7 @@ def is_password_unique(password: str) -> bool:
     users_db = get_user_db()
     
     # For security, this compares the hash of the new password with existing password hashes
-    new_hash = get_password_hash(password)
-    
+    # Using verify_password to compare the password with all existing hashes
     for user in users_db:
         if verify_password(password, user["hashed_password"]):
             return False
@@ -94,8 +96,8 @@ def create_user(username: str, email: str, password: str) -> Dict[str, Any]:
     """Create a new user."""
     users_db = get_user_db()
     
-    # Check if username already exists
-    if any(user["username"] == username for user in users_db):
+    # Check if username already exists (case-insensitive)
+    if any(user["username"].lower() == username.lower() for user in users_db):
         raise ValueError("Username already exists")
     
     # Check if email already exists
@@ -124,6 +126,6 @@ def get_user(user_id: str) -> Optional[Dict[str, Any]]:
     return next((user for user in users_db if user["id"] == user_id), None)
 
 def get_user_by_username(username: str) -> Optional[Dict[str, Any]]:
-    """Get user by username."""
+    """Get user by username (case-insensitive)."""
     users_db = get_user_db()
-    return next((user for user in users_db if user["username"] == username), None)
+    return next((user for user in users_db if user["username"].lower() == username.lower()), None)

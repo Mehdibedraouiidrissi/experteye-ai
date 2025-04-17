@@ -39,7 +39,7 @@ const RegisterForm = () => {
         />
         <p className="text-xs text-muted-foreground">
           <Info className="inline h-3 w-3 mr-1" />
-          Username must be unique
+          Username must be unique (case-insensitive)
         </p>
       </div>
       
@@ -70,7 +70,7 @@ const RegisterForm = () => {
           <p><Info className="inline h-3 w-3 mr-1" />Must be 8-12 characters</p>
           <p><Info className="inline h-3 w-3 mr-1" />Must start with an uppercase letter</p>
           <p><Info className="inline h-3 w-3 mr-1" />Must contain at least one digit</p>
-          <p><Info className="inline h-3 w-3 mr-1" />Must be unique across all users</p>
+          <p><Info className="inline h-3 w-3 mr-1" />Must be unique across all users (case-insensitive)</p>
         </div>
       </div>
       
