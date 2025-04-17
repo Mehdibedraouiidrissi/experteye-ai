@@ -26,21 +26,21 @@ export const AuthApi = {
       
       // Get user profile to verify token
       try {
-        await this.getUserProfile();
-        console.log("User profile verified successfully");
+        const profile = await this.getUserProfile();
+        console.log("User profile verified successfully:", profile);
+        
+        // Redirect to dashboard with a timeout to allow for state updates
+        setTimeout(() => {
+          window.location.href = "/dashboard";
+        }, 100);
+        
+        return response;
       } catch (profileError) {
         console.error("Profile verification failed:", profileError);
         // Logout if profile verification fails
         this.logout();
         throw new Error("Authentication session verification failed");
       }
-      
-      // Redirect to dashboard with a timeout to allow for state updates
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 500);
-      
-      return response;
     } catch (error) {
       console.error("Login error:", error);
       throw error;
@@ -51,7 +51,6 @@ export const AuthApi = {
     try {
       console.log("Attempting to register user:", { username, email });
       
-      // Create a proper request body
       const userData = {
         username: username,
         email: email,
@@ -65,8 +64,6 @@ export const AuthApi = {
       );
       
       console.log("Registration successful:", response);
-      
-      // Return the response for handling by the calling code
       return response;
     } catch (error: any) {
       console.error("Registration error:", error);
@@ -85,19 +82,11 @@ export const AuthApi = {
   
   logout() {
     console.log("Logging out user");
-    
-    // Clear token
     ApiService.setToken(null);
-    
-    // Use the improved storage clearing method
     ApiService.clearStorage();
-    
-    // Force a complete page reload to clear any in-memory state
-    // Use replace instead of href to prevent back-button issues
     window.location.replace("/login?logout=true&_t=" + new Date().getTime());
   },
   
-  // Check if we're authenticated
   isAuthenticated() {
     return !!ApiService.getToken();
   }
