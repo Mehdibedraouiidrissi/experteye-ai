@@ -122,7 +122,7 @@ export const useAuth = (isLogin: boolean) => {
         // Use navigate instead of direct window.location for better UX
         setTimeout(() => {
           navigate("/login", { replace: true });
-        }, 1000);
+        }, 500);
       }
     } catch (error: any) {
       console.error("Auth error:", error);

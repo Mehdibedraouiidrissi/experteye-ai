@@ -14,6 +14,7 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
 
 @router.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
+    print(f"Login attempt: {form_data.username}")
     user = authenticate_user(form_data.username, form_data.password)
     if not user:
         raise HTTPException(
@@ -26,6 +27,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     access_token = create_access_token(
         data={"sub": user["username"]}, expires_delta=access_token_expires
     )
+    print(f"User {user['username']} authenticated successfully")
     
     return {"access_token": access_token, "token_type": "bearer"}
 

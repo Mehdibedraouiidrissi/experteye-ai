@@ -58,11 +58,9 @@ export class ApiService {
     const options: RequestInit = {
       method,
       headers,
-      // Use 'include' for cross-origin requests with credentials
       credentials: "include",
-      // Prevent caching of requests
       cache: "no-store",
-      mode: "cors", // Explicitly set CORS mode
+      mode: "cors",
     };
     
     if (data) {
@@ -81,7 +79,6 @@ export class ApiService {
       
       const response = await fetch(cacheBustUrl, options);
       
-      // For debugging purposes
       console.log(`Response status: ${response.status}`);
       
       if (!response.ok) {
@@ -129,21 +126,13 @@ export class ApiService {
     }
   }
   
-  // Clear all browser storage - for complete logout
   static clearStorage() {
-    // Clear localStorage
     localStorage.clear();
-    
-    // Clear sessionStorage
     sessionStorage.clear();
-    
-    // Clear all cookies
     document.cookie.split(";").forEach(cookie => {
       const [name] = cookie.trim().split("=");
       document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
     });
-    
-    // Clear the token in memory
     this.token = null;
   }
 }
