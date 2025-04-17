@@ -1,5 +1,4 @@
 
-import { BookOpen } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import Logo from "@/components/shared/Logo";
 

@@ -62,7 +62,8 @@ export const useAuth = (isLogin: boolean) => {
           title: "Logged in successfully",
           description: "Welcome back to ExpertEye!",
         });
-        navigate("/dashboard");
+        // Force navigation using direct call instead of navigate hook
+        window.location.href = "/dashboard";
       } else {
         await AuthApi.register(username, email, password);
         toast({
