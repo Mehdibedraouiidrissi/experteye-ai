@@ -1,4 +1,3 @@
-
 import uuid
 from datetime import datetime
 from typing import Dict, Any, Optional
@@ -77,6 +76,19 @@ def authenticate_user(username: str, password: str) -> Optional[Dict[str, Any]]:
     
     print("Password verification failed")
     return None
+
+def is_password_unique(password: str) -> bool:
+    """Check if a password is unique among all users."""
+    users_db = get_user_db()
+    
+    # For security, this compares the hash of the new password with existing password hashes
+    new_hash = get_password_hash(password)
+    
+    for user in users_db:
+        if verify_password(password, user["hashed_password"]):
+            return False
+    
+    return True
 
 def create_user(username: str, email: str, password: str) -> Dict[str, Any]:
     """Create a new user."""
