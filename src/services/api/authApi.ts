@@ -16,13 +16,15 @@ export const AuthApi = {
         true
       );
       
+      if (!response || !response.access_token) {
+        throw new Error("Invalid response format from server");
+      }
+      
       console.log("Login successful, setting token");
       ApiService.setToken(response.access_token);
       
-      // Ensure we redirect properly after login
-      setTimeout(() => {
-        window.location.href = "/dashboard";
-      }, 100);
+      // Use window.location for a complete page reload to refresh state
+      window.location.href = "/dashboard";
       
       return response;
     } catch (error) {
@@ -34,26 +36,30 @@ export const AuthApi = {
   async register(username: string, email: string, password: string) {
     try {
       console.log("Attempting to register user:", { username, email });
+      const userData = { username, email, password };
+      
       return await ApiService.request(
         "/auth/register",
         "POST",
-        { username, email, password }
+        userData
       );
     } catch (error: any) {
       console.error("Registration error:", error);
-      // Enhance the error message if it's related to the API being unreachable
-      if (error.status === 0) {
-        error.message = "Unable to connect to the backend server. Please ensure the backend service is running and try again. If the issue persists, check that the backend is running on port 5000.";
-      }
       throw error;
     }
   },
   
   async getUserProfile() {
-    return await ApiService.request("/auth/users/me", "GET");
+    try {
+      return await ApiService.request("/auth/users/me", "GET");
+    } catch (error) {
+      console.error("Error fetching user profile:", error);
+      throw error;
+    }
   },
   
   logout() {
+    console.log("Logging out user");
     ApiService.setToken(null);
     window.location.href = "/login";
   }

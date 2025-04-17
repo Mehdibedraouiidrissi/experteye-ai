@@ -1,6 +1,4 @@
-import { ApiError } from "./types";
 
-// Ensure correct API URL based on environment
 const API_BASE_URL = import.meta.env.PROD 
   ? "/api" 
   : "http://localhost:5000/api"; 
@@ -49,6 +47,7 @@ export class ApiService {
     const options: RequestInit = {
       method,
       headers,
+      // Use 'include' for cross-origin requests with credentials
       credentials: "include",
     };
     
@@ -62,13 +61,10 @@ export class ApiService {
     
     try {
       console.log(`Attempting API request to: ${url} with method: ${method}`);
-      console.log("Request options:", JSON.stringify({
-        method,
-        headers,
-        hasBody: !!options.body
-      }, null, 2));
-      
       const response = await fetch(url, options);
+      
+      // For debugging purposes
+      console.log(`Response status: ${response.status}`);
       
       if (!response.ok) {
         let errorMessage;
@@ -76,17 +72,14 @@ export class ApiService {
           const errorData = await response.json();
           errorMessage = errorData.detail || `Error: ${response.status}`;
         } catch {
-          // For auth failures, provide a more user-friendly message
           if (endpoint === "/auth/token" && response.status === 401) {
             errorMessage = "Username or password invalid";
-          } else if (endpoint === "/auth/register") {
-            errorMessage = "Registration failed - server may be unavailable";
           } else {
             errorMessage = `Request failed with status: ${response.status}`;
           }
         }
         
-        const error: ApiError = {
+        const error = {
           status: response.status,
           message: errorMessage,
         };
@@ -104,11 +97,10 @@ export class ApiService {
       console.error(`API request failed to ${url}:`, error);
       
       if (error instanceof TypeError && error.message.includes('fetch')) {
-        const networkError: ApiError = {
+        throw {
           status: 0,
-          message: `Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}. Try running './start-dev.sh' script from the project root.`
+          message: `Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}.`
         };
-        throw networkError;
       }
       
       throw error;

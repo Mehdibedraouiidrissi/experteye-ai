@@ -1,7 +1,8 @@
+
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { AuthApi, useApiErrorHandler } from "@/services/api";
+import { AuthApi } from "@/services/api";
 
 export const useAuth = (isLogin: boolean) => {
   const [email, setEmail] = useState("");
@@ -12,7 +13,6 @@ export const useAuth = (isLogin: boolean) => {
   const [backendError, setBackendError] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
-  const { handleError } = useApiErrorHandler();
 
   const validateExpertEyeEmail = (email: string) => {
     return email.endsWith("@experteye.com");
@@ -23,6 +23,7 @@ export const useAuth = (isLogin: boolean) => {
     
     setBackendError(null);
     
+    // Validation
     if (!isLogin) {
       if (!validateExpertEyeEmail(email)) {
         toast({
@@ -56,15 +57,15 @@ export const useAuth = (isLogin: boolean) => {
     
     try {
       if (isLogin) {
-        console.log("Submitting login form with:", { username: username || email, password: password.length });
-        await AuthApi.login(username || email, password);
+        const loginIdentifier = username || email;
+        console.log(`Attempting login with identifier: ${loginIdentifier}`);
+        
+        await AuthApi.login(loginIdentifier, password);
+        
         toast({
           title: "Logged in successfully",
           description: "Welcome back to ExpertEye!",
         });
-        
-        console.log("Login successful, redirecting to dashboard");
-        // We'll let the AuthApi handle the redirect now
       } else {
         await AuthApi.register(username, email, password);
         toast({
@@ -76,22 +77,24 @@ export const useAuth = (isLogin: boolean) => {
     } catch (error: any) {
       console.error("Auth error:", error);
       
-      if (error?.status === 0 || error?.message?.includes("backend")) {
+      // Check for backend connectivity issues
+      if (error?.status === 0) {
         setBackendError(error.message || "Unable to connect to the backend server");
-      }
-      
-      if (isLogin) {
-        toast({
-          title: "Login failed",
-          description: "Username or password invalid. Please check your credentials or sign up if you don't have an account.",
-          variant: "destructive",
-        });
-      } else {
-        toast({
-          title: "Registration failed",
-          description: error?.message || "Unable to connect to the server. Please check your internet connection and try again.",
-          variant: "destructive",
-        });
+      } else if (error?.message) {
+        // Handle specific authentication errors
+        if (isLogin) {
+          toast({
+            title: "Login failed",
+            description: "Username or password invalid. Please check your credentials.",
+            variant: "destructive",
+          });
+        } else {
+          toast({
+            title: "Registration failed",
+            description: error.message,
+            variant: "destructive",
+          });
+        }
       }
     } finally {
       setIsLoading(false);

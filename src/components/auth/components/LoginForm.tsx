@@ -7,6 +7,7 @@ import { useToast } from "@/hooks/use-toast";
 import PasswordInput from "./PasswordInput";
 import BackendErrorAlert from "./BackendErrorAlert";
 import { useAuth } from "../hooks/useAuth";
+import { useEffect } from "react";
 
 const LoginForm = () => {
   const {
@@ -22,6 +23,16 @@ const LoginForm = () => {
   } = useAuth(true);
   
   const { toast } = useToast();
+
+  // Check for stored token on component mount
+  useEffect(() => {
+    const token = localStorage.getItem("auth_token");
+    if (token) {
+      // If token exists, navigate to dashboard
+      console.log("Token found in localStorage, redirecting to dashboard");
+      window.location.href = "/dashboard";
+    }
+  }, []);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
@@ -58,10 +69,13 @@ const LoginForm = () => {
         <Button 
           variant="link" 
           className="p-0 h-auto" 
-          onClick={() => toast({ 
-            title: "Reset link sent", 
-            description: "If an account exists, you'll receive a reset email" 
-          })}
+          onClick={(e) => {
+            e.preventDefault();
+            toast({ 
+              title: "Reset link sent", 
+              description: "If an account exists, you'll receive a reset email" 
+            });
+          }}
         >
           Forgot password?
         </Button>

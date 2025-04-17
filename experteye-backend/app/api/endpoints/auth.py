@@ -6,7 +6,7 @@ from datetime import timedelta
 from app.core.security import create_access_token, verify_password
 from app.core.config import settings
 from app.db.session import get_user_db
-from app.services.auth_service import authenticate_user, create_user
+from app.services.auth_service import authenticate_user, create_user, get_user_by_username
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
@@ -29,7 +29,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-async def register_user(username: str, password: str, email: str):
+async def register_user(username: str, email: str, password: str):
     # Validate email domain
     if not email.endswith("@experteye.com"):
         raise HTTPException(
@@ -56,4 +56,34 @@ async def register_user(username: str, password: str, email: str):
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"Registration failed: {str(e)}"
+        )
+
+@router.get("/users/me")
+async def read_users_me(token: str = Depends(oauth2_scheme)):
+    try:
+        import jwt
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        username = payload.get("sub")
+        if username is None:
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid authentication credentials",
+            )
+        user = get_user_by_username(username)
+        if not user:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="User not found",
+            )
+        # Remove sensitive information
+        user_data = {
+            "username": user["username"],
+            "email": user["email"],
+            "is_admin": user.get("is_admin", False)
+        }
+        return user_data
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Could not validate credentials: {str(e)}",
         )
