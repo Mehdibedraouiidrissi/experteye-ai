@@ -24,7 +24,18 @@ export const AuthApi = {
       console.log("Login successful, setting token:", response.access_token.substring(0, 10) + "...");
       ApiService.setToken(response.access_token);
       
-      // Redirect to dashboard
+      // Get user profile to verify token
+      try {
+        await this.getUserProfile();
+        console.log("User profile verified successfully");
+      } catch (profileError) {
+        console.error("Profile verification failed:", profileError);
+        // Logout if profile verification fails
+        this.logout();
+        throw new Error("Authentication session verification failed");
+      }
+      
+      // Redirect to dashboard with a timeout to allow for state updates
       setTimeout(() => {
         window.location.href = "/dashboard";
       }, 500);
@@ -54,6 +65,8 @@ export const AuthApi = {
       );
       
       console.log("Registration successful:", response);
+      
+      // Return the response for handling by the calling code
       return response;
     } catch (error: any) {
       console.error("Registration error:", error);
@@ -76,17 +89,16 @@ export const AuthApi = {
     // Clear token
     ApiService.setToken(null);
     
-    // Clear all storage to prevent cache issues
-    localStorage.clear();
-    sessionStorage.clear();
+    // Use the improved storage clearing method
+    ApiService.clearStorage();
     
-    // Clear cookies related to authentication
-    document.cookie.split(";").forEach(cookie => {
-      const [name] = cookie.trim().split("=");
-      document.cookie = `${name}=; expires=Thu, 01 Jan 1970 00:00:00 GMT; path=/;`;
-    });
-    
-    // Force a full page reload to clear any in-memory state
-    window.location.href = "/login?logout=true";
+    // Force a complete page reload to clear any in-memory state
+    // Use replace instead of href to prevent back-button issues
+    window.location.replace("/login?logout=true&_t=" + new Date().getTime());
+  },
+  
+  // Check if we're authenticated
+  isAuthenticated() {
+    return !!ApiService.getToken();
   }
 };

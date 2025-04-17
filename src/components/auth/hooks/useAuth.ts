@@ -19,6 +19,19 @@ export const useAuth = (isLogin: boolean) => {
     setBackendError(null);
   }, [username, email, password, confirmPassword]);
 
+  // Check for "logout=true" in the URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("logout") === "true") {
+      toast({
+        title: "Logged out successfully",
+        description: "You have been logged out of your account."
+      });
+      // Remove the query parameter to prevent showing the message again on refresh
+      navigate("/login", { replace: true });
+    }
+  }, [navigate, toast]);
+
   const validateExpertEyeEmail = (email: string) => {
     return email.endsWith("@experteye.com");
   };
@@ -108,7 +121,7 @@ export const useAuth = (isLogin: boolean) => {
         
         // Use navigate instead of direct window.location for better UX
         setTimeout(() => {
-          navigate("/login");
+          navigate("/login", { replace: true });
         }, 1000);
       }
     } catch (error: any) {

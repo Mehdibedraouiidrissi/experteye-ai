@@ -2,7 +2,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import timedelta
-from typing import Dict
+from typing import Dict, Optional
 
 from app.core.security import create_access_token, verify_password
 from app.core.config import settings
@@ -102,8 +102,18 @@ async def read_users_me(token: str = Depends(oauth2_scheme)):
             "is_admin": user.get("is_admin", False)
         }
         return user_data
+    except jwt.PyJWTError as e:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=f"Invalid token: {str(e)}",
+        )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=f"Could not validate credentials: {str(e)}",
         )
+
+# Add a basic health check endpoint
+@router.get("/health")
+async def health_check():
+    return {"status": "healthy"}

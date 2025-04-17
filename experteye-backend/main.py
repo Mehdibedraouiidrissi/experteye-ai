@@ -24,18 +24,24 @@ origins = [
     "http://172.19.16.1:8080", # Network IP from logs
 ]
 
-# More permissive CORS for development
+# Configure CORS middleware
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Allow all origins for troubleshooting
+    allow_origins=["*"],  # Allow all origins for development
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
     expose_headers=["*"],
+    max_age=600,  # Limit preflight cache to 10 minutes
 )
 
 # Include API router
 app.include_router(api_router, prefix="/api")
+
+# Add healthcheck endpoint for frontend to test connectivity
+@app.get("/api/healthcheck")
+async def healthcheck():
+    return {"status": "healthy", "message": "API server is running"}
 
 if __name__ == "__main__":
     import uvicorn
