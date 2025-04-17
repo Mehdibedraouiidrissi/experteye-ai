@@ -1,7 +1,8 @@
 
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import timedelta
+from typing import Dict
 
 from app.core.security import create_access_token, verify_password
 from app.core.config import settings
@@ -29,7 +30,11 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     return {"access_token": access_token, "token_type": "bearer"}
 
 @router.post("/register", status_code=status.HTTP_201_CREATED)
-async def register_user(username: str, email: str, password: str):
+async def register_user(
+    username: str = Body(...),
+    email: str = Body(...),
+    password: str = Body(...)
+):
     # Validate email domain
     if not email.endswith("@experteye.com"):
         raise HTTPException(

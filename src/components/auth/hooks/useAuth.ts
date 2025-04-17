@@ -72,7 +72,10 @@ export const useAuth = (isLogin: boolean) => {
           title: "Account created successfully",
           description: "Your account has been created. You can now login.",
         });
-        navigate("/login");
+        // Use navigate instead of direct window.location for better UX
+        setTimeout(() => {
+          navigate("/login");
+        }, 1000);
       }
     } catch (error: any) {
       console.error("Auth error:", error);
@@ -81,20 +84,13 @@ export const useAuth = (isLogin: boolean) => {
       if (error?.status === 0) {
         setBackendError(error.message || "Unable to connect to the backend server");
       } else if (error?.message) {
-        // Handle specific authentication errors
-        if (isLogin) {
-          toast({
-            title: "Login failed",
-            description: "Username or password invalid. Please check your credentials.",
-            variant: "destructive",
-          });
-        } else {
-          toast({
-            title: "Registration failed",
-            description: error.message,
-            variant: "destructive",
-          });
-        }
+        setBackendError(error.message);
+        // Also show toast for better visibility
+        toast({
+          title: isLogin ? "Login failed" : "Registration failed",
+          description: error.message,
+          variant: "destructive",
+        });
       }
     } finally {
       setIsLoading(false);

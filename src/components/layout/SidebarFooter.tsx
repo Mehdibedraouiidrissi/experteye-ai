@@ -1,9 +1,9 @@
 
 import { LogOut } from "lucide-react";
-import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
+import { AuthApi } from "@/services/api";
 
 interface SidebarFooterProps {
   isCollapsed: boolean;
@@ -11,14 +11,15 @@ interface SidebarFooterProps {
 
 export function SidebarFooter({ isCollapsed }: SidebarFooterProps) {
   const { toast } = useToast();
-  const navigate = useNavigate();
 
   const handleLogout = () => {
     toast({
-      title: "Logged out successfully",
-      description: "You have been logged out of your account."
+      title: "Logging out",
+      description: "You are being logged out of your account."
     });
-    navigate("/login");
+    
+    // Use AuthApi logout to properly clear tokens and redirect
+    AuthApi.logout();
   };
 
   return (
