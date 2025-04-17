@@ -6,6 +6,7 @@ import { AppSidebar } from "./AppSidebar";
 import { Button } from "@/components/ui/button";
 import { UserCircle2 } from "lucide-react";
 import { ModeToggle } from "./ModeToggle";
+import Logo from "@/components/shared/Logo";
 
 interface DashboardLayoutProps {
   children: ReactNode;
@@ -20,21 +21,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
         <AppSidebar />
         <div className="flex-1 flex flex-col overflow-hidden">
           <header className="bg-background border-b py-2 px-4 flex justify-between items-center">
-            <div 
-              className="logo-container cursor-pointer" 
-              onClick={() => navigate("/")}
-            >
-              <div className="logo-img flex items-center justify-center">
-                <img 
-                  src="/lovable-uploads/2c36dba7-9c21-44c0-9d59-c51c67614466.png" 
-                  alt="ExpertEye Logo" 
-                  className="h-8 w-8"
-                />
-              </div>
-              <h1 className="text-xl font-bold text-primary logo-text hidden md:block">
-                ExpertEye AI Assistant
-              </h1>
-            </div>
+            <Logo />
             <div className="flex items-center gap-3">
               <ModeToggle />
               <Button 

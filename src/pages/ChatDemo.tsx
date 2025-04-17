@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { SendIcon, ArrowLeft } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { ModeToggle } from "@/components/layout/ModeToggle";
+import Logo from "@/components/shared/Logo";
 
 const ChatDemo = () => {
   const navigate = useNavigate();
@@ -45,16 +46,7 @@ const ChatDemo = () => {
           <Button variant="ghost" size="icon" onClick={() => navigate("/")} className="rounded-full">
             <ArrowLeft className="h-5 w-5" />
           </Button>
-          <div className="logo-container">
-            <div className="logo-img flex items-center justify-center">
-              <img 
-                src="/lovable-uploads/2c36dba7-9c21-44c0-9d59-c51c67614466.png" 
-                alt="ExpertEye Logo" 
-                className="h-8 w-8"
-              />
-            </div>
-            <h1 className="text-xl font-bold text-primary logo-text">ExpertEye AI Assistant Demo</h1>
-          </div>
+          <Logo />
         </div>
         <ModeToggle />
       </header>
