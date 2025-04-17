@@ -22,15 +22,16 @@ origins = [
     "http://127.0.0.1:8080",  # Local IP alternative
     "http://172.18.1.5:8080", # Network IP from logs
     "http://172.19.16.1:8080", # Network IP from logs
-    "*"  # Allow all origins for testing (remove in production)
 ]
 
+# More permissive CORS for development
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=["*"],  # Allow all origins for troubleshooting
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["*"],
 )
 
 # Include API router

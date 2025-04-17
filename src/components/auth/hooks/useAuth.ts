@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { AuthApi } from "@/services/api";
@@ -13,6 +13,11 @@ export const useAuth = (isLogin: boolean) => {
   const [backendError, setBackendError] = useState<string | null>(null);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Clear error when form changes
+  useEffect(() => {
+    setBackendError(null);
+  }, [username, email, password, confirmPassword]);
 
   const validateExpertEyeEmail = (email: string) => {
     return email.endsWith("@experteye.com");
@@ -42,7 +47,34 @@ export const useAuth = (isLogin: boolean) => {
         });
         return;
       }
+      
+      if (!username || username.trim() === "") {
+        toast({
+          title: "Username required",
+          description: "Please enter a valid username.",
+          variant: "destructive",
+        });
+        return;
+      }
     } else {
+      if (!username && !email) {
+        toast({
+          title: "Login information required",
+          description: "Please enter a username or email.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      if (!password) {
+        toast({
+          title: "Password required",
+          description: "Please enter your password.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       if (email && !validateExpertEyeEmail(email)) {
         toast({
           title: "Invalid Email Format",
@@ -67,11 +99,13 @@ export const useAuth = (isLogin: boolean) => {
           description: "Welcome back to ExpertEye!",
         });
       } else {
-        await AuthApi.register(username, email, password);
+        const result = await AuthApi.register(username, email, password);
+        
         toast({
           title: "Account created successfully",
           description: "Your account has been created. You can now login.",
         });
+        
         // Use navigate instead of direct window.location for better UX
         setTimeout(() => {
           navigate("/login");
@@ -80,9 +114,9 @@ export const useAuth = (isLogin: boolean) => {
     } catch (error: any) {
       console.error("Auth error:", error);
       
-      // Check for backend connectivity issues
+      // Handle network issues specifically
       if (error?.status === 0) {
-        setBackendError(error.message || "Unable to connect to the backend server");
+        setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
       } else if (error?.message) {
         setBackendError(error.message);
         // Also show toast for better visibility

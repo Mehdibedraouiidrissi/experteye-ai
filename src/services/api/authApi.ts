@@ -1,6 +1,5 @@
 
 import { ApiService } from "./apiService";
-import { useNavigate } from "react-router-dom";
 
 export const AuthApi = {
   async login(username: string, password: string) {
@@ -18,14 +17,17 @@ export const AuthApi = {
       );
       
       if (!response || !response.access_token) {
+        console.error("Invalid response format from server:", response);
         throw new Error("Invalid response format from server");
       }
       
-      console.log("Login successful, setting token");
+      console.log("Login successful, setting token:", response.access_token.substring(0, 10) + "...");
       ApiService.setToken(response.access_token);
       
-      // Use window.location for a complete page reload to refresh state
-      window.location.href = "/dashboard";
+      // Redirect to dashboard
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 500);
       
       return response;
     } catch (error) {
@@ -45,11 +47,14 @@ export const AuthApi = {
         password: password
       };
       
-      return await ApiService.request(
+      const response = await ApiService.request(
         "/auth/register",
         "POST",
         userData
       );
+      
+      console.log("Registration successful:", response);
+      return response;
     } catch (error: any) {
       console.error("Registration error:", error);
       throw error;
@@ -67,6 +72,7 @@ export const AuthApi = {
   
   logout() {
     console.log("Logging out user");
+    
     // Clear token
     ApiService.setToken(null);
     
@@ -81,6 +87,6 @@ export const AuthApi = {
     });
     
     // Force a full page reload to clear any in-memory state
-    window.location.href = "/login";
+    window.location.href = "/login?logout=true";
   }
 };

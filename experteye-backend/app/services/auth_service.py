@@ -34,9 +34,9 @@ def ensure_admin_user_exists():
         print(f"Admin user created: {ADMIN_USERNAME}")
     else:
         # Re-hash admin password to ensure it works with current hashing algorithm
-        for user in users_db:
+        for i, user in enumerate(users_db):
             if user["username"] == ADMIN_USERNAME:
-                user["hashed_password"] = get_password_hash(ADMIN_PASSWORD)
+                users_db[i]["hashed_password"] = get_password_hash(ADMIN_PASSWORD)
                 save_user_db(users_db)
                 break
         print(f"Admin user already exists: {ADMIN_USERNAME}")
@@ -45,23 +45,38 @@ def authenticate_user(username: str, password: str) -> Optional[Dict[str, Any]]:
     """Authenticate a user with username and password."""
     users_db = get_user_db()
     
+    # Debug
+    print(f"Authenticating user: {username}")
+    
     # Try to find user by username or email
     user = next((user for user in users_db if user["username"] == username or user["email"] == username), None)
     
     if not user:
+        print(f"User not found: {username}")
         return None
     
-    # Check if password is correct    
-    if not verify_password(password, user["hashed_password"]):
-        # Special case for admin during development
-        if username == ADMIN_USERNAME and password == ADMIN_PASSWORD:
-            # Update password hash and save
-            user["hashed_password"] = get_password_hash(ADMIN_PASSWORD)
-            save_user_db(users_db)
-            return user
-        return None
-        
-    return user
+    print(f"Found user: {user['username']}")
+    
+    # Special case for admin during development
+    if (user["username"] == ADMIN_USERNAME and password == ADMIN_PASSWORD):
+        print("Admin login with default password")
+        # Update password hash if needed
+        if not verify_password(password, user["hashed_password"]):
+            print("Updating admin password hash")
+            for i, u in enumerate(users_db):
+                if u["username"] == ADMIN_USERNAME:
+                    users_db[i]["hashed_password"] = get_password_hash(ADMIN_PASSWORD)
+                    save_user_db(users_db)
+                    break
+        return user
+    
+    # Regular password check
+    if verify_password(password, user["hashed_password"]):
+        print("Password verified")
+        return user
+    
+    print("Password verification failed")
+    return None
 
 def create_user(username: str, email: str, password: str) -> Dict[str, Any]:
     """Create a new user."""
@@ -70,6 +85,10 @@ def create_user(username: str, email: str, password: str) -> Dict[str, Any]:
     # Check if username already exists
     if any(user["username"] == username for user in users_db):
         raise ValueError("Username already exists")
+    
+    # Check if email already exists
+    if any(user["email"] == email for user in users_db):
+        raise ValueError("Email already exists")
     
     # Create new user
     user = {
@@ -83,6 +102,7 @@ def create_user(username: str, email: str, password: str) -> Dict[str, Any]:
     
     users_db.append(user)
     save_user_db(users_db)
+    print(f"User created: {username}")
     
     return user
 
