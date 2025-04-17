@@ -36,6 +36,31 @@ export const useAuth = (isLogin: boolean) => {
     return email.endsWith("@experteye.com");
   };
 
+  const validatePassword = (password: string): { valid: boolean; message: string } => {
+    if (password.length < 8 || password.length > 12) {
+      return {
+        valid: false,
+        message: "Password must be between 8 and 12 characters"
+      };
+    }
+
+    if (!/^[A-Z]/.test(password)) {
+      return {
+        valid: false,
+        message: "Password must start with an uppercase letter"
+      };
+    }
+
+    if (!/\d/.test(password)) {
+      return {
+        valid: false,
+        message: "Password must contain at least one digit"
+      };
+    }
+
+    return { valid: true, message: "" };
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
@@ -47,6 +72,17 @@ export const useAuth = (isLogin: boolean) => {
         toast({
           title: "Invalid Email",
           description: "Only @experteye.com email addresses are allowed.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Password validation
+      const passwordValidation = validatePassword(password);
+      if (!passwordValidation.valid) {
+        toast({
+          title: "Invalid Password",
+          description: passwordValidation.message,
           variant: "destructive",
         });
         return;

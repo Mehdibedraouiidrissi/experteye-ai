@@ -2,7 +2,7 @@
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Loader2 } from "lucide-react";
+import { Loader2, Info } from "lucide-react";
 import PasswordInput from "./PasswordInput";
 import BackendErrorAlert from "./BackendErrorAlert";
 import { useAuth } from "../hooks/useAuth";
@@ -37,6 +37,10 @@ const RegisterForm = () => {
           required
           className="w-full"
         />
+        <p className="text-xs text-muted-foreground">
+          <Info className="inline h-3 w-3 mr-1" />
+          Username must be unique
+        </p>
       </div>
       
       <div className="space-y-2">
@@ -44,19 +48,31 @@ const RegisterForm = () => {
         <Input
           id="email"
           type="email"
-          placeholder="name@example.com"
+          placeholder="name@experteye.com"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
           className="w-full"
         />
+        <p className="text-xs text-muted-foreground">
+          <Info className="inline h-3 w-3 mr-1" />
+          Only @experteye.com email addresses are allowed
+        </p>
       </div>
       
-      <PasswordInput
-        id="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-      />
+      <div className="space-y-2">
+        <PasswordInput
+          id="password"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+        />
+        <div className="text-xs text-muted-foreground space-y-1">
+          <p><Info className="inline h-3 w-3 mr-1" />Must be 8-12 characters</p>
+          <p><Info className="inline h-3 w-3 mr-1" />Must start with an uppercase letter</p>
+          <p><Info className="inline h-3 w-3 mr-1" />Must contain at least one digit</p>
+          <p><Info className="inline h-3 w-3 mr-1" />Must be unique across all users</p>
+        </div>
+      </div>
       
       <PasswordInput
         id="confirmPassword"
