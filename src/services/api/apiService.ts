@@ -1,4 +1,3 @@
-
 import { ApiError } from "./types";
 
 // Ensure correct API URL based on environment
@@ -13,6 +12,7 @@ export class ApiService {
     this.token = token;
     if (token) {
       localStorage.setItem("auth_token", token);
+      console.log("Auth token set successfully");
     } else {
       localStorage.removeItem("auth_token");
     }
@@ -39,7 +39,10 @@ export class ApiService {
       headers["Authorization"] = `Bearer ${token}`;
     }
     
-    if (!isFormData && data) {
+    // For login, ensure we use the right content type
+    if (endpoint === "/auth/token" && method === "POST") {
+      headers["Content-Type"] = "application/x-www-form-urlencoded";
+    } else if (!isFormData && data && typeof data !== 'string') {
       headers["Content-Type"] = "application/json";
     }
     
@@ -52,9 +55,6 @@ export class ApiService {
     if (data) {
       if (isFormData || (typeof data === 'string' && endpoint === "/auth/token")) {
         options.body = data;
-        if (endpoint === "/auth/token") {
-          headers["Content-Type"] = "application/x-www-form-urlencoded";
-        }
       } else {
         options.body = JSON.stringify(data);
       }
@@ -62,7 +62,11 @@ export class ApiService {
     
     try {
       console.log(`Attempting API request to: ${url} with method: ${method}`);
-      console.log("Request options:", JSON.stringify(options, null, 2));
+      console.log("Request options:", JSON.stringify({
+        method,
+        headers,
+        hasBody: !!options.body
+      }, null, 2));
       
       const response = await fetch(url, options);
       

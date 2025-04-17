@@ -1,4 +1,3 @@
-
 import { ApiService } from "./apiService";
 
 export const AuthApi = {
@@ -7,15 +6,28 @@ export const AuthApi = {
     formData.append("username", username);
     formData.append("password", password);
     
-    const response = await ApiService.request<{ access_token: string, token_type: string }>(
-      "/auth/token",
-      "POST",
-      formData.toString(),
-      false
-    );
-    
-    ApiService.setToken(response.access_token);
-    return response;
+    try {
+      console.log("Attempting login with:", { username });
+      const response = await ApiService.request<{ access_token: string, token_type: string }>(
+        "/auth/token",
+        "POST",
+        formData.toString(),
+        true
+      );
+      
+      console.log("Login successful, setting token");
+      ApiService.setToken(response.access_token);
+      
+      // Ensure we redirect properly after login
+      setTimeout(() => {
+        window.location.href = "/dashboard";
+      }, 100);
+      
+      return response;
+    } catch (error) {
+      console.error("Login error:", error);
+      throw error;
+    }
   },
   
   async register(username: string, email: string, password: string) {

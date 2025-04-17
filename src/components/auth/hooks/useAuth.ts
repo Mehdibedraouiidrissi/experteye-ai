@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -57,13 +56,15 @@ export const useAuth = (isLogin: boolean) => {
     
     try {
       if (isLogin) {
+        console.log("Submitting login form with:", { username: username || email, password: password.length });
         await AuthApi.login(username || email, password);
         toast({
           title: "Logged in successfully",
           description: "Welcome back to ExpertEye!",
         });
-        // Force navigation using direct call instead of navigate hook
-        window.location.href = "/dashboard";
+        
+        console.log("Login successful, redirecting to dashboard");
+        // We'll let the AuthApi handle the redirect now
       } else {
         await AuthApi.register(username, email, password);
         toast({
