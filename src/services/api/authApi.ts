@@ -24,6 +24,9 @@ export const AuthApi = {
       console.log("Login successful, setting token:", response.access_token.substring(0, 10) + "...");
       ApiService.setToken(response.access_token);
       
+      // Store username for admin check
+      localStorage.setItem("username", username);
+      
       // Get user profile to verify token
       try {
         const profile = await this.getUserProfile();

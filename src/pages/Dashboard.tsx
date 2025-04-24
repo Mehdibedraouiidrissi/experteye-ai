@@ -7,7 +7,11 @@ import { useDashboardStats } from "@/hooks/useDashboardStats";
 
 const Dashboard = () => {
   const { data: stats } = useDashboardStats();
-  const isAdmin = stats?.system?.users?.admins === 5; // Admin check based on system stats
+  
+  // Improved admin check: verify if the user is an admin based on auth data
+  // We need to access the actual user data instead of comparing with a fixed number
+  const isAdmin = stats?.system?.users?.admins > 0 && 
+                  localStorage.getItem("username") === "admin";
   
   useEffect(() => {
     document.title = "ExpertEye - Dashboard";
