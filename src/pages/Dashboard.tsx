@@ -1,7 +1,7 @@
 
 import { useEffect } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
-import AdminDashboard from "@/components/dashboard/AdminPanel";
+import AdminDashboard from "@/components/dashboard/AdminDashboard";
 import UserDashboard from "@/components/dashboard/UserDashboard";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 
