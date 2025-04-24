@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, FileText, Clock } from "lucide-react";
+import { MessageSquare, FileText } from "lucide-react";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { formatDistanceToNow } from "date-fns";
 
@@ -48,7 +48,7 @@ const UserDashboard = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Clock className="h-5 w-5" />
+              <FileText className="h-5 w-5" />
               Recent Activity
             </CardTitle>
             <CardDescription>Your latest actions</CardDescription>
