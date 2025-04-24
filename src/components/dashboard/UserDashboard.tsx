@@ -1,6 +1,6 @@
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { MessageSquare, FileText } from "lucide-react";
+import { MessageSquare, FileText, Activity } from "lucide-react";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { formatDistanceToNow } from "date-fns";
 
@@ -48,7 +48,7 @@ const UserDashboard = () => {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <FileText className="h-5 w-5" />
+              <Activity className="h-5 w-5" />
               Recent Activity
             </CardTitle>
             <CardDescription>Your latest actions</CardDescription>
@@ -56,13 +56,18 @@ const UserDashboard = () => {
           <CardContent>
             <div className="space-y-4">
               {stats?.recentActivity.slice(0, 3).map((activity) => (
-                <div key={activity.id} className="flex items-start gap-2 text-sm">
-                  <p className="text-muted-foreground">
-                    {formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}
-                  </p>
+                <div key={activity.id} className="flex flex-col gap-1 text-sm">
                   <p>{activity.action}</p>
+                  <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                    <span>{activity.user}</span>
+                    <span>•</span>
+                    <span>{formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}</span>
+                  </div>
                 </div>
               ))}
+              {(!stats?.recentActivity || stats.recentActivity.length === 0) && (
+                <p className="text-sm text-muted-foreground">No recent activity</p>
+              )}
             </div>
           </CardContent>
         </Card>

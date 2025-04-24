@@ -27,12 +27,12 @@ const RecentActivity = ({ recentActivity = [] }: RecentActivityProps) => {
       <CardContent>
         <div className="space-y-4">
           {recentActivity.slice(0, 5).map((item) => (
-            <div key={item.id} className="flex items-start gap-2 text-sm">
-              <div className="flex-1 space-y-1">
-                <p>{item.action}</p>
-                <p className="text-xs text-muted-foreground">
-                  {item.user} • {formatDistanceToNow(new Date(item.timestamp), { addSuffix: true })}
-                </p>
+            <div key={item.id} className="flex flex-col gap-1 text-sm">
+              <p>{item.action}</p>
+              <div className="flex items-center gap-1 text-xs text-muted-foreground">
+                <span>{item.user}</span>
+                <span>•</span>
+                <span>{formatDistanceToNow(new Date(item.timestamp), { addSuffix: true })}</span>
               </div>
             </div>
           ))}
