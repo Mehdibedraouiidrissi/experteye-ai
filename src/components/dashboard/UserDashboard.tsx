@@ -57,9 +57,9 @@ const UserDashboard = () => {
             <div className="space-y-4">
               {stats?.recentActivity.slice(0, 3).map((activity) => (
                 <div key={activity.id} className="flex flex-col gap-1 text-sm">
-                  <p>{activity.action}</p>
+                  <p className="font-medium">{activity.action}</p>
                   <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                    <span>{activity.user}</span>
+                    <span className="font-medium">{activity.user}</span>
                     <span>•</span>
                     <span>{formatDistanceToNow(new Date(activity.timestamp), { addSuffix: true })}</span>
                   </div>

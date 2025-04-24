@@ -28,9 +28,9 @@ const RecentActivity = ({ recentActivity = [] }: RecentActivityProps) => {
         <div className="space-y-4">
           {recentActivity.slice(0, 5).map((item) => (
             <div key={item.id} className="flex flex-col gap-1 text-sm">
-              <p>{item.action}</p>
+              <p className="font-medium">{item.action}</p>
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <span>{item.user}</span>
+                <span className="font-medium">{item.user}</span>
                 <span>•</span>
                 <span>{formatDistanceToNow(new Date(item.timestamp), { addSuffix: true })}</span>
               </div>
