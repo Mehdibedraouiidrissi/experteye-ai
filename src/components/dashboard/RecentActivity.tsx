@@ -4,7 +4,7 @@ import { Activity } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
 
 interface RecentActivityProps {
-  activity?: Array<{
+  recentActivity?: Array<{
     id: string;
     action: string;
     timestamp: string;
@@ -12,7 +12,7 @@ interface RecentActivityProps {
   }>;
 }
 
-const RecentActivity = ({ activity = [] }: RecentActivityProps) => {
+const RecentActivity = ({ recentActivity = [] }: RecentActivityProps) => {
   return (
     <Card>
       <CardHeader>
@@ -26,7 +26,7 @@ const RecentActivity = ({ activity = [] }: RecentActivityProps) => {
       </CardHeader>
       <CardContent>
         <div className="space-y-4">
-          {activity.slice(0, 5).map((item) => (
+          {recentActivity.slice(0, 5).map((item) => (
             <div key={item.id} className="flex items-start gap-2 text-sm">
               <div className="flex-1 space-y-1">
                 <p>{item.action}</p>
@@ -36,7 +36,7 @@ const RecentActivity = ({ activity = [] }: RecentActivityProps) => {
               </div>
             </div>
           ))}
-          {activity.length === 0 && (
+          {recentActivity.length === 0 && (
             <p className="text-sm text-muted-foreground">No recent activity</p>
           )}
         </div>
