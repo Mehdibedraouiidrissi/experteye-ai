@@ -7,7 +7,7 @@ import asyncio
 
 from app.core.dependencies import get_current_user
 from app.services.document_service import save_document, list_documents, get_document, delete_document
-from app.rag.document_processor import process_document
+from app.rag.processor_core import DocumentProcessor  # Updated import
 
 router = APIRouter()
 
