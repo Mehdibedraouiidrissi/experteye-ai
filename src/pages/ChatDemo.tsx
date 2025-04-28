@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,6 +15,18 @@ interface Message {
   content: string;
 }
 
+// Define interface for the chat API response
+interface ChatSessionResponse {
+  chat_id: string;
+}
+
+interface ChatMessageResponse {
+  response: string;
+  user_message_id?: string;
+  assistant_message_id?: string;
+  context?: string[];
+}
+
 const ChatDemo = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
@@ -26,10 +38,10 @@ const ChatDemo = () => {
   const [chatId, setChatId] = useState<string | null>(null);
 
   // Create a new chat session when component mounts
-  React.useEffect(() => {
+  useEffect(() => {
     const initializeChat = async () => {
       try {
-        const response = await ChatApi.createChat();
+        const response = await ChatApi.createChat() as ChatSessionResponse;
         if (response && response.chat_id) {
           setChatId(response.chat_id);
           console.log("Chat session created:", response.chat_id);
@@ -53,7 +65,7 @@ const ChatDemo = () => {
     try {
       if (chatId) {
         // If we have a chatId, use the API
-        const response = await ChatApi.sendMessage(chatId, input);
+        const response = await ChatApi.sendMessage(chatId, input) as ChatMessageResponse;
         if (response && response.response) {
           setMessages(prev => [...prev, { role: 'assistant', content: response.response }]);
         } else {
