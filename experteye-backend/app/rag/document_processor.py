@@ -1,4 +1,3 @@
-
 """Main document processing module"""
 import os
 import logging
@@ -19,7 +18,8 @@ from app.rag.processors.sas_processor import (
     process_sas_program
 )
 from app.rag.processors.document_chunking import split_documents
-from app.rag.vector_store import PersistentVectorStore, BackgroundProcessor
+from app.rag.persistent_store import PersistentVectorStore
+from app.rag.background_processor import BackgroundProcessor
 
 logger = logging.getLogger("DocumentIntelligence.Processor")
 
