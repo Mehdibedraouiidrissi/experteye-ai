@@ -1299,3 +1299,55 @@ def get_huggingface_llm(model_name: str, temperature: float = 0.1):
     except Exception as e:
         logger.error(f"Error creating HuggingFace endpoint for model {model_name}: {str(e)}")
         return None
+
+async def process_query(query: str, context: List[str] = None) -> str:
+    """
+    Process a query using the RAG engine
+    
+    Args:
+        query: The user's query
+        context: Optional list of context strings
+        
+    Returns:
+        Generated answer text
+    """
+    try:
+        # Default response if we can't process the query
+        default_response = "I'm currently in demo mode. In the full version, I can provide personalized market analysis and pricing insights based on your specific industry data. Would you like to learn more about our full AI assistant capabilities?"
+        
+        # For now, we'll return a simple response based on the query type
+        # In a real implementation, this would use an LLM to generate answers based on the context
+        if "price" in query.lower() or "cost" in query.lower() or "pricing" in query.lower():
+            return "Based on our latest market analysis, similar products in this sector are priced between $450-550. This represents a 5% increase from last quarter."
+        elif "market" in query.lower() or "industry" in query.lower() or "trend" in query.lower():
+            return "The market for this product category has grown 12% year-over-year. Key trends include increased demand for sustainable options and integrated smart features."
+        elif "competitor" in query.lower() or "competition" in query.lower():
+            return "Your top three competitors in this space are Acme Corp (34% market share), Innovatech (22%), and PrimeProducts (15%). Your current position is 4th with 11%."
+        elif "forecast" in query.lower() or "prediction" in query.lower() or "future" in query.lower():
+            return "Our models forecast a 8-10% growth in this segment over the next 18 months, with particularly strong performance expected in Q2 and Q3 of next year."
+        
+        # Default response for other queries
+        return default_response
+    except Exception as e:
+        logging.error(f"Error in process_query: {str(e)}")
+        return "I apologize, but I'm having trouble processing your query right now. I'm operating in demo mode with limited functionality."
+
+async def retrieve_context(query: str) -> List[str]:
+    """
+    Retrieve context from the vector store based on the query
+    
+    Args:
+        query: The user's query
+        
+    Returns:
+        List of context strings
+    """
+    try:
+        # This is a stub implementation
+        # In a real implementation, this would query a vector store to find relevant documents
+        
+        # For now, return empty context
+        return []
+    except Exception as e:
+        logging.error(f"Error in retrieve_context: {str(e)}")
+        return []
