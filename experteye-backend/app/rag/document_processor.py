@@ -11,7 +11,7 @@ from pptx import Presentation
 
 import streamlit as st
 from langchain_core.documents import Document
-from vector_store import PersistentVectorStore , BackgroundProcessor
+from app.rag.vector_store import PersistentVectorStore, BackgroundProcessor
 
 # Document loaders
 from langchain_community.document_loaders import (
@@ -26,7 +26,7 @@ from langchain_text_splitters import (
 )
 # Text splitter
 from langchain_text_splitters import RecursiveCharacterTextSplitter
-from vector_store import PersistentVectorStore
+from app.rag.vector_store import PersistentVectorStore
 
 # For Excel
 try:
