@@ -4,6 +4,7 @@ from typing import List, Dict, Any
 import os
 import uuid
 from datetime import datetime
+import asyncio
 
 from app.core.dependencies import get_current_user
 from app.services.document_service import save_document, list_documents, get_document, delete_document

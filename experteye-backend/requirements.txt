@@ -38,3 +38,4 @@ pyperclip
 langchain_huggingface
 pyreadstat
 pandas
+streamlit
