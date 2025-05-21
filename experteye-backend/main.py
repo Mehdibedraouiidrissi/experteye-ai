@@ -22,6 +22,7 @@ origins = [
     "http://127.0.0.1:8080",  # Local IP alternative
     "http://172.18.1.5:8080", # Network IP from logs
     "http://172.19.16.1:8080", # Network IP from logs
+    "*",  # Allow any origin temporarily for debugging (remove in production)
 ]
 
 # Configure CORS middleware
@@ -43,6 +44,12 @@ app.include_router(api_router, prefix="/api")
 async def healthcheck():
     return {"status": "healthy", "message": "API server is running"}
 
+# Add simple root endpoint for testing
+@app.get("/")
+async def root():
+    return {"message": "Welcome to ExpertEye API"}
+
 if __name__ == "__main__":
     import uvicorn
+    # Use host 0.0.0.0 to allow external connections
     uvicorn.run(app, host="0.0.0.0", port=5000)

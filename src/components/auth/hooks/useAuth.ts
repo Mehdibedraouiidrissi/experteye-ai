@@ -1,5 +1,5 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { AuthApi } from "@/services/api";
@@ -13,6 +13,7 @@ export const useAuth = (isLogin: boolean) => {
   const [isLoading, setIsLoading] = useState(false);
   const [backendError, setBackendError] = useState<string | null>(null);
   const [isBackendAvailable, setIsBackendAvailable] = useState(true);
+  const [isRetrying, setIsRetrying] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -20,6 +21,7 @@ export const useAuth = (isLogin: boolean) => {
   useEffect(() => {
     const checkBackend = async () => {
       try {
+        setIsRetrying(true);
         const available = await ApiService.checkBackendConnection();
         setIsBackendAvailable(available);
         if (!available) {
@@ -31,6 +33,8 @@ export const useAuth = (isLogin: boolean) => {
         console.error("Backend check error:", error);
         setIsBackendAvailable(false);
         setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
+      } finally {
+        setIsRetrying(false);
       }
     };
     
@@ -99,7 +103,8 @@ export const useAuth = (isLogin: boolean) => {
     return { valid: true, message: "" };
   };
 
-  const retryBackendConnection = async () => {
+  const retryBackendConnection = useCallback(async () => {
+    setIsRetrying(true);
     setIsLoading(true);
     try {
       const available = await ApiService.checkBackendConnection();
@@ -123,8 +128,9 @@ export const useAuth = (isLogin: boolean) => {
       setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
     } finally {
       setIsLoading(false);
+      setIsRetrying(false);
     }
-  };
+  }, [toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -270,6 +276,7 @@ export const useAuth = (isLogin: boolean) => {
     confirmPassword,
     setConfirmPassword,
     isLoading,
+    isRetrying,
     backendError,
     isBackendAvailable,
     retryBackendConnection,

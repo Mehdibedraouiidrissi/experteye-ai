@@ -13,18 +13,19 @@ const BackendErrorAlert = ({ error, onRetry, isRetrying = false }: BackendErrorA
   if (!error) return null;
   
   const isConnectionError = error.toLowerCase().includes("unable to connect") || 
-                           error.toLowerCase().includes("backend service");
+                           error.toLowerCase().includes("backend service") ||
+                           error.toLowerCase().includes("timed out");
   
   return (
     <Alert variant="destructive" className="mb-4">
       <AlertTriangle className="h-4 w-4" />
-      <AlertDescription className="flex items-center justify-between">
+      <AlertDescription className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
         <span>{error}</span>
         {isConnectionError && onRetry && (
           <Button 
             variant="outline" 
             size="sm" 
-            className="ml-2 bg-white/10 hover:bg-white/20"
+            className="min-w-24 bg-white/10 hover:bg-white/20"
             onClick={onRetry}
             disabled={isRetrying}
           >
@@ -33,7 +34,7 @@ const BackendErrorAlert = ({ error, onRetry, isRetrying = false }: BackendErrorA
             ) : (
               <RefreshCw className="h-3 w-3 mr-1" />
             )}
-            Retry
+            Retry Connection
           </Button>
         )}
       </AlertDescription>

@@ -1,6 +1,8 @@
 
 #!/bin/bash
 
+echo "Starting ExpertEye development environment..."
+
 # Install Python requirements
 echo "Installing Python dependencies..."
 cd experteye-backend
@@ -12,10 +14,10 @@ echo "Starting Python backend server..."
 cd experteye-backend
 python main.py &
 BACKEND_PID=$!
+cd ..
 
 # Start the frontend
 echo "Starting React frontend..."
-cd ..
 npm run dev &
 FRONTEND_PID=$!
 
@@ -30,5 +32,5 @@ function cleanup {
 # Catch interrupt signal (Ctrl+C)
 trap cleanup SIGINT
 
-# Keep script running
-wait
+# Wait for both processes to finish (which should be never unless ctrl+c is pressed)
+wait $BACKEND_PID $FRONTEND_PID

@@ -25,19 +25,27 @@ export class ApiService {
   }
 
   static async checkBackendConnection(): Promise<boolean> {
+    console.log("Checking backend connection to:", API_BASE_URL);
     try {
       const timestamp = new Date().getTime();
+      // Use a simpler request with timeout
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
       const response = await fetch(`${API_BASE_URL}/healthcheck?_t=${timestamp}`, {
         method: 'GET',
         headers: {
           "Cache-Control": "no-cache, no-store, must-revalidate",
           "Pragma": "no-cache"
         },
-        mode: "cors"
+        mode: "cors",
+        signal: controller.signal
       });
       
+      clearTimeout(timeoutId);
+      
       this.backendAvailable = response.ok;
-      console.log(`Backend server connection check: ${this.backendAvailable ? 'available' : 'unavailable'}`);
+      console.log(`Backend server connection check: ${this.backendAvailable ? 'available' : 'unavailable'}, status: ${response.status}`);
       return this.backendAvailable;
     } catch (error) {
       console.error("Backend server connection check failed:", error);
@@ -59,6 +67,7 @@ export class ApiService {
     // First check backend connection if we haven't confirmed it's available
     if (!this.backendAvailable) {
       try {
+        console.log("Backend not available, checking connection before request");
         const isAvailable = await this.checkBackendConnection();
         if (!isAvailable) {
           throw {
@@ -122,7 +131,15 @@ export class ApiService {
       // Add timestamp parameter to URL to prevent caching
       const cacheBustUrl = `${url}${url.includes('?') ? '&' : '?'}_t=${timestamp}`;
       
+      // Add timeout to prevent hanging requests
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 second timeout
+      
+      options.signal = controller.signal;
+      
       const response = await fetch(cacheBustUrl, options);
+      
+      clearTimeout(timeoutId);
       
       console.log(`Response status: ${response.status}`);
       
@@ -165,6 +182,12 @@ export class ApiService {
         throw {
           status: 0,
           message: `Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}.`
+        };
+      } else if (error instanceof DOMException && error.name === 'AbortError') {
+        this.backendAvailable = false;
+        throw {
+          status: 0,
+          message: `Request timed out. Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}.`
         };
       }
       
