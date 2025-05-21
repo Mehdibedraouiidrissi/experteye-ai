@@ -1,5 +1,4 @@
-
-from fastapi import APIRouter, Depends, HTTPException, status, Body
+from fastapi import APIRouter, Depends, HTTPException, status, Body, Response, Request
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from datetime import timedelta
 from typing import Dict, Optional
@@ -13,6 +12,21 @@ from app.services.auth_service import authenticate_user, create_user, get_user_b
 
 router = APIRouter()
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/token")
+
+# Explicit OPTIONS handler for CORS preflight
+@router.options("/token")
+async def options_token(request: Request, response: Response):
+    """
+    Handle CORS preflight requests for /auth/token.
+    """
+    response.headers["Access-Control-Allow-Origin"] = request.headers.get("origin", "*")
+    response.headers["Access-Control-Allow-Methods"] = "POST, OPTIONS"
+    response.headers["Access-Control-Allow-Headers"] = request.headers.get(
+        "Access-Control-Request-Headers", "Authorization,Content-Type"
+    )
+    response.headers["Access-Control-Allow-Credentials"] = "true"
+    response.status_code = status.HTTP_200_OK
+    return
 
 @router.post("/token")
 async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends()):
