@@ -1,6 +1,7 @@
 
 import { AuthApi, ApiService } from "@/services/api";
-import { useToast } from "@/hooks/use-toast";
+import { validateLoginInput } from "../utils/loginValidation";
+import { validateRegistrationInput } from "../utils/registrationValidation";
 
 /**
  * Service for handling authentication operations
@@ -75,23 +76,15 @@ export class AuthService {
 
   /**
    * Validates login input
-   * Returns an error message if validation fails, null otherwise
+   * Delegates to the dedicated validation utility
    */
   static validateLoginInput(usernameOrEmail: string, password: string): string | null {
-    if (!usernameOrEmail) {
-      return "Please enter a username or email.";
-    }
-    
-    if (!password) {
-      return "Please enter your password.";
-    }
-    
-    return null;
+    return validateLoginInput(usernameOrEmail, password);
   }
 
   /**
    * Validates registration input
-   * Returns an error message if validation fails, null otherwise
+   * Delegates to the dedicated validation utility
    */
   static validateRegistrationInput(
     username: string, 
@@ -99,31 +92,6 @@ export class AuthService {
     password: string, 
     confirmPassword: string
   ): string | null {
-    if (!username || username.trim() === "") {
-      return "Please enter a valid username.";
-    }
-    
-    if (!email || !email.endsWith("@experteye.com")) {
-      return "Only @experteye.com email addresses are allowed.";
-    }
-    
-    // Password validation
-    if (password.length < 8 || password.length > 12) {
-      return "Password must be between 8 and 12 characters.";
-    }
-    
-    if (!/^[A-Z]/.test(password)) {
-      return "Password must start with an uppercase letter.";
-    }
-    
-    if (!/\d/.test(password)) {
-      return "Password must contain at least one digit.";
-    }
-    
-    if (password !== confirmPassword) {
-      return "Passwords do not match.";
-    }
-    
-    return null;
+    return validateRegistrationInput(username, email, password, confirmPassword);
   }
 }
