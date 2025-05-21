@@ -1,23 +1,17 @@
-
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-<<<<<<< HEAD
 import AuthForm from "@/components/auth/AuthForm";
-=======
-import AuthFormHeader from "@/components/auth/components/AuthFormHeader";
-import Logo from "@/components/shared/Logo";
->>>>>>> 586624315dcc7c1c14590961da1869cfcbceca23
+import Logo from "@/components/shared/Logo"; // ✅ Add this line to import Logo
 
 const Signup = () => {
-  
+  const navigate = useNavigate();
+
   useEffect(() => {
     document.title = "ExpertEye - Sign Up";
   }, []);
-  const navigate = useNavigate()
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex flex-col items-center justify-center p-4">
-<<<<<<< HEAD
       <div className="w-full max-w-md flex flex-col items-center justify-center mb-6">
         <div 
           className="logo-container mb-4 cursor-pointer" 
@@ -41,10 +35,7 @@ const Signup = () => {
           Create an account to access our AI-powered support chatbot, designed to assist with product specifications, troubleshooting, warranty information, and more.
         </p>
       </div>
-=======
-      <AuthFormHeader isLogin={false} />
->>>>>>> 586624315dcc7c1c14590961da1869cfcbceca23
-      
+
       <AuthForm isLogin={false} />
       
       <footer className="mt-8 text-xs text-center text-muted-foreground">

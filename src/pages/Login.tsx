@@ -12,7 +12,6 @@ const Login = () => {
   const navigate = useNavigate()
 
   return (
-<<<<<<< HEAD
     <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex flex-col items-center justify-center p-4">
       <div className="w-full max-w-md flex flex-col items-center justify-center mb-6">
         <div 
@@ -37,10 +36,6 @@ const Login = () => {
           Access our AI-powered support chatbot, designed to assist with product specifications, troubleshooting, warranty information, and more.
         </p>
       </div>
-=======
-    <div className="min-h-screen bg-gradient-to-b from-background to-muted/30 flex flex-col items-center justify-center p-4 relative">
-      <AuthFormHeader isLogin={true} />
->>>>>>> 586624315dcc7c1c14590961da1869cfcbceca23
       
       <AuthForm isLogin={true} />
       
