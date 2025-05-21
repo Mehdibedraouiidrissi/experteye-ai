@@ -6,6 +6,7 @@ const API_BASE_URL = import.meta.env.PROD
 export class ApiService {
   private static token: string | null = null;
   private static backendAvailable: boolean = true;
+  private static connectionCheckInProgress: boolean = false;
   
   static setToken(token: string | null) {
     this.token = token;
@@ -25,12 +26,21 @@ export class ApiService {
   }
 
   static async checkBackendConnection(): Promise<boolean> {
+    if (this.connectionCheckInProgress) {
+      console.log("Connection check already in progress, skipping");
+      return this.backendAvailable;
+    }
+    
+    this.connectionCheckInProgress = true;
     console.log("Checking backend connection to:", API_BASE_URL);
+    
     try {
       const timestamp = new Date().getTime();
       // Use a simpler request with timeout
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      
+      console.log(`Sending healthcheck request to ${API_BASE_URL}/healthcheck?_t=${timestamp}`);
       
       const response = await fetch(`${API_BASE_URL}/healthcheck?_t=${timestamp}`, {
         method: 'GET',
@@ -46,10 +56,22 @@ export class ApiService {
       
       this.backendAvailable = response.ok;
       console.log(`Backend server connection check: ${this.backendAvailable ? 'available' : 'unavailable'}, status: ${response.status}`);
+      
+      if (response.ok) {
+        try {
+          const data = await response.json();
+          console.log("Healthcheck response:", data);
+        } catch (e) {
+          console.log("Healthcheck response was not JSON:", e);
+        }
+      }
+      
+      this.connectionCheckInProgress = false;
       return this.backendAvailable;
     } catch (error) {
       console.error("Backend server connection check failed:", error);
       this.backendAvailable = false;
+      this.connectionCheckInProgress = false;
       return false;
     }
   }

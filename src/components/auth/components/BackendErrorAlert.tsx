@@ -19,20 +19,20 @@ const BackendErrorAlert = ({ error, onRetry, isRetrying = false }: BackendErrorA
   return (
     <Alert variant="destructive" className="mb-4">
       <AlertTriangle className="h-4 w-4" />
-      <AlertDescription className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
-        <span>{error}</span>
+      <AlertDescription className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <span className="font-medium">{error}</span>
         {isConnectionError && onRetry && (
           <Button 
             variant="outline" 
             size="sm" 
-            className="min-w-24 bg-white/10 hover:bg-white/20"
+            className="min-w-24 bg-white/10 hover:bg-white/20 border-white/20"
             onClick={onRetry}
             disabled={isRetrying}
           >
             {isRetrying ? (
-              <RefreshCw className="h-3 w-3 mr-1 animate-spin" />
+              <RefreshCw className="h-3 w-3 mr-2 animate-spin" />
             ) : (
-              <RefreshCw className="h-3 w-3 mr-1" />
+              <RefreshCw className="h-3 w-3 mr-2" />
             )}
             Retry Connection
           </Button>
