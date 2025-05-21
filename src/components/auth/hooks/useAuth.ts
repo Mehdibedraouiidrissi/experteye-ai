@@ -22,12 +22,30 @@ export const useAuth = (isLogin: boolean) => {
     const checkBackend = async () => {
       try {
         setIsRetrying(true);
+        // Clear any existing errors first
+        setBackendError(null);
+        
+        console.log("Initial backend connection check...");
         const available = await ApiService.checkBackendConnection();
+        
         setIsBackendAvailable(available);
         if (!available) {
           setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
         } else {
-          setBackendError(null);
+          // If backend is available, check token validity
+          const token = ApiService.getToken();
+          if (token && isLogin) {
+            console.log("Token found, validating...");
+            try {
+              await AuthApi.getUserProfile();
+              // If token is valid and we're on login page, redirect to dashboard
+              console.log("Token valid, redirecting to dashboard");
+              navigate("/dashboard", { replace: true });
+            } catch (err) {
+              console.log("Invalid token, clearing");
+              ApiService.setToken(null);
+            }
+          }
         }
       } catch (error) {
         console.error("Backend check error:", error);
@@ -39,7 +57,7 @@ export const useAuth = (isLogin: boolean) => {
     };
     
     checkBackend();
-  }, []);
+  }, [isLogin, navigate]);
 
   // Clear error when form changes
   useEffect(() => {
@@ -107,7 +125,12 @@ export const useAuth = (isLogin: boolean) => {
     setIsRetrying(true);
     setIsLoading(true);
     try {
+      // Forcibly clear any cached backend status
+      setBackendError(null);
+      
+      // Try to connect with a fresh request
       const available = await ApiService.checkBackendConnection();
+      
       setIsBackendAvailable(available);
       if (!available) {
         setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
@@ -224,14 +247,8 @@ export const useAuth = (isLogin: boolean) => {
         const loginIdentifier = username || email;
         console.log(`Attempting login with identifier: ${loginIdentifier}`);
         
-        const response = await AuthApi.login(loginIdentifier, password);
-        
-        toast({
-          title: "Logged in successfully",
-          description: "Welcome back to ExpertEye!",
-        });
-        
-        // We don't need to redirect here as the AuthApi.login function will handle that
+        // We'll let the AuthApi.login handle the redirection
+        await AuthApi.login(loginIdentifier, password);
       } else {
         const result = await AuthApi.register(username, email, password);
         

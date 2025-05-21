@@ -1,4 +1,3 @@
-
 import { ApiService } from "./apiService";
 
 export const AuthApi = {
@@ -21,7 +20,8 @@ export const AuthApi = {
         throw new Error("Invalid response format from server");
       }
       
-      console.log("Login successful, setting token:", response.access_token.substring(0, 10) + "...");
+      console.log("Login successful, setting token");
+      // Set API service token
       ApiService.setToken(response.access_token);
       
       // Store username for admin check
@@ -32,12 +32,9 @@ export const AuthApi = {
         const profile = await this.getUserProfile();
         console.log("User profile verified successfully:", profile);
         
-        // Redirect to dashboard after successful login and profile verification
-        // Add a small delay to ensure the token is properly set
-        setTimeout(() => {
-          console.log("Redirecting to dashboard...");
-          window.location.href = "/dashboard";
-        }, 100);
+        // Force browser redirect instead of React Router navigate
+        // This ensures a full page reload which establishes the authentication state properly
+        window.location.href = "/dashboard";
         
         return response;
       } catch (profileError) {
@@ -89,10 +86,13 @@ export const AuthApi = {
     console.log("Logging out user");
     ApiService.setToken(null);
     ApiService.clearStorage();
-    window.location.replace("/login?logout=true&_t=" + new Date().getTime());
+    
+    // Force a full page reload when logging out to clear all state
+    window.location.href = "/login?logout=true&_t=" + new Date().getTime();
   },
   
   isAuthenticated() {
-    return !!ApiService.getToken();
+    const token = ApiService.getToken();
+    return !!token;
   }
 };

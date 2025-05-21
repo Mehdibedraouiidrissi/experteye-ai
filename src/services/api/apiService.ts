@@ -1,3 +1,4 @@
+
 const API_BASE_URL = import.meta.env.PROD 
   ? "/api" 
   : "http://localhost:5000/api"; 
@@ -90,9 +91,9 @@ export class ApiService {
     data: any = null,
     isFormData: boolean = false
   ): Promise<T> {
-    // First check backend connection if we haven't confirmed it's available
-    if (!this.backendAvailable) {
-      try {
+    try {
+      // First check backend connection if we haven't confirmed it's available
+      if (!this.backendAvailable) {
         console.log("Backend not available, checking connection before request");
         const isAvailable = await this.checkBackendConnection();
         if (!isAvailable) {
@@ -101,57 +102,50 @@ export class ApiService {
             message: `Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}.`
           };
         }
-      } catch (error) {
-        throw {
-          status: 0,
-          message: `Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}.`
-        };
       }
-    }
-    
-    const url = `${API_BASE_URL}${endpoint}`;
-    const token = this.getToken();
-    
-    console.log(`API Request: ${method} ${url}`);
-    
-    // Generate a unique timestamp to prevent caching
-    const timestamp = new Date().getTime();
-    
-    const headers: HeadersInit = {
-      // Add cache control headers to prevent caching
-      "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
-      "Pragma": "no-cache",
-      "Expires": "0"
-    };
-    
-    if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
-    }
-    
-    // For login, ensure we use the right content type
-    if (endpoint === "/auth/token" && method === "POST") {
-      headers["Content-Type"] = "application/x-www-form-urlencoded";
-    } else if (!isFormData && data && typeof data !== 'string') {
-      headers["Content-Type"] = "application/json";
-    }
-    
-    const options: RequestInit = {
-      method,
-      headers,
-      credentials: "include",
-      cache: "no-store",
-      mode: "cors",
-    };
-    
-    if (data) {
-      if (isFormData || (typeof data === 'string' && endpoint === "/auth/token")) {
-        options.body = data;
-      } else {
-        options.body = JSON.stringify(data);
+      
+      const url = `${API_BASE_URL}${endpoint}`;
+      const token = this.getToken();
+      
+      console.log(`API Request: ${method} ${url}`);
+      
+      // Generate a unique timestamp to prevent caching
+      const timestamp = new Date().getTime();
+      
+      const headers: HeadersInit = {
+        // Add cache control headers to prevent caching
+        "Cache-Control": "no-cache, no-store, must-revalidate, max-age=0",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      };
+      
+      if (token) {
+        headers["Authorization"] = `Bearer ${token}`;
       }
-    }
-    
-    try {
+      
+      // For login, ensure we use the right content type
+      if (endpoint === "/auth/token" && method === "POST") {
+        headers["Content-Type"] = "application/x-www-form-urlencoded";
+      } else if (!isFormData && data && typeof data !== 'string') {
+        headers["Content-Type"] = "application/json";
+      }
+      
+      const options: RequestInit = {
+        method,
+        headers,
+        credentials: "include",
+        cache: "no-store",
+        mode: "cors",
+      };
+      
+      if (data) {
+        if (isFormData || (typeof data === 'string' && endpoint === "/auth/token")) {
+          options.body = data;
+        } else {
+          options.body = JSON.stringify(data);
+        }
+      }
+      
       console.log(`Making API request to: ${url}?_t=${timestamp} with method: ${method}`);
       
       // Add timestamp parameter to URL to prevent caching
@@ -168,6 +162,11 @@ export class ApiService {
       clearTimeout(timeoutId);
       
       console.log(`Response status: ${response.status}`);
+      
+      // If this is an authentication request and it's successful, mark backend as available
+      if (endpoint === "/auth/token" && response.ok) {
+        this.backendAvailable = true;
+      }
       
       if (!response.ok) {
         let errorMessage;
@@ -201,7 +200,7 @@ export class ApiService {
       console.log("Received empty or non-JSON response");
       return {} as T;
     } catch (error) {
-      console.error(`API request failed to ${url}:`, error);
+      console.error(`API request failed:`, error);
       
       if (error instanceof TypeError && error.message.includes('fetch')) {
         this.backendAvailable = false;
