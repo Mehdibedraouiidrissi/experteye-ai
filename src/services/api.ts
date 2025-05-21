@@ -1,9 +1,6 @@
 
 export { 
   ApiService,
-  TokenManager,
-  ConnectionManager,
-  RequestHandler,
   AuthApi,
   DocumentsApi,
   ChatApi,
