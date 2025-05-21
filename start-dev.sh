@@ -27,13 +27,24 @@ check_pip() {
 check_python
 check_pip
 
-# Install Python requirements
-echo "Installing Python dependencies..."
-cd experteye-backend
+# Determine Python and pip commands
+PYTHON_CMD="python"
+if command -v python3 &> /dev/null; then
+  PYTHON_CMD="python3"
+fi
+
 PIP_CMD="pip"
 if command -v pip3 &> /dev/null; then
   PIP_CMD="pip3"
 fi
+
+# Try to upgrade pip first
+echo "Attempting to upgrade pip..."
+$PYTHON_CMD -m pip install --upgrade pip || echo "Could not upgrade pip, continuing anyway..."
+
+# Install Python requirements
+echo "Installing Python dependencies..."
+cd experteye-backend
 $PIP_CMD install -r requirements.txt
 if [ $? -ne 0 ]; then
   echo "ERROR: Failed to install Python dependencies. Please check the error message above."
@@ -41,13 +52,21 @@ if [ $? -ne 0 ]; then
 fi
 cd ..
 
+# Install npm dependencies
+echo "Installing npm dependencies..."
+npm install
+if [ $? -ne 0 ]; then
+  echo "WARNING: npm install had some issues. The application might still work."
+fi
+
+# Run update-browserslist script
+echo "Running update-browserslist script..."
+chmod +x ./update-browserslist.sh
+./update-browserslist.sh
+
 # Start the backend server
 echo "Starting Python backend server..."
 cd experteye-backend
-PYTHON_CMD="python"
-if command -v python3 &> /dev/null; then
-  PYTHON_CMD="python3"
-fi
 $PYTHON_CMD main.py &
 BACKEND_PID=$!
 cd ..
