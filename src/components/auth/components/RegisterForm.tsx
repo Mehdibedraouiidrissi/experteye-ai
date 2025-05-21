@@ -79,6 +79,7 @@ const RegisterForm = () => {
           <p><Info className="inline h-3 w-3 mr-1" />Must be 8-12 characters</p>
           <p><Info className="inline h-3 w-3 mr-1" />Must start with an uppercase letter</p>
           <p><Info className="inline h-3 w-3 mr-1" />Must contain at least one digit</p>
+          <p><Info className="inline h-3 w-3 mr-1" />Must contain at least one special character (!@#$%^&*)</p>
           <p><Info className="inline h-3 w-3 mr-1" />Must be unique across all users (case-insensitive)</p>
         </div>
       </div>
