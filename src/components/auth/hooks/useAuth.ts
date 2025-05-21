@@ -1,19 +1,30 @@
 
-import { useState, useEffect, useCallback } from "react";
+import { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
-import { AuthApi } from "@/services/api";
-import { ApiService } from "@/services/api/apiService";
+import { AuthApi, ApiService } from "@/services/api";
+import { validateExpertEyeEmail, validatePassword } from "./utils/validationUtils";
+import { useBackendConnectivity } from "./utils/backendUtils";
+import { useAuthFormFields } from "./utils/formHandlingUtils";
 
 export const useAuth = (isLogin: boolean) => {
-  const [email, setEmail] = useState("");
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
-  const [backendError, setBackendError] = useState<string | null>(null);
-  const [isBackendAvailable, setIsBackendAvailable] = useState(true);
-  const [isRetrying, setIsRetrying] = useState(false);
+  const {
+    email, setEmail,
+    username, setUsername,
+    password, setPassword,
+    confirmPassword, setConfirmPassword,
+    isLoading, setIsLoading
+  } = useAuthFormFields(isLogin);
+  
+  const {
+    isBackendAvailable,
+    backendError,
+    setBackendError,
+    isRetrying,
+    checkBackendConnection,
+    retryBackendConnection
+  } = useBackendConnectivity();
+  
   const { toast } = useToast();
   const navigate = useNavigate();
 
@@ -25,44 +36,36 @@ export const useAuth = (isLogin: boolean) => {
         // Clear any existing errors first
         setBackendError(null);
         
-        console.log("Initial backend connection check...");
-        const available = await ApiService.checkBackendConnection();
+        await checkBackendConnection();
         
-        setIsBackendAvailable(available);
-        if (!available) {
-          setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
-        } else {
-          // If backend is available, check token validity
-          const token = ApiService.getToken();
-          if (token && isLogin) {
-            console.log("Token found, validating...");
-            try {
-              await AuthApi.getUserProfile();
-              // If token is valid and we're on login page, redirect to dashboard
-              console.log("Token valid, redirecting to dashboard");
-              navigate("/dashboard", { replace: true });
-            } catch (err) {
-              console.log("Invalid token, clearing");
-              ApiService.setToken(null);
-            }
+        // If backend is available, check token validity
+        const token = ApiService.getToken();
+        if (token && isLogin) {
+          console.log("Token found, validating...");
+          try {
+            await AuthApi.getUserProfile();
+            // If token is valid and we're on login page, redirect to dashboard
+            console.log("Token valid, redirecting to dashboard");
+            navigate("/dashboard", { replace: true });
+          } catch (err) {
+            console.log("Invalid token, clearing");
+            ApiService.setToken(null);
           }
         }
       } catch (error) {
         console.error("Backend check error:", error);
-        setIsBackendAvailable(false);
-        setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
       } finally {
         setIsRetrying(false);
       }
     };
     
     checkBackend();
-  }, [isLogin, navigate]);
+  }, [isLogin, navigate, checkBackendConnection, setBackendError, setIsRetrying]);
 
   // Clear error when form changes
   useEffect(() => {
     setBackendError(null);
-  }, [username, email, password, confirmPassword]);
+  }, [username, email, password, confirmPassword, setBackendError]);
 
   // Check for "logout=true" in the URL
   useEffect(() => {
@@ -91,69 +94,6 @@ export const useAuth = (isLogin: boolean) => {
       }
     }
   }, [isLogin]);
-
-  const validateExpertEyeEmail = (email: string) => {
-    return email.endsWith("@experteye.com");
-  };
-
-  const validatePassword = (password: string): { valid: boolean; message: string } => {
-    if (password.length < 8 || password.length > 12) {
-      return {
-        valid: false,
-        message: "Password must be between 8 and 12 characters"
-      };
-    }
-
-    if (!/^[A-Z]/.test(password)) {
-      return {
-        valid: false,
-        message: "Password must start with an uppercase letter"
-      };
-    }
-
-    if (!/\d/.test(password)) {
-      return {
-        valid: false,
-        message: "Password must contain at least one digit"
-      };
-    }
-
-    return { valid: true, message: "" };
-  };
-
-  const retryBackendConnection = useCallback(async () => {
-    setIsRetrying(true);
-    setIsLoading(true);
-    try {
-      // Forcibly clear any cached backend status
-      setBackendError(null);
-      
-      // Try to connect with a fresh request
-      const available = await ApiService.checkBackendConnection();
-      
-      setIsBackendAvailable(available);
-      if (!available) {
-        setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
-        toast({
-          title: "Connection failed",
-          description: "Could not connect to the backend server. Please check that it's running.",
-          variant: "destructive",
-        });
-      } else {
-        setBackendError(null);
-        toast({
-          title: "Connection restored",
-          description: "Successfully connected to the backend server.",
-        });
-      }
-    } catch (error) {
-      setIsBackendAvailable(false);
-      setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
-    } finally {
-      setIsLoading(false);
-      setIsRetrying(false);
-    }
-  }, [toast]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
