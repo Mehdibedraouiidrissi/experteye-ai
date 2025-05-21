@@ -2,9 +2,13 @@
 @echo off
 echo Starting ExpertEye development environment...
 
+:: Install Python requirements
+echo Installing Python dependencies...
+cd experteye-backend
+pip install -r requirements.txt
+
 :: Start the backend server
 echo Starting Python backend server...
-cd experteye-backend
 start cmd /k python main.py
 
 :: Return to the root directory and start the frontend

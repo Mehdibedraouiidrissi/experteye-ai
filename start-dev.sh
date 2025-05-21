@@ -1,6 +1,12 @@
 
 #!/bin/bash
 
+# Install Python requirements
+echo "Installing Python dependencies..."
+cd experteye-backend
+pip install -r requirements.txt
+cd ..
+
 # Start the backend server
 echo "Starting Python backend server..."
 cd experteye-backend
