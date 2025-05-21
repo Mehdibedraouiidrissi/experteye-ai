@@ -20,15 +20,16 @@ if %ERRORLEVEL% NEQ 0 (
 echo Installing Python dependencies...
 cd experteye-backend
 
-:: Try to upgrade pip first
-echo Attempting to upgrade pip...
-python -m pip install --upgrade pip
-
-echo Installing required packages...
-python -m pip install -r requirements.txt
+echo Installing required packages with binary wheels...
+python -m pip install --only-binary=:all: -r requirements.txt
 if %ERRORLEVEL% NEQ 0 (
-  echo ERROR: Failed to install Python dependencies. Please check the error message above.
-  exit /b 1
+  echo ERROR: Trying alternative installation method...
+  python -m pip install -r requirements.txt
+  if %ERRORLEVEL% NEQ 0 (
+    echo ERROR: Failed to install Python dependencies. Please check the error message above.
+    echo Try manually running: pip install -r requirements.txt
+    exit /b 1
+  )
 )
 
 :: Start the backend server

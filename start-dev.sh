@@ -38,16 +38,13 @@ if command -v pip3 &> /dev/null; then
   PIP_CMD="pip3"
 fi
 
-# Try to upgrade pip first
-echo "Attempting to upgrade pip..."
-$PYTHON_CMD -m pip install --upgrade pip || echo "Could not upgrade pip, continuing anyway..."
-
-# Install Python requirements
+# Install Python requirements with --only-binary option
 echo "Installing Python dependencies..."
 cd experteye-backend
-$PIP_CMD install -r requirements.txt
+$PIP_CMD install --only-binary=:all: -r requirements.txt
 if [ $? -ne 0 ]; then
   echo "ERROR: Failed to install Python dependencies. Please check the error message above."
+  echo "Try running: $PIP_CMD install --only-binary=:all: -r requirements.txt"
   exit 1
 fi
 cd ..
