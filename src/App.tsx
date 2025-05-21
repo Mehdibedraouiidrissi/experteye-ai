@@ -46,8 +46,8 @@ const App = () => (
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Index />} />
-          <Route path="/login" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Login />} />
-          <Route path="/signup" element={isAuthenticated() ? <Navigate to="/dashboard" /> : <Signup />} />
+          <Route path="/login" element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Login />} />
+          <Route path="/signup" element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Signup />} />
           <Route path="/chatdemo" element={<ChatDemo />} />
           <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
           <Route path="/chat" element={<ProtectedRoute element={<Chat />} />} />

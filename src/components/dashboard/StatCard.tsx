@@ -6,12 +6,9 @@ import { cn } from "@/lib/utils";
 interface StatCardProps {
   title: string;
   value: string | number;
-  icon: ReactNode;
+  icon?: ReactNode;
   description?: string;
-  trend?: {
-    value: number;
-    isPositive: boolean;
-  };
+  change?: number;
   className?: string;
 }
 
@@ -20,9 +17,13 @@ const StatCard = ({
   value,
   icon,
   description,
-  trend,
+  change,
   className,
 }: StatCardProps) => {
+  // Determine if the change is positive, negative, or zero
+  const isPositive = change && change > 0;
+  const isNegative = change && change < 0;
+  
   return (
     <Card className={cn("overflow-hidden", className)}>
       <CardContent className="p-6">
@@ -31,14 +32,14 @@ const StatCard = ({
             <p className="text-sm font-medium text-muted-foreground">{title}</p>
             <div className="flex items-baseline gap-2">
               <h3 className="text-2xl font-bold">{value}</h3>
-              {trend && (
+              {change !== undefined && (
                 <span
                   className={cn(
                     "text-xs font-medium",
-                    trend.isPositive ? "text-green-500" : "text-red-500"
+                    isPositive ? "text-green-500" : isNegative ? "text-red-500" : "text-gray-500"
                   )}
                 >
-                  {trend.isPositive ? "↑" : "↓"} {Math.abs(trend.value)}%
+                  {isPositive ? "↑" : isNegative ? "↓" : ""} {Math.abs(change)}%
                 </span>
               )}
             </div>
@@ -46,9 +47,11 @@ const StatCard = ({
               <p className="mt-1 text-xs text-muted-foreground">{description}</p>
             )}
           </div>
-          <div className="rounded-md bg-primary/10 p-2 text-primary">
-            {icon}
-          </div>
+          {icon && (
+            <div className="rounded-md bg-primary/10 p-2 text-primary">
+              {icon}
+            </div>
+          )}
         </div>
       </CardContent>
     </Card>
