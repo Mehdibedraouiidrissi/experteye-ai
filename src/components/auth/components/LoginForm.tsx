@@ -1,4 +1,3 @@
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -37,8 +36,14 @@ const LoginForm = () => {
     }
   }, []);
 
+  // Add a log on render
+  console.log("[LoginForm] Rendered");
+
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form onSubmit={(e) => {
+      console.log("[LoginForm] Form submit fired");
+      handleSubmit(e);
+    }} className="space-y-4">
       <BackendErrorAlert error={backendError} />
       
       <div className="space-y-2">

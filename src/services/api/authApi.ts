@@ -1,14 +1,14 @@
-
 import { ApiService } from "./apiService";
 
 export const AuthApi = {
   async login(username: string, password: string) {
+    console.log("[AuthApi] login called with", { username });
     const formData = new URLSearchParams();
     formData.append("username", username);
     formData.append("password", password);
     
     try {
-      console.log("Attempting login with:", { username });
+      console.log("[AuthApi] Attempting request to POST /auth/token");
       const response = await ApiService.request<{ access_token: string, token_type: string }>(
         "/auth/token",
         "POST",
@@ -47,7 +47,7 @@ export const AuthApi = {
         throw new Error("Authentication session verification failed");
       }
     } catch (error) {
-      console.error("Login error:", error);
+      console.error("[AuthApi] Login error:", error);
       throw error;
     }
   },

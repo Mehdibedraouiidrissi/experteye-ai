@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
@@ -62,6 +61,7 @@ export const useAuth = (isLogin: boolean) => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("[useAuth] handleSubmit called");
     e.preventDefault();
     
     setBackendError(null);
@@ -134,13 +134,13 @@ export const useAuth = (isLogin: boolean) => {
       }
     }
 
+    console.log("[useAuth] Validation passed. About to make API call");
     setIsLoading(true);
     
     try {
       if (isLogin) {
         const loginIdentifier = username || email;
-        console.log(`Attempting login with identifier: ${loginIdentifier}`);
-        
+        console.log(`[useAuth] Attempting AuthApi.login with identifier: ${loginIdentifier}`);
         const response = await AuthApi.login(loginIdentifier, password);
         
         toast({
@@ -163,7 +163,7 @@ export const useAuth = (isLogin: boolean) => {
         }, 500);
       }
     } catch (error: any) {
-      console.error("Auth error:", error);
+      console.error("[useAuth] Auth error:", error);
       
       // Handle network issues specifically
       if (error?.status === 0) {
