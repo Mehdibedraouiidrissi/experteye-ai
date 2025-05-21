@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Separator } from "@/components/ui/separator";
 import FooterLinks from './FooterLinks';
@@ -5,21 +6,20 @@ import Logo from "@/components/shared/Logo";
 
 const Footer = () => {
   const productLinks = [
-    { text: "Capabilities", href: "#features" },
-    { text: "How It Helps", href: "#use-cases" },
-    { text: "Security & Compliance", href: "#security" }
+    { text: "Features", href: "#features" },
+    { text: "How It Works", href: "#how-it-works" }
   ];
   
   const companyLinks = [
-    { text: "About DigitalHub", href: "#" },
-    { text: "Team Directory", href: "#" },
-    { text: "Internal Support", href: "#" }
+    { text: "About Us", href: "#" },
+    { text: "Careers", href: "#" },
+    { text: "Contact", href: "#" }
   ];
   
   const legalLinks = [
-    { text: "Data Use Policy", href: "#" },
-    { text: "Access Guidelines", href: "#" },
-    { text: "Terms of Use", href: "#" }
+    { text: "Privacy Policy", href: "#" },
+    { text: "Terms of Service", href: "#" },
+    { text: "Cookie Policy", href: "#" }
   ];
 
   return (
@@ -29,30 +29,33 @@ const Footer = () => {
           <div>
             <Logo className="mb-4" />
             <p className="text-sm text-muted-foreground">
-              Your AI assistant for seamless knowledge access, task automation, and smarter collaboration — built for ExpertEye teams.
+              Advanced AI solutions for modern businesses.
             </p>
           </div>
           
-          <FooterLinks title="DigitalHub" links={productLinks} />
-          <FooterLinks title="Company Tools" links={companyLinks} />
-          <FooterLinks title="Policies" links={legalLinks} />
+          <FooterLinks title="Product" links={productLinks} />
+          <FooterLinks title="Company" links={companyLinks} />
+          <FooterLinks title="Legal" links={legalLinks} />
         </div>
         
         <Separator className="my-8" />
         
         <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <p className="text-sm text-muted-foreground">
-            © 2025 ExpertEye DigitalHub – For internal use only.
+            © 2025 ExpertEye, All Rights Reserved
           </p>
           <div className="flex gap-4">
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Internal LinkedIn">
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
               <i className="ri-linkedin-fill"></i>
             </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Internal GitHub">
-              <i className="ri-github-fill"></i>
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <i className="ri-twitter-fill"></i>
             </a>
-            <a href="#" className="text-muted-foreground hover:text-primary transition-colors" aria-label="Intranet">
-              <i className="ri-building-4-line"></i>
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <i className="ri-facebook-fill"></i>
+            </a>
+            <a href="#" className="text-muted-foreground hover:text-primary transition-colors">
+              <i className="ri-instagram-fill"></i>
             </a>
           </div>
         </div>

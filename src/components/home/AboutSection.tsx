@@ -7,9 +7,8 @@ const AboutSection = () => {
       <div className="container mx-auto text-center max-w-3xl space-y-6">
         <h2 className="text-3xl font-bold">About ExpertEye</h2>
         <p className="text-lg text-muted-foreground">
-                     ExpertEye AI is your intelligent assistant, 
-                designed to support automotive professionals with instant access to pricing benchmarks, market insights, 
-            and performance analytics — all powered by real-time data and ExpertEye's industry expertise.
+          ExpertEye is an advanced AI-powered platform designed to deliver actionable insights, 
+          automate workflows, and optimize decision-making processes for businesses across industries.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
           <div className="bg-background p-6 rounded-lg shadow-soft hover:shadow-hover transition-all duration-300 border border-border">

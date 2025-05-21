@@ -22,7 +22,7 @@ const HeroSection = () => {
       <div className="container relative z-10 mx-auto">
         <div className="max-w-2xl space-y-6 animate-fade-in">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight text-foreground">
-            Unlock Internal Innovation with Experteye AI Assistance
+            Intelligent Auto Pricing <span className="text-primary">Solutions</span>
           </h1>
           <p className="text-xl text-muted-foreground max-w-xl">
             Our AI-powered platform analyzes market data to provide accurate vehicle pricing, giving you the competitive edge in automotive sales.

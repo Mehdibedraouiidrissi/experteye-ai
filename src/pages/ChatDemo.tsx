@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,24 +36,6 @@ const ChatDemo = () => {
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [chatId, setChatId] = useState<string | null>(null);
-  
-  // Track used responses to avoid repetition
-  const usedResponsesRef = useRef<Set<string>>(new Set());
-  
-  // Demo responses for the chatbot
-  const demoResponses = [
-    "Based on my analysis of market trends, similar products in your sector are typically priced between $450-550. The upper quartile reaches $600 for premium offerings.",
-    "Our data mining shows that competitors have decreased their prices by 8% in Q1. Would you like to see the detailed report with quarterly breakdowns?",
-    "According to our mystery shopping results, the average discount offered in your industry is currently 12% for new customers, with loyalty programs offering an additional 5-7%.",
-    "I've analyzed the Total Cost of Ownership for your product line. The 5-year TCO is approximately 2.3x the initial purchase price, which is competitive for your market segment.",
-    "The benchmark data indicates your pricing is well-positioned, but there's room for optimization in the enterprise tier where competitors are charging 15-20% more for similar features.",
-    "Market analysis suggests that bundle pricing could increase your average order value by 22% based on customer purchasing patterns in similar industries.",
-    "Your pricing strategy appears to be in the mid-market range. Premium competitors are leveraging value-based pricing with success, showing 30% higher margins.",
-    "Based on competitive intelligence, three major players in your space have introduced subscription models in the past quarter with promising early adoption rates.",
-    "Regional pricing analysis shows your products could be priced 5-10% higher in the Northeast and West Coast markets without significant impact on conversion rates.",
-    "Customer feedback data indicates price sensitivity is lower than industry average for your target demographic, suggesting room for strategic price increases.",
-    "In the full version, I can provide detailed competitive positioning maps showing exactly where your offerings stand relative to market leaders in both price and feature dimensions."
-  ];
 
   // Create a new chat session when component mounts
   useEffect(() => {
@@ -73,54 +55,6 @@ const ChatDemo = () => {
     initializeChat();
   }, []);
 
-  // Function to get a unique response that hasn't been used yet
-  const getUniqueResponse = (userInput: string): string => {
-    // Try to tailor response based on user input
-    let relevantResponses = demoResponses;
-    
-    const inputLower = userInput.toLowerCase();
-    
-    // Filter for more contextually relevant responses
-    if (inputLower.includes('price') || inputLower.includes('cost') || inputLower.includes('expensive')) {
-      relevantResponses = demoResponses.filter(r => 
-        r.toLowerCase().includes('price') || 
-        r.toLowerCase().includes('cost') || 
-        r.toLowerCase().includes('discount') ||
-        r.toLowerCase().includes('$')
-      );
-    } else if (inputLower.includes('market') || inputLower.includes('competitor') || inputLower.includes('industry')) {
-      relevantResponses = demoResponses.filter(r => 
-        r.toLowerCase().includes('market') || 
-        r.toLowerCase().includes('competitor') || 
-        r.toLowerCase().includes('industry')
-      );
-    }
-    
-    // If no relevant responses or all have been used, reset tracking
-    if (relevantResponses.length === 0 || 
-        relevantResponses.every(r => usedResponsesRef.current.has(r))) {
-      if (usedResponsesRef.current.size >= demoResponses.length / 2) {
-        usedResponsesRef.current.clear();
-      }
-      relevantResponses = demoResponses;
-    }
-    
-    // Filter out previously used responses if possible
-    const unusedResponses = relevantResponses.filter(r => !usedResponsesRef.current.has(r));
-    
-    // If all relevant responses have been used, use any response
-    const availableResponses = unusedResponses.length > 0 ? unusedResponses : relevantResponses;
-    
-    // Choose a random response from available options
-    const randomIndex = Math.floor(Math.random() * availableResponses.length);
-    const selectedResponse = availableResponses[randomIndex];
-    
-    // Mark this response as used
-    usedResponsesRef.current.add(selectedResponse);
-    
-    return selectedResponse;
-  };
-
   const handleSend = async () => {
     if (!input.trim()) return;
     
@@ -138,12 +72,11 @@ const ChatDemo = () => {
           throw new Error("Invalid response format");
         }
       } else {
-        // Fallback to demo mode with improved response selection
+        // Fallback to demo mode - use one consistent response instead of random
         setTimeout(() => {
-          const uniqueResponse = getUniqueResponse(input);
           setMessages(prev => [...prev, { 
             role: 'assistant', 
-            content: uniqueResponse
+            content: "I'm currently in demo mode. In the full version, I can provide personalized market analysis and pricing insights based on your specific industry data. Would you like to learn more about our full AI assistant capabilities?" 
           }]);
         }, 1000);
       }
@@ -157,10 +90,9 @@ const ChatDemo = () => {
       
       // Fallback message on error
       setTimeout(() => {
-        const fallbackResponse = "I apologize, but I'm having trouble connecting to the analysis database. This demo version has limited functionality. Please try again later or sign up for the full experience.";
         setMessages(prev => [...prev, { 
           role: 'assistant', 
-          content: fallbackResponse
+          content: "I apologize, but I'm having trouble connecting to the analysis database. This demo version has limited functionality. Please try again later or sign up for the full experience." 
         }]);
       }, 500);
     } finally {

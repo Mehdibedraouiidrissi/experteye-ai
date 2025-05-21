@@ -2,7 +2,6 @@
 import uuid
 from datetime import datetime
 from typing import Dict, Any, Optional
-import re
 
 from app.db.session import get_user_db, save_user_db
 from app.core.security import verify_password, get_password_hash
@@ -44,27 +43,54 @@ def ensure_admin_user_exists():
 
 def authenticate_user(username: str, password: str) -> Optional[Dict[str, Any]]:
     """Authenticate a user with username and password."""
-    # ... keep existing code (authentication logic)
+    users_db = get_user_db()
     
+    # Debug
+    print(f"Authenticating user: {username}")
+    
+    # Try to find user by username or email (case-insensitive for username)
+    user = next((user for user in users_db if 
+                 user["username"].lower() == username.lower() or 
+                 user["email"] == username), None)
+    
+    if not user:
+        print(f"User not found: {username}")
+        return None
+    
+    print(f"Found user: {user['username']}")
+    
+    # Special case for admin during development
+    if (user["username"] == ADMIN_USERNAME and password == ADMIN_PASSWORD):
+        print("Admin login with default password")
+        # Update password hash if needed
+        if not verify_password(password, user["hashed_password"]):
+            print("Updating admin password hash")
+            for i, u in enumerate(users_db):
+                if u["username"] == ADMIN_USERNAME:
+                    users_db[i]["hashed_password"] = get_password_hash(ADMIN_PASSWORD)
+                    save_user_db(users_db)
+                    break
+        return user
+    
+    # Regular password check
+    if verify_password(password, user["hashed_password"]):
+        print("Password verified")
+        return user
+    
+    print("Password verification failed")
+    return None
+
 def is_password_unique(password: str) -> bool:
     """Check if a password is unique among all users."""
-    # ... keep existing code (password uniqueness check)
-
-def is_password_valid(password: str) -> tuple[bool, str]:
-    """Validate password against security requirements."""
-    if len(password) < 8 or len(password) > 12:
-        return False, "Password must be between 8 and 12 characters"
+    users_db = get_user_db()
     
-    if not re.match(r'^[A-Z]', password):
-        return False, "Password must start with an uppercase letter"
+    # For security, this compares the hash of the new password with existing password hashes
+    # Using verify_password to compare the password with all existing hashes
+    for user in users_db:
+        if verify_password(password, user["hashed_password"]):
+            return False
     
-    if not re.search(r'\d', password):
-        return False, "Password must contain at least one digit"
-    
-    if not re.search(r'[!@#$%^&*()_+\-=\[\]{};\':"\\|,.<>\/?]', password):
-        return False, "Password must contain at least one special character"
-    
-    return True, ""
+    return True
 
 def create_user(username: str, email: str, password: str) -> Dict[str, Any]:
     """Create a new user."""
@@ -77,11 +103,6 @@ def create_user(username: str, email: str, password: str) -> Dict[str, Any]:
     # Check if email already exists
     if any(user["email"] == email for user in users_db):
         raise ValueError("Email already exists")
-    
-    # Validate password
-    is_valid, error_msg = is_password_valid(password)
-    if not is_valid:
-        raise ValueError(error_msg)
     
     # Create new user
     user = {
