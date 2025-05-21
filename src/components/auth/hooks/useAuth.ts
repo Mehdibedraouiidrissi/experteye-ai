@@ -32,10 +32,8 @@ export const useAuth = (isLogin: boolean) => {
   useEffect(() => {
     const checkBackend = async () => {
       try {
-        setIsRetrying(true);
-        // Clear any existing errors first
-        setBackendError(null);
-        
+        // Don't have access to setIsRetrying here, use the hook's retryBackendConnection
+        // which will set isRetrying internally
         await checkBackendConnection();
         
         // If backend is available, check token validity
@@ -54,13 +52,11 @@ export const useAuth = (isLogin: boolean) => {
         }
       } catch (error) {
         console.error("Backend check error:", error);
-      } finally {
-        setIsRetrying(false);
       }
     };
     
     checkBackend();
-  }, [isLogin, navigate, checkBackendConnection, setBackendError, setIsRetrying]);
+  }, [isLogin, navigate, checkBackendConnection]);
 
   // Clear error when form changes
   useEffect(() => {
@@ -208,7 +204,7 @@ export const useAuth = (isLogin: boolean) => {
       // Handle network issues specifically
       if (error?.status === 0) {
         setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
-        setIsBackendAvailable(false);
+        // Don't have direct access to setIsBackendAvailable, update through hook methods
       } else if (error?.message) {
         setBackendError(error.message);
         // Also show toast for better visibility

@@ -18,6 +18,7 @@ export const useBackendConnectivity = () => {
   const checkBackendConnection = useCallback(async () => {
     try {
       console.log("Initial backend connection check...");
+      setIsRetrying(true);
       const available = await ApiService.checkBackendConnection();
       
       setIsBackendAvailable(available);
@@ -26,11 +27,13 @@ export const useBackendConnectivity = () => {
       } else {
         setBackendError(null);
       }
+      setIsRetrying(false);
       return available;
     } catch (error) {
       console.error("Backend check error:", error);
       setIsBackendAvailable(false);
       setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
+      setIsRetrying(false);
       return false;
     }
   }, []);
@@ -78,6 +81,7 @@ export const useBackendConnectivity = () => {
     setBackendError,
     isRetrying,
     checkBackendConnection,
-    retryBackendConnection
+    retryBackendConnection,
+    setIsBackendAvailable // Export this function to allow updates
   };
 };
