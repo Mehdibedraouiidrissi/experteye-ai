@@ -38,7 +38,7 @@ app.add_middleware(
 # Include API router
 app.include_router(api_router, prefix="/api")
 
-# Add healthcheck endpoint for frontend to test connectivity
+# Add specific healthcheck endpoint for frontend to test connectivity
 @app.get("/api/healthcheck")
 async def healthcheck():
     return {"status": "healthy", "message": "API server is running"}

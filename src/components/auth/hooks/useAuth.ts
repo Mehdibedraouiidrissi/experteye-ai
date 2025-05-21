@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { AuthApi } from "@/services/api";
+import { ApiService } from "@/services/api/apiService";
 
 export const useAuth = (isLogin: boolean) => {
   const [email, setEmail] = useState("");
@@ -11,8 +12,30 @@ export const useAuth = (isLogin: boolean) => {
   const [confirmPassword, setConfirmPassword] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [backendError, setBackendError] = useState<string | null>(null);
+  const [isBackendAvailable, setIsBackendAvailable] = useState(true);
   const { toast } = useToast();
   const navigate = useNavigate();
+
+  // Check backend connectivity on component mount
+  useEffect(() => {
+    const checkBackend = async () => {
+      try {
+        const available = await ApiService.checkBackendConnection();
+        setIsBackendAvailable(available);
+        if (!available) {
+          setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
+        } else {
+          setBackendError(null);
+        }
+      } catch (error) {
+        console.error("Backend check error:", error);
+        setIsBackendAvailable(false);
+        setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
+      }
+    };
+    
+    checkBackend();
+  }, []);
 
   // Clear error when form changes
   useEffect(() => {
@@ -31,6 +54,21 @@ export const useAuth = (isLogin: boolean) => {
       navigate("/login", { replace: true });
     }
   }, [navigate, toast]);
+
+  // Check for stored token on component mount for login form
+  useEffect(() => {
+    if (isLogin) {
+      // Check if we're already logged in
+      const token = localStorage.getItem("auth_token");
+      if (token) {
+        // Add timestamp to prevent caching
+        const timestamp = new Date().getTime();
+        // If token exists, navigate to dashboard
+        console.log("Token found in localStorage, redirecting to dashboard");
+        window.location.href = `/dashboard?_t=${timestamp}`;
+      }
+    }
+  }, [isLogin]);
 
   const validateExpertEyeEmail = (email: string) => {
     return email.endsWith("@experteye.com");
@@ -61,10 +99,49 @@ export const useAuth = (isLogin: boolean) => {
     return { valid: true, message: "" };
   };
 
+  const retryBackendConnection = async () => {
+    setIsLoading(true);
+    try {
+      const available = await ApiService.checkBackendConnection();
+      setIsBackendAvailable(available);
+      if (!available) {
+        setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
+        toast({
+          title: "Connection failed",
+          description: "Could not connect to the backend server. Please check that it's running.",
+          variant: "destructive",
+        });
+      } else {
+        setBackendError(null);
+        toast({
+          title: "Connection restored",
+          description: "Successfully connected to the backend server.",
+        });
+      }
+    } catch (error) {
+      setIsBackendAvailable(false);
+      setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     setBackendError(null);
+    
+    // Check backend availability first
+    if (!isBackendAvailable) {
+      try {
+        await retryBackendConnection();
+        if (!isBackendAvailable) {
+          return;
+        }
+      } catch (error) {
+        return;
+      }
+    }
     
     // Validation
     if (!isLogin) {
@@ -168,6 +245,7 @@ export const useAuth = (isLogin: boolean) => {
       // Handle network issues specifically
       if (error?.status === 0) {
         setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
+        setIsBackendAvailable(false);
       } else if (error?.message) {
         setBackendError(error.message);
         // Also show toast for better visibility
@@ -193,6 +271,8 @@ export const useAuth = (isLogin: boolean) => {
     setConfirmPassword,
     isLoading,
     backendError,
+    isBackendAvailable,
+    retryBackendConnection,
     handleSubmit,
   };
 };

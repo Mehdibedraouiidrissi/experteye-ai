@@ -5,6 +5,7 @@ const API_BASE_URL = import.meta.env.PROD
 
 export class ApiService {
   private static token: string | null = null;
+  private static backendAvailable: boolean = true;
   
   static setToken(token: string | null) {
     this.token = token;
@@ -22,6 +23,32 @@ export class ApiService {
     }
     return this.token;
   }
+
+  static async checkBackendConnection(): Promise<boolean> {
+    try {
+      const timestamp = new Date().getTime();
+      const response = await fetch(`${API_BASE_URL}/healthcheck?_t=${timestamp}`, {
+        method: 'GET',
+        headers: {
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          "Pragma": "no-cache"
+        },
+        mode: "cors"
+      });
+      
+      this.backendAvailable = response.ok;
+      console.log(`Backend server connection check: ${this.backendAvailable ? 'available' : 'unavailable'}`);
+      return this.backendAvailable;
+    } catch (error) {
+      console.error("Backend server connection check failed:", error);
+      this.backendAvailable = false;
+      return false;
+    }
+  }
+  
+  static isBackendAvailable(): boolean {
+    return this.backendAvailable;
+  }
   
   static async request<T>(
     endpoint: string,
@@ -29,6 +56,24 @@ export class ApiService {
     data: any = null,
     isFormData: boolean = false
   ): Promise<T> {
+    // First check backend connection if we haven't confirmed it's available
+    if (!this.backendAvailable) {
+      try {
+        const isAvailable = await this.checkBackendConnection();
+        if (!isAvailable) {
+          throw {
+            status: 0,
+            message: `Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}.`
+          };
+        }
+      } catch (error) {
+        throw {
+          status: 0,
+          message: `Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}.`
+        };
+      }
+    }
+    
     const url = `${API_BASE_URL}${endpoint}`;
     const token = this.getToken();
     
@@ -116,6 +161,7 @@ export class ApiService {
       console.error(`API request failed to ${url}:`, error);
       
       if (error instanceof TypeError && error.message.includes('fetch')) {
+        this.backendAvailable = false;
         throw {
           status: 0,
           message: `Unable to connect to the backend server. Please ensure the backend service is running and accessible at ${API_BASE_URL}.`

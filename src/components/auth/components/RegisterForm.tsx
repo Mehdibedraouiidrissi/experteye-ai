@@ -19,12 +19,18 @@ const RegisterForm = () => {
     setConfirmPassword,
     isLoading,
     backendError,
+    isBackendAvailable,
+    retryBackendConnection,
     handleSubmit,
   } = useAuth(false);
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <BackendErrorAlert error={backendError} />
+      <BackendErrorAlert 
+        error={backendError} 
+        onRetry={retryBackendConnection}
+        isRetrying={isLoading && !isBackendAvailable}
+      />
       
       <div className="space-y-2">
         <Label htmlFor="username">Username</Label>
@@ -36,6 +42,7 @@ const RegisterForm = () => {
           onChange={(e) => setUsername(e.target.value)}
           required
           className="w-full"
+          disabled={isLoading || !isBackendAvailable}
         />
         <p className="text-xs text-muted-foreground">
           <Info className="inline h-3 w-3 mr-1" />
@@ -53,6 +60,7 @@ const RegisterForm = () => {
           onChange={(e) => setEmail(e.target.value)}
           required
           className="w-full"
+          disabled={isLoading || !isBackendAvailable}
         />
         <p className="text-xs text-muted-foreground">
           <Info className="inline h-3 w-3 mr-1" />
@@ -65,6 +73,7 @@ const RegisterForm = () => {
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
+          disabled={isLoading || !isBackendAvailable}
         />
         <div className="text-xs text-muted-foreground space-y-1">
           <p><Info className="inline h-3 w-3 mr-1" />Must be 8-12 characters</p>
@@ -79,12 +88,13 @@ const RegisterForm = () => {
         label="Confirm Password"
         value={confirmPassword}
         onChange={(e) => setConfirmPassword(e.target.value)}
+        disabled={isLoading || !isBackendAvailable}
       />
 
       <Button 
         type="submit" 
         className="w-full" 
-        disabled={isLoading}
+        disabled={isLoading || !isBackendAvailable}
       >
         {isLoading ? (
           <>
