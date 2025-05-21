@@ -19,6 +19,7 @@ origins = [
     "http://localhost:5173",  # Vite default
     "http://localhost:3000",  # Common React port
     "http://localhost:8080",  # Your current frontend
+    "http://localhost:8081",  # <-- Add this! The actual frontend origin you are using
     "http://127.0.0.1:8080",  # Local IP alternative
     "http://172.18.1.5:8080", # Network IP from logs
     "http://172.19.16.1:8080", # Network IP from logs
