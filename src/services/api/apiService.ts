@@ -1,4 +1,3 @@
-
 const API_BASE_URL = import.meta.env.PROD 
   ? "/api" 
   : "http://localhost:5000/api"; 
@@ -7,6 +6,8 @@ export class ApiService {
   private static token: string | null = null;
   private static backendAvailable: boolean = true;
   private static connectionCheckInProgress: boolean = false;
+  private static lastConnectionCheck: number = 0;
+  private static connectionCheckInterval: number = 2000; // 2 seconds
   
   static setToken(token: string | null) {
     this.token = token;
@@ -26,19 +27,22 @@ export class ApiService {
   }
 
   static async checkBackendConnection(): Promise<boolean> {
-    if (this.connectionCheckInProgress) {
-      console.log("Connection check already in progress, skipping");
+    // Don't check too frequently to avoid overwhelming the server
+    const now = Date.now();
+    if (this.connectionCheckInProgress || (now - this.lastConnectionCheck < this.connectionCheckInterval)) {
+      console.log("Connection check skipped: too soon or already in progress");
       return this.backendAvailable;
     }
     
     this.connectionCheckInProgress = true;
+    this.lastConnectionCheck = now;
     console.log("Checking backend connection to:", API_BASE_URL);
     
     try {
       const timestamp = new Date().getTime();
       // Use a simpler request with timeout
       const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 5000); // 5 second timeout
+      const timeoutId = setTimeout(() => controller.abort(), 3000); // 3 second timeout
       
       console.log(`Sending healthcheck request to ${API_BASE_URL}/healthcheck?_t=${timestamp}`);
       
