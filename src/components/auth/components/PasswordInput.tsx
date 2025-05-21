@@ -12,6 +12,7 @@ interface PasswordInputProps {
   placeholder?: string;
   required?: boolean;
   autoComplete?: string;
+  disabled?: boolean; // Add the disabled prop
 }
 
 const PasswordInput = ({
@@ -21,7 +22,8 @@ const PasswordInput = ({
   label = "Password",
   placeholder = "••••••••",
   required = true,
-  autoComplete = "current-password"
+  autoComplete = "current-password",
+  disabled = false // Add default value
 }: PasswordInputProps) => {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -38,11 +40,13 @@ const PasswordInput = ({
           required={required}
           className="w-full pr-10"
           autoComplete={autoComplete}
+          disabled={disabled} // Pass the disabled prop to the Input
         />
         <button 
           type="button" 
           className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700"
           onClick={() => setShowPassword(!showPassword)}
+          disabled={disabled} // Also disable the show/hide button when the input is disabled
         >
           {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
         </button>
