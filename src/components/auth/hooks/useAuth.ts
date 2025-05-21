@@ -3,9 +3,9 @@ import { useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useToast } from "@/hooks/use-toast";
 import { AuthApi, ApiService } from "@/services/api";
-import { validateExpertEyeEmail, validatePassword } from "./utils/validationUtils";
 import { useBackendConnectivity } from "./utils/backendUtils";
 import { useAuthFormFields } from "./utils/formHandlingUtils";
+import { AuthService } from "../services/authService";
 
 export const useAuth = (isLogin: boolean) => {
   const {
@@ -109,71 +109,22 @@ export const useAuth = (isLogin: boolean) => {
     }
     
     // Validation
-    if (!isLogin) {
-      if (!validateExpertEyeEmail(email)) {
-        toast({
-          title: "Invalid Email",
-          description: "Only @experteye.com email addresses are allowed.",
-          variant: "destructive",
-        });
-        return;
-      }
-
-      // Password validation
-      const passwordValidation = validatePassword(password);
-      if (!passwordValidation.valid) {
-        toast({
-          title: "Invalid Password",
-          description: passwordValidation.message,
-          variant: "destructive",
-        });
-        return;
-      }
-
-      if (password !== confirmPassword) {
-        toast({
-          title: "Passwords don't match",
-          description: "Please make sure your passwords match.",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      if (!username || username.trim() === "") {
-        toast({
-          title: "Username required",
-          description: "Please enter a valid username.",
-          variant: "destructive",
-        });
-        return;
-      }
+    let validationError: string | null = null;
+    
+    if (isLogin) {
+      const loginIdentifier = username || email;
+      validationError = AuthService.validateLoginInput(loginIdentifier, password);
     } else {
-      if (!username && !email) {
-        toast({
-          title: "Login information required",
-          description: "Please enter a username or email.",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      if (!password) {
-        toast({
-          title: "Password required",
-          description: "Please enter your password.",
-          variant: "destructive",
-        });
-        return;
-      }
-      
-      if (email && !validateExpertEyeEmail(email)) {
-        toast({
-          title: "Invalid Email Format",
-          description: "Only @experteye.com email addresses are allowed.",
-          variant: "destructive",
-        });
-        return;
-      }
+      validationError = AuthService.validateRegistrationInput(username, email, password, confirmPassword);
+    }
+    
+    if (validationError) {
+      toast({
+        title: isLogin ? "Login failed" : "Registration failed",
+        description: validationError,
+        variant: "destructive",
+      });
+      return;
     }
 
     setIsLoading(true);
@@ -181,39 +132,58 @@ export const useAuth = (isLogin: boolean) => {
     try {
       if (isLogin) {
         const loginIdentifier = username || email;
-        console.log(`Attempting login with identifier: ${loginIdentifier}`);
         
-        // We'll let the AuthApi.login handle the redirection
-        await AuthApi.login(loginIdentifier, password);
+        await AuthService.login(
+          loginIdentifier,
+          password,
+          undefined,
+          (error) => {
+            if (error?.status === 0) {
+              setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
+            } else if (error?.message) {
+              setBackendError(error.message);
+              toast({
+                title: "Login failed",
+                description: error.message,
+                variant: "destructive",
+              });
+            }
+          }
+        );
+        // Login redirects within the AuthApi.login method
       } else {
-        const result = await AuthApi.register(username, email, password);
-        
-        toast({
-          title: "Account created successfully",
-          description: "Your account has been created. You can now login.",
-        });
-        
-        // Use navigate instead of direct window.location for better UX
-        setTimeout(() => {
-          navigate("/login", { replace: true });
-        }, 500);
+        await AuthService.register(
+          username,
+          email,
+          password,
+          () => {
+            toast({
+              title: "Account created successfully",
+              description: "Your account has been created. You can now login.",
+            });
+            
+            // Use navigate instead of direct window.location for better UX
+            setTimeout(() => {
+              navigate("/login", { replace: true });
+            }, 500);
+          },
+          (error) => {
+            if (error?.status === 0) {
+              setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
+            } else if (error?.message) {
+              setBackendError(error.message);
+              toast({
+                title: "Registration failed",
+                description: error.message,
+                variant: "destructive",
+              });
+            }
+          }
+        );
       }
     } catch (error: any) {
       console.error("Auth error:", error);
-      
-      // Handle network issues specifically
-      if (error?.status === 0) {
-        setBackendError("Unable to connect to the backend server. Please ensure the backend service is running and accessible.");
-        // Don't have direct access to setIsBackendAvailable, update through hook methods
-      } else if (error?.message) {
-        setBackendError(error.message);
-        // Also show toast for better visibility
-        toast({
-          title: isLogin ? "Login failed" : "Registration failed",
-          description: error.message,
-          variant: "destructive",
-        });
-      }
+      // Error handling is now done in the service callbacks
     } finally {
       setIsLoading(false);
     }
