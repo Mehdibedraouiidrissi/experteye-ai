@@ -1,32 +1,34 @@
+
 import {
   BrowserRouter as Router,
   Routes,
   Route,
   Navigate,
+  Outlet,
 } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { Toaster } from "@/components/ui/toaster";
-import { HomePage } from "@/pages/HomePage";
-import { Login } from "@/pages/Login";
-import { Signup } from "@/pages/Signup";
-import { Dashboard } from "@/pages/Dashboard";
-import { Chat } from "@/pages/Chat";
-import { Documents } from "@/pages/Documents";
-import { Settings } from "@/pages/Settings";
-import { ChatDemo } from "@/pages/ChatDemo";
-import { NotFound } from "@/pages/NotFound";
+import HomePage from "@/pages/HomePage";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
+import Dashboard from "@/pages/Dashboard";
+import Chat from "@/pages/Chat";
+import Documents from "@/pages/Documents";
+import Settings from "@/pages/Settings";
+import ChatDemo from "@/pages/ChatDemo";
+import NotFound from "@/pages/NotFound";
 import { ThemeProvider } from "@/components/theme-provider";
 import Account from "@/pages/Account";
 
 function App() {
   const { isLoggedIn } = useAuth();
 
-  const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
+  const ProtectedRoute = () => {
     if (!isLoggedIn) {
       return <Navigate to="/login" />;
     }
 
-    return <>{children}</>;
+    return <Outlet />;
   };
 
   return (
@@ -47,7 +49,7 @@ function App() {
             <Route path="/chat/:id" element={<Chat />} />
             <Route path="/documents" element={<Documents />} />
             <Route path="/settings" element={<Settings />} />
-            <Route path="/account" element={<Account />} /> {/* Add this new route */}
+            <Route path="/account" element={<Account />} />
           </Route>
           
           {/* Chat demo route */}
