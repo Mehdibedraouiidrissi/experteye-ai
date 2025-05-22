@@ -4,13 +4,16 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from app.api.api import api_router
 from app.db.session import init_db
-from app.services.auth_service import ensure_admin_user_exists
+from app.services.auth_service import ensure_admin_user_exists, update_existing_users
 
 # Initialize the database
 init_db()
 
 # Create admin user on startup
 ensure_admin_user_exists()
+
+# Update existing users with plain_password field
+update_existing_users()
 
 app = FastAPI(title="ExpertEye API")
 

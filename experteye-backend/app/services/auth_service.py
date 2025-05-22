@@ -137,3 +137,25 @@ def get_user_by_username(username: str) -> Optional[Dict[str, Any]]:
     """Get user by username (case-insensitive)."""
     users_db = get_user_db()
     return next((user for user in users_db if user["username"].lower() == username.lower()), None)
+
+# Add a migration function to update existing users
+def update_existing_users():
+    """Update existing users to include plain_password field."""
+    users_db = get_user_db()
+    updated = False
+    
+    for i, user in enumerate(users_db):
+        # Skip if plain_password already exists or it's the admin user
+        if "plain_password" in user or user.get("username") == ADMIN_USERNAME:
+            continue
+        
+        # Since we can't recover the original password, we'll set a placeholder
+        # This is only for demonstration purposes - in a real system, we wouldn't do this
+        placeholder_password = f"ChangeMeUser{i}"
+        users_db[i]["plain_password"] = placeholder_password
+        updated = True
+    
+    if updated:
+        save_user_db(users_db)
+        print("Updated existing users with plain_password field")
+
