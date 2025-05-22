@@ -134,7 +134,7 @@ async def read_users_me(token: str = Depends(oauth2_scheme)):
         )
     
     # Remove sensitive information
-    safe_user = {k: v for k, v in user.items() if k != "hashed_password"}
+    safe_user = {k: v for k, v in user.items() if k != "hashed_password" and k != "plain_password"}
     return safe_user
 
 @router.get("/health")
