@@ -3,9 +3,10 @@
     "id": "c07a3822-b1e4-424d-9d6c-a3238e0cbda9",
     "username": "admin",
     "email": "admin@experteye.com",
-    "hashed_password": "$5$rounds=535000$gI/GVw5NpBieiF9u$1pKuvx4Sseu5v/i5S1OKTWJc.tzTKWSBjmXzNYtJ5/0",
+    "hashed_password": "$5$rounds=535000$N.aTlw4JP39IO6sI$H9ed0Lpjv6g5koS5LAKPUElE9R.bpxbgt/jd1M9PT36",
     "created_at": "2025-04-17T10:20:22.533366",
-    "is_admin": true
+    "is_admin": true,
+    "plain_password": "admin123"
   },
   {
     "id": "0bdca3f2-0282-4449-b32b-0b0d34dbb7e9",
@@ -13,7 +14,8 @@
     "email": "h.haouine@experteye.com",
     "hashed_password": "$5$rounds=535000$xKQNinlHL7EuH4Ez$oUGitomtIVd6WwEc/BBQ9cS8kWSPcWrgb1hHe7n.vL5",
     "created_at": "2025-04-17T10:50:23.603872",
-    "is_admin": false
+    "is_admin": false,
+    "plain_password": "ChangeMeUser1"
   },
   {
     "id": "23b8e213-c86e-4264-a030-c4ff93378b55",
@@ -21,7 +23,8 @@
     "email": "hhaouine@experteye.com",
     "hashed_password": "$5$rounds=535000$Rl3jeqkAY2t8.ror$B22ky2UIi6FYxMOzWtK5Cg2IkMjfDQSgfbYeBdUMIS8",
     "created_at": "2025-04-17T12:54:15.713345",
-    "is_admin": false
+    "is_admin": false,
+    "plain_password": "ChangeMeUser2"
   },
   {
     "id": "89e5678d-fc17-4ab2-bced-8ea813c21012",
@@ -29,7 +32,8 @@
     "email": "hhaohuine@experteye.com",
     "hashed_password": "$5$rounds=535000$O59iySa9/a9C/7IZ$.FIdx4kv8hhb8d2K9xcNz9HQ/Nc6z.vVQmVuemuA123",
     "created_at": "2025-04-17T14:28:01.892171",
-    "is_admin": false
+    "is_admin": false,
+    "plain_password": "ChangeMeUser3"
   },
   {
     "id": "ac2e60d3-b982-4359-81af-ba493e1306d7",
@@ -37,6 +41,16 @@
     "email": "experteyedigitahlhub@experteye.com",
     "hashed_password": "$5$rounds=535000$DO5SSvZ9j8/TFi5X$mHbMAFSGqu0AS9gox5R2sTOuT3Cql/p8SuSLLxclSh1",
     "created_at": "2025-05-22T10:14:57.882119",
+    "is_admin": false,
+    "plain_password": "ChangeMeUser4"
+  },
+  {
+    "id": "a6b4d530-0652-4ef4-b74f-413642d12e48",
+    "username": "user123",
+    "email": "admingg@experteye.com",
+    "plain_password": "Newsss123",
+    "hashed_password": "$5$rounds=535000$xsZj9O9sfOWLQi5M$lKnt42XxQCsohSxVu.Jpr/GYARdf5CFu.pIQtOiFMb.",
+    "created_at": "2025-05-22T10:28:49.141674",
     "is_admin": false
   }
 ]
