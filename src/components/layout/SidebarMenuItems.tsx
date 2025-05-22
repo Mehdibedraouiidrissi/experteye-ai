@@ -14,6 +14,7 @@ interface MenuItem {
   name: string;
   path: string;
   icon: React.ReactNode;
+  adminOnly?: boolean;
 }
 
 interface SidebarMenuItemsProps {
@@ -21,6 +22,9 @@ interface SidebarMenuItemsProps {
 }
 
 export function SidebarMenuItems({ isCollapsed }: SidebarMenuItemsProps) {
+  // Check if the current user is admin
+  const isAdmin = localStorage.getItem("username") === "admin";
+
   const menuItems: MenuItem[] = [
     { 
       name: "Dashboard", 
@@ -40,9 +44,13 @@ export function SidebarMenuItems({ isCollapsed }: SidebarMenuItemsProps) {
     { 
       name: "Settings", 
       path: "/settings", 
-      icon: <Settings className="h-5 w-5" /> 
+      icon: <Settings className="h-5 w-5" />,
+      adminOnly: true
     }
   ];
+
+  // Filter menu items based on user role
+  const filteredMenuItems = menuItems.filter(item => !item.adminOnly || isAdmin);
 
   return (
     <div className="flex flex-col h-full">
@@ -63,7 +71,7 @@ export function SidebarMenuItems({ isCollapsed }: SidebarMenuItemsProps) {
         )}>
           {!isCollapsed && "Navigation"}
         </p>
-        {menuItems.map((item) => (
+        {filteredMenuItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}
