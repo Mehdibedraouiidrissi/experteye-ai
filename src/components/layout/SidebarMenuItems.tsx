@@ -1,11 +1,14 @@
 
+import { useEffect, useState } from "react";
 import { NavLink } from "react-router-dom";
 import { 
   LayoutDashboard, 
   MessageSquare, 
   FolderOpen, 
   Settings,
-  PlusCircle
+  PlusCircle,
+  UserCircle2,
+  Key
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -14,6 +17,7 @@ interface MenuItem {
   name: string;
   path: string;
   icon: React.ReactNode;
+  adminOnly?: boolean;
 }
 
 interface SidebarMenuItemsProps {
@@ -21,6 +25,14 @@ interface SidebarMenuItemsProps {
 }
 
 export function SidebarMenuItems({ isCollapsed }: SidebarMenuItemsProps) {
+  const [isAdmin, setIsAdmin] = useState(false);
+  
+  useEffect(() => {
+    // Check if user is admin
+    const username = localStorage.getItem("username");
+    setIsAdmin(username === "admin");
+  }, []);
+  
   const menuItems: MenuItem[] = [
     { 
       name: "Dashboard", 
@@ -40,9 +52,19 @@ export function SidebarMenuItems({ isCollapsed }: SidebarMenuItemsProps) {
     { 
       name: "Settings", 
       path: "/settings", 
-      icon: <Settings className="h-5 w-5" /> 
+      icon: <Settings className="h-5 w-5" />,
+      adminOnly: true
+    },
+    {
+      name: "Account",
+      path: "/account",
+      icon: <UserCircle2 className="h-5 w-5" />,
+      adminOnly: false
     }
   ];
+
+  // Filter menu items based on user role
+  const filteredMenuItems = menuItems.filter(item => !item.adminOnly || isAdmin);
 
   return (
     <div className="flex flex-col h-full">
@@ -63,7 +85,7 @@ export function SidebarMenuItems({ isCollapsed }: SidebarMenuItemsProps) {
         )}>
           {!isCollapsed && "Navigation"}
         </p>
-        {menuItems.map((item) => (
+        {filteredMenuItems.map((item) => (
           <NavLink
             key={item.path}
             to={item.path}

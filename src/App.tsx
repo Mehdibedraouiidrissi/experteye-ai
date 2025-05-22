@@ -1,63 +1,67 @@
 
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+  Outlet,
+} from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { ApiService } from "./services/api";
-import Index from "./pages/Index";
-import Login from "./pages/Login";
-import Signup from "./pages/Signup";
-import Dashboard from "./pages/Dashboard";
-import Chat from "./pages/Chat";
-import ChatDemo from "./pages/ChatDemo";
-import Documents from "./pages/Documents";
-import Settings from "./pages/Settings";
-import NotFound from "./pages/NotFound";
+import HomePage from "@/pages/HomePage";
+import Login from "@/pages/Login";
+import Signup from "@/pages/Signup";
+import Dashboard from "@/pages/Dashboard";
+import Chat from "@/pages/Chat";
+import Documents from "@/pages/Documents";
+import Settings from "@/pages/Settings";
+import ChatDemo from "@/pages/ChatDemo";
+import NotFound from "@/pages/NotFound";
+import { ThemeProvider } from "@/components/theme-provider";
+import Account from "@/pages/Account";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
-      retry: 1,
-      staleTime: 5 * 60 * 1000, // 5 minutes
-    },
-  },
-});
+function App() {
+  const { isLoggedIn } = useAuth();
 
-// Check authentication status
-const isAuthenticated = () => {
-  return !!ApiService.getToken();
-};
+  const ProtectedRoute = () => {
+    if (!isLoggedIn) {
+      return <Navigate to="/login" />;
+    }
 
-const ProtectedRoute = ({ element }: { element: React.ReactNode }) => {
-  return isAuthenticated() ? (
-    <>{element}</>
-  ) : (
-    <Navigate to="/login" replace />
-  );
-};
+    return <Outlet />;
+  };
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <TooltipProvider>
-      <Toaster />
-      <Sonner />
-      <BrowserRouter>
+  return (
+    <ThemeProvider
+      defaultTheme="system"
+      storageKey="vite-react-tailwind-theme"
+    >
+      <Router>
         <Routes>
-          <Route path="/" element={<Index />} />
-          <Route path="/login" element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Login />} />
-          <Route path="/signup" element={isAuthenticated() ? <Navigate to="/dashboard" replace /> : <Signup />} />
-          <Route path="/chatdemo" element={<ChatDemo />} />
-          <Route path="/dashboard" element={<ProtectedRoute element={<Dashboard />} />} />
-          <Route path="/chat" element={<ProtectedRoute element={<Chat />} />} />
-          <Route path="/documents" element={<ProtectedRoute element={<Documents />} />} />
-          <Route path="/settings" element={<ProtectedRoute element={<Settings />} />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/chat" element={<Chat />} />
+            <Route path="/chat/:id" element={<Chat />} />
+            <Route path="/documents" element={<Documents />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/account" element={<Account />} />
+          </Route>
+          
+          {/* Chat demo route */}
+          <Route path="/chat-demo" element={<ChatDemo />} />
+          
+          {/* 404 route */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </TooltipProvider>
-  </QueryClientProvider>
-);
+      </Router>
+      <Toaster />
+    </ThemeProvider>
+  );
+}
 
 export default App;
