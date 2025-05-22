@@ -1,5 +1,5 @@
 
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { SidebarProvider } from "@/components/ui/sidebar";
 import { AppSidebar } from "./AppSidebar";
@@ -14,6 +14,15 @@ interface DashboardLayoutProps {
 
 const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const navigate = useNavigate();
+  const [username, setUsername] = useState<string>("User");
+  
+  useEffect(() => {
+    // Get the username from localStorage
+    const storedUsername = localStorage.getItem("username");
+    if (storedUsername) {
+      setUsername(storedUsername);
+    }
+  }, []);
   
   return (
     <SidebarProvider>
@@ -30,7 +39,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 onClick={() => navigate("/settings")}
               >
                 <UserCircle2 className="h-5 w-5" />
-                <span className="hidden md:inline">Admin User</span>
+                <span className="hidden md:inline">{username}</span>
               </Button>
             </div>
           </header>
