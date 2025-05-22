@@ -9,6 +9,7 @@ class User(BaseModel):
     username: str
     email: str
     hashed_password: str
+    plain_password: Optional[str] = None
     created_at: datetime
     
     class Config:
@@ -18,6 +19,7 @@ class User(BaseModel):
                 "username": "johndoe",
                 "email": "john@example.com",
                 "hashed_password": "[hashed_password]",
+                "plain_password": "Password123",
                 "created_at": "2023-01-01T00:00:00"
             }
         }
@@ -83,3 +85,4 @@ class Document(BaseModel):
                 "processing_status": "pending"
             }
         }
+

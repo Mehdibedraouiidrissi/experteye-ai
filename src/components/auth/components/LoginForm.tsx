@@ -36,14 +36,8 @@ const LoginForm = () => {
     }
   }, []);
 
-  // Add a log on render
-  console.log("[LoginForm] Rendered");
-
   return (
-    <form onSubmit={(e) => {
-      console.log("[LoginForm] Form submit fired");
-      handleSubmit(e);
-    }} className="space-y-4">
+    <form onSubmit={handleSubmit} className="space-y-4">
       <BackendErrorAlert error={backendError} />
       
       <div className="space-y-2">
